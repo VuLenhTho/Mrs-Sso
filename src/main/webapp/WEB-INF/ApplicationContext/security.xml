@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns="http://www.springframework.org/schema/security"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+            http://www.springframework.org/schema/security
+            http://www.springframework.org/schema/security/spring-security-4.2.xsd">
+
+    <http auto-config="false" use-expressions="true" disable-url-rewriting="true" realm="Contact Realm">
+        <intercept-url pattern="/admin/**" access="hasAnyRole('ROLE_ADMIN')"/>
+        <intercept-url pattern="/users" access="hasAnyRole('ROLE_ADMIN')"/>
+        <intercept-url pattern="/user/**" access="hasAnyRole('ROLE_ADMIN')"/>
+        <intercept-url pattern="/web/**" access="permitAll()"/>
+
+
+        <access-denied-handler error-page="/accessDenied"/>
+        <form-login login-page="/login"
+                    username-parameter="userName"
+                    password-parameter="password"
+                    login-processing-url="/handle-login"
+                    authentication-success-handler-ref="customSuccessHandler"
+                    authentication-failure-url="/login"/>
+        <session-management invalid-session-url="/login"/>
+        <logout delete-cookies="JSESSIONID"/>
+    </http>
+
+
+    <authentication-manager>
+        <authentication-provider
+                ref="customAuthenticationProvider" />
+    </authentication-manager>
+
+    <beans:bean id="bcryptEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+    <beans:bean id="customAuthenticationProvider" class="com.vulenhtho.security.CustomAuthenticationProvider"/>
+    <beans:bean id="customSuccessHandler" class="com.vulenhtho.security.CustomSuccessHandler"/>
+
+</beans:beans>
