@@ -1,4 +1,4 @@
-package com.vulenhtho.model.response;
+package com.vulenhtho.dto.response;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,13 +8,21 @@ import lombok.Setter;
 @Setter
 public class UserFilterResponse {
     private String sort;
+
     private String search;
-    private String status;
+
     private String sex;
-    public UserFilterResponse(String sort, String search, String status, String sex) {
+
+    private String status;
+
+    private String roles;
+
+
+    public UserFilterResponse(String sort, String search, String sex, String status, String roles) {
         this.sort = sort;
         this.search = search;
-        this.status = status;
         this.sex = sex;
+        this.status = status;
+        this.roles = roles;
     }
 }

@@ -38,6 +38,8 @@ public class UserDTO {
 
     private String activationKey;
 
+    private String resetDate;
+
     private String resetKey;
 
     private String createdBy;

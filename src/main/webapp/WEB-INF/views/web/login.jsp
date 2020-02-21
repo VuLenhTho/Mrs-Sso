@@ -34,7 +34,7 @@
                             </div>
                             <h3 class="text-center m-text-15">Đăng nhập</h3>
                             <h5 class="text-center m-text-15" style="color: #ff5185">${mess}</h5>
-                            <form:form action="/handle-login" method="post" >
+                            <form:form action="/login" method="post" >
                                 <div class="form-group">
                                     <label>UserName</label>
                                     <input type="text" class="form-control" placeholder="UserName" name="userName">

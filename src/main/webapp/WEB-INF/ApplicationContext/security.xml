@@ -18,7 +18,7 @@
         <form-login login-page="/login"
                     username-parameter="userName"
                     password-parameter="password"
-                    login-processing-url="/handle-login"
+                    login-processing-url="/login"
                     authentication-success-handler-ref="customSuccessHandler"
                     authentication-failure-url="/login"/>
         <session-management invalid-session-url="/login"/>
