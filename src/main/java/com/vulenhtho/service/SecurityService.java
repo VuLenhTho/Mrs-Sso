@@ -43,4 +43,14 @@ public class SecurityService {
         return null;
     }
 
+    public String getShortToken(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null){
+            if (authentication.getPrincipal() instanceof CustomUserDetail){
+                return ((CustomUserDetail) authentication.getPrincipal()).getToken();
+            }
+        }
+        return null;
+    }
+
 }

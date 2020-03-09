@@ -28,7 +28,7 @@
     <%@include file="/common/admin/menu.jsp" %>
     <div class="content-body">
 
-        <form action="<c:url value="/users"/>" id="formSubmit" method="get">
+        <form action="<c:url value="/admin/users"/>" id="formSubmit" method="get">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
@@ -92,20 +92,29 @@
                                     <select class="custom-select mr-sm-2" id="status" name="status">
                                         <option selected="selected" value="${filter.status}">
                                             <c:if test="${filter.status=='all'}">Tất cả</c:if>
-                                            <c:if test="${filter.status=='true'}">Đang hoạt động</c:if>
-                                            <c:if test="${filter.status=='false'}">Đã khóa</c:if>
+                                            <c:if test="${filter.status=='active'}">Đang hoạt động</c:if>
+                                            <c:if test="${filter.status=='non-activated'}">Chưa kích hoạt</c:if>
+                                            <c:if test="${filter.status=='locked'}">Đã khóa</c:if>
                                         </option>
                                         <c:if test="${filter.status=='all'}">
-                                            <option value="true">Đang hoạt động</option>
-                                            <option value="false">Đã khóa</option>
+                                            <option value="active">Đang hoạt động</option>
+                                            <option value="non-activated">Chưa kích hoạt</option>
+                                            <option value="locked">Đã khóa</option>
                                         </c:if>
-                                        <c:if test="${filter.status=='true'}">
+                                        <c:if test="${filter.status=='active'}">
                                             <option value="all">Tất cả</option>
-                                            <option value="false">Đã khóa</option>
+                                            <option value="non-activated">Chưa kích hoạt</option>
+                                            <option value="locked">Đã khóa</option>
                                         </c:if>
-                                        <c:if test="${filter.status=='false'}">
+                                        <c:if test="${filter.status=='non-activated'}">
                                             <option value="all">Tất cả</option>
-                                            <option value="true">Đang hoạt động</option>
+                                            <option value="active">Đang hoạt động</option>
+                                            <option value="locked">Đã khóa</option>
+                                        </c:if>
+                                        <c:if test="${filter.status=='locked'}">
+                                            <option value="all">Tất cả</option>
+                                            <option value="active">Đang hoạt động</option>
+                                            <option value="non-activated">Chưa kích hoạt</option>
                                         </c:if>
 
                                     </select>
@@ -160,7 +169,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <c:forEach items="${data.users}" var="user">
+                                    <c:forEach items="${data.userDTOS}" var="user">
                                         <tr>
                                             <th>${user.id}</th>
                                             <td>${user.userName}</td>
@@ -168,22 +177,25 @@
                                             <td>${user.phone}</td>
                                             <td>${user.email}</td>
                                                 <%--sex--%>
-                                            <c:if test="${user.sex==true}">
+                                            <c:if test="${user.sex == true}">
                                                 <td>Nam</td>
                                             </c:if>
-                                            <c:if test="${user.sex==false}">
+                                            <c:if test="${user.sex == false}">
                                                 <td>Nữ</td>
                                             </c:if>
                                                 <%--status--%>
-                                            <c:if test="${user.status==true}">
+                                            <c:if test="${(user.locked == false) and (user.activated = true)}">
                                                 <td>Hoạt động</td>
                                             </c:if>
-                                            <c:if test="${user.status==false}">
+                                            <c:if test="${(user.locked == true) and (user.activated = true)}">
                                                 <td>Đã khóa</td>
+                                            </c:if>
+                                            <c:if test="${user.activated == false}">
+                                                <td>Chưa kích hoạt</td>
                                             </c:if>
                                                 <%--action--%>
                                             <td align="center">
-                                                <a href="/user/${user.id}" data-toggle="tooltip"
+                                                <a href="/admin/user/${user.id}" data-toggle="tooltip"
                                                    data-placement="top"
                                                    title="" data-original-title="Chỉnh sửa">
                                                     <i class="fa fa-pencil color-muted m-r-5"></i>

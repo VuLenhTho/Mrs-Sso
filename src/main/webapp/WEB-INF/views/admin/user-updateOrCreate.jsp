@@ -18,6 +18,7 @@
     <!-- Custom Stylesheet -->
     <link href="<c:url value="/template/css/style.css"/>" rel="stylesheet">
     <script src="<c:url value="/template/js/modernizr-3.6.0.min.js"/>"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jQuery/2.1.3/jQuery.min.js"> </script>
 </head>
 <body class="v-light vertical-nav fix-header fix-sidebar">
 <div id="preloader">
@@ -51,20 +52,33 @@
                             <div class="form-validation">
 
 
-                                <form id="formUpdateOrCreate">
-                                    <div class="form-group row">
-                                        <label class="col-lg-4 col-form-label" for="val-username">Tài khoản <span
-                                                class="text-danger">*</span>
-                                        </label>
-                                        <div class="col-lg-6">
-                                            <input type="text" class="form-control" id="val-username" name="userName"
-                                                   maxlength="25" placeholder="Enter a username.."
-                                                   value="${user.userName}">
-                                        </div>
+                                <form:form action="/admin/user" method="post" id="formUpdateOrCreate">
+                                    <div class="form-group row" style="size: 20px;color: #ff4f65">
+                                            <p>
+                                                <label >
+                                                </label> ${result}
+                                            </p>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-lg-4 col-form-label" for="val-username">Mật khẩu <span
-                                                class="text-danger">*</span>
+                                        <label class="col-lg-4 col-form-label" for="val-username">Tài khoản
+                                        </label>
+                                        <c:if test="${user == null}">
+                                            <div class="col-lg-6">
+                                                <input type="text" class="form-control" id="val-username" name="userName"
+                                                       maxlength="25" placeholder="Enter a username.."
+                                                       value="${user.userName}">
+                                            </div>
+                                        </c:if>
+                                        <c:if test="${user != null}">
+                                            <div class="col-lg-6">
+                                                <input type="text" class="form-control" id="username" name="userName"
+                                                       maxlength="25" placeholder="Enter a username.." readonly
+                                                       value="${user.userName}">
+                                            </div>
+                                        </c:if>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="val-username">Mật khẩu
                                         </label>
                                         <div class="col-lg-6">
                                             <input type="password" class="form-control" id="Password"
@@ -73,8 +87,6 @@
                                     </div>
                                         <div class="form-group row">
                                             <label class="col-lg-4 col-form-label" for="val-username"> Xác nhận mật khẩu
-                                                <span
-                                                        class="text-danger">*</span>
                                             </label>
                                             <div class="col-lg-6">
                                                 <input type="password" class="form-control" id="ConfirmPassword"
@@ -83,8 +95,7 @@
                                             </div>
                                         </div>
                                     <div class="form-group row">
-                                        <label class="col-lg-4 col-form-label" for="val-username">Họ tên <span
-                                                class="text-danger">*</span>
+                                        <label class="col-lg-4 col-form-label" for="val-username">Họ tên
                                         </label>
                                         <div class="col-lg-6">
                                             <input type="text" class="form-control" id="fullName" name="fullName"
@@ -93,26 +104,23 @@
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-lg-4 col-form-label" for="val-username">Email <span
-                                                class="text-danger">*</span>
+                                        <label class="col-lg-4 col-form-label" for="val-username">Email
                                         </label>
                                         <div class="col-lg-6">
-                                            <input type="text" class="form-control" id="email" name="email"
+                                            <input type="email" class="form-control" id="email" name="email"
                                                    maxlength="30" placeholder="Enter a Email.." value="${user.email}">
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-lg-4 col-form-label" for="val-username">Điện thoại <span
-                                                class="text-danger">*</span>
+                                        <label class="col-lg-4 col-form-label" for="val-username">Điện thoại
                                         </label>
                                         <div class="col-lg-6">
-                                            <input type="number" class="form-control" id="phone" name="phone"
+                                            <input type="text" class="form-control" id="phone" name="phone"
                                                    maxlength="15" placeholder="Enter a Phone.." value="${user.phone}">
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-lg-4 col-form-label" for="val-username">Giới tính <span
-                                                class="text-danger">*</span>
+                                        <label class="col-lg-4 col-form-label" for="val-username">Giới tính
                                         </label>
                                         <div class="col-lg-6">
                                             <c:if test="${user == null}">
@@ -140,27 +148,26 @@
                                     </div>
 
                                     <div class="form-group row">
-                                        <label class="col-lg-4 col-form-label" for="val-username">Trạng thái<span
-                                                class="text-danger">*</span>
+                                        <label class="col-lg-4 col-form-label" for="val-username">Kích hoạt
                                         </label>
                                         <div class="col-lg-6">
                                             <c:if test="${user == null}">
-                                                <select class="form-control" id="status" name="status">
-                                                    <option value="true" selected="selected">Hoạt động</option>
-                                                    <option value="false">Khóa</option>
+                                                <select class="form-control" id="activated" name="activated">
+                                                    <option value="true" selected="selected">Đã kích hoạt</option>
+                                                    <option value="false">Chưa kích hoạt</option>
                                                 </select>
                                             </c:if>
                                             <c:if test="${user!= null}">
-                                                <select class="form-control" id="status" name="status">
-                                                    <option value="${user.status}" selected="selected">
-                                                        <c:if test="${user.status == true}">Hoạt động</c:if>
-                                                        <c:if test="${user.status == false}">Khóa</c:if>
+                                                <select class="form-control" id="activated" name="activated">
+                                                    <option value="${user.activated}" selected="selected">
+                                                        <c:if test="${user.activated == false}">Chưa kích hoạt</c:if>
+                                                        <c:if test="${user.activated == true}">Đã kích hoạt</c:if>
                                                     </option>
-                                                    <c:if test="${user.status == false}">
-                                                        <option value="true">Hoạt động</option>
+                                                    <c:if test="${user.activated == true}">
+                                                        <option value="false">Chưa kích hoạt</option>
                                                     </c:if>
-                                                    <c:if test="${user.status == true}">
-                                                        <option value="false">Khóa</option>
+                                                    <c:if test="${user.activated == false}">
+                                                        <option value="true">Đã kích hoạt</option>
                                                     </c:if>
                                                 </select>
                                             </c:if>
@@ -169,8 +176,47 @@
                                     </div>
 
                                     <div class="form-group row">
-                                        <label class="col-lg-4 col-form-label" for="val-username">Quyền<span
-                                                class="text-danger">*</span>
+                                        <label class="col-lg-4 col-form-label" for="val-username">Khóa
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <c:if test="${user == null}">
+                                                <select class="form-control" id="locked" name="locked">
+                                                    <option value="true" selected="selected">Hoạt động</option>
+                                                    <option value="false">Khóa</option>
+                                                </select>
+                                            </c:if>
+                                            <c:if test="${user!= null}">
+                                                <c:if test="${user.activated == true}">
+                                                    <select class="form-control" id="locked" name="locked">
+                                                        <option value="${user.locked}" selected="selected">
+                                                            <c:if test="${user.locked == false}">Hoạt động</c:if>
+                                                            <c:if test="${user.locked == true}">Khóa</c:if>
+                                                        </option>
+                                                        <c:if test="${user.locked == true}">
+                                                            <option value="false">Hoạt động</option>
+                                                        </c:if>
+                                                        <c:if test="${user.locked == false}">
+                                                            <option value="true">Khóa</option>
+                                                        </c:if>
+                                                    </select>
+                                                </c:if>
+                                                <c:if test="${user.activated == false}">
+                                                    <p>
+                                                        <label style="size: 20px;color: #ff4f65">
+                                                        </label> Tài khoản chưa kích hoạt
+                                                    </p>
+                                                </c:if>
+                                            </c:if>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <input type="hidden" class="form-control" id="roles" name="roles"  value=""/>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="val-username">Quyền
                                         </label>
 
                                     </div>
@@ -203,7 +249,7 @@
                                                         <label>
                                                             <input type="checkbox" class="check-box" name="ids"
                                                                    checked="checked" value="${role.id}">
-                                                        </label> ${role.name}
+                                                        </label> ${role.description}
                                                     </p>
                                                     <c:set value="${false}" var="show"/>
                                                 </c:if>
@@ -214,7 +260,7 @@
                                                     <label>
                                                         <input type="checkbox" class="check-box" name="ids"
                                                                value="${role.id}">
-                                                    </label> ${role.name}
+                                                    </label> ${role.description}
                                                 </p>
                                             </c:if>
 
@@ -241,12 +287,8 @@
                                             </c:if>
                                         </div>
                                     </div>
-                                    <div class="form-group row">
-                                        <div class="col-lg-8 ml-auto">
-                                            <p id="wr" style="size: 12px;color: #ff4f65"></p>
-                                        </div>
-                                    </div>
-                                </form>
+
+                                </form:form>
                             </div>
                         </div>
                     </div>
@@ -270,92 +312,19 @@
 
 <script>
     $('#btnAddOrUpdate').click(function (e) {
-        e.preventDefault();
-
-        if (!checkValid()) return;
-
-        var data = {};
-        var roleIds = [];
+        var roleIds = "";
         var formData = $('#formUpdateOrCreate').serializeArray();
 
         $.each(formData, function (i, v) {
             if (("" + v.name + "") === "ids") {
                 var roleId = parseInt(v.value, 10);
-                roleIds.push(roleId);
+                roleIds = roleIds +  roleId.toString();
             }
-            data["" + v.name + ""] = v.value;
         });
-        if (roleIds.length < 1) {
-            document.getElementById("wr").innerHTML = "Bạn chưa chọn quyền!";
-            return;
-        }
-        data["ids"] = roleIds;
-        data["creator"] = document.getElementById("creator").innerText;
 
-        var id = $('#id').val();
-        if (id === '') {
-            addAccount(data);
-        } else {
-            updateAccount(data);
-        }
-
+        document.getElementById("roles").value = roleIds;
     });
 
-    function checkValid() {
-        var pass = document.getElementById("Password");
-        var confirmPass = document.getElementById("ConfirmPassword");
-        var email = document.getElementById('email');
-        var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-        var user = document.getElementById("val-username");
-        var fullName = document.getElementById("fullName");
-        var phone = document.getElementById("phone");
-
-        if (pass.value === '' || confirmPass.value === '' || email.value === ''
-            || user.value === '' || fullName.value === '' || phone.value === '') {
-            document.getElementById("wr").innerHTML = "Vui lòng điền đầy đủ thông tin!";
-            return false;
-        } else if ((pass.value !== confirmPass.value)) {
-            document.getElementById("wr").innerHTML = "Mật khẩu không trùng khớp!";
-            return false;
-        } else if (!filter.test(email.value)) {
-            document.getElementById("wr").innerHTML = "Sai email!";
-            return false;
-        }
-        document.getElementById("wr").innerHTML = "";
-        return true;
-    }
-
-    function addAccount(data) {
-        $.ajax({
-            url: ('http://localhost:8888/user'),
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(data),
-            dataType: 'text',
-            success: function () {
-                document.getElementById("wr").innerHTML = "Thêm mới thành công!";
-            },
-            error: function () {
-                document.getElementById("wr").innerHTML = "Thêm mới thất bại!";
-            }
-        });
-    }
-
-    function updateAccount(data) {
-        $.ajax({
-            url: ('http://localhost:8888/user/${user.id}'),
-            type: 'PUT',
-            contentType: 'application/json',
-            data: JSON.stringify(data),
-            dataType: 'text',
-            success: function () {
-                document.getElementById("wr").innerHTML = "Cập nhật thành công!";
-            },
-            error: function () {
-                document.getElementById("wr").innerHTML = "Cập nhật thất bại!";
-            }
-        });
-    }
 </script>
 </body>
 </html>

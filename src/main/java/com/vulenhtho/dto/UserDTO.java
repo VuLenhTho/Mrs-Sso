@@ -51,4 +51,19 @@ public class UserDTO {
     private String lastModifiedDate;
 
     private Set<RoleDTO> roles = new HashSet<>();
+
+    public UserDTO(Long id, String userName, String password, String fullName, Boolean sex, String email, String phone
+            , String avatarUrl, Long coins, Boolean locked, Set<RoleDTO> roles) {
+        this.id = id;
+        this.userName = userName;
+        this.password = password;
+        this.fullName = fullName;
+        this.sex = sex;
+        this.email = email;
+        this.phone = phone;
+        this.avatarUrl = avatarUrl;
+        this.coins = coins;
+        this.locked = locked;
+        this.roles = roles;
+    }
 }

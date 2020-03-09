@@ -36,7 +36,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
         Set<GrantedAuthority> authoritySet = jwtResponse.getUserDTO().getRoles().stream().map(roleDTO -> new SimpleGrantedAuthority(roleDTO.getName())).collect(Collectors.toSet());
 
-        CustomUserDetail customUserDetail = new CustomUserDetail(jwtResponse.getUserDTO().getUserName(), jwtResponse.getUserDTO().getPassword(), authoritySet);
+        CustomUserDetail customUserDetail = new CustomUserDetail(jwtResponse.getUserDTO().getUserName(), authentication.getCredentials().toString(), authoritySet);
         customUserDetail.setToken(jwtResponse.getToken());
         customUserDetail.setType(jwtResponse.getType());
         customUserDetail.setFullName(jwtResponse.getUserDTO().getFullName());
