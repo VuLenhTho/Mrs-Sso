@@ -42,6 +42,9 @@
                             <br>
                             <br>
                             <h4 class="card-title">Danh sách tài khoản</h4>
+
+                            <h3 style="color: deeppink" class="card-title">${result}</h3>
+
                             <div class="form-row align-items-center">
                                 <div class="col-auto my-1">
                                     <label class="mr-sm-2">Ngày tạo</label>
@@ -211,15 +214,15 @@
                                 <ul class="pagination" id="pagination"></ul>
                                 <input type="hidden" value="1" id="page" name="page">
                                 <input type="hidden" value="5" id="size" name="size">
-
-                                <input type="hidden" value="" id="userIds" name="userIds">
-
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </form>
+        <form:form action="/admin/users/deletes" method="post" id="formDelete">
+            <input type="hidden" value="" id="userIds" name="userIds">
+        </form:form>
 
     </div>
     <%@include file="/common/admin/footer.jsp" %>
@@ -266,11 +269,11 @@
         $.each(formData, function (i, v) {
             if (v.name === "userID") {
                 userId = parseInt(v.value, 10);
-                ids = ids + userId.toString();
+                ids = ids + userId.toString() + ',';
             }
         });
-
         document.getElementById("userIds").value = ids;
+        $('#formDelete').submit();
     })
 
 </script>

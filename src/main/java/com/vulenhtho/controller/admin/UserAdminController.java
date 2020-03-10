@@ -56,11 +56,11 @@ public class UserAdminController {
             , @RequestParam(defaultValue = "all", required = false) String roles
             , @RequestParam(required = false) String search) {
 
-
+        page = page != null ? page : 1;
         ModelAndView mav = new ModelAndView("admin/user/user-table");
         String url = "http://localhost:8888/api/admin/users?page=" + (page - 1) + "&size=" + size;
 
-        if (!sex.equals("all")) url += "&sex=" + sex;
+        if (!"all".equals(sex)) url += "&sex=" + sex;
 
         if ("non-activated".equals(status)) {
             url += "&activated=false";
@@ -70,9 +70,9 @@ public class UserAdminController {
             url += "&locked=false&activated=true";
         }
 
-        if (!sort.equals("all")) url += "&sort=" + sort;
-        if (search != null && search.length() > 0) url += "&search=" + search;
-        if (!roles.equals("all")) url += "&roles=" + roles;
+        if (!"all".equals(sort)) url += "&sort=" + sort;
+        if (!StringUtils.isEmpty(search)) url += "&search=" + search;
+        if (!"all".equals(roles)) url += "&roles=" + roles;
 
         PageUserRequest users = restTemplate.exchange(url, HttpMethod.GET, new HttpEntity<>(securityService.getHeaders()), PageUserRequest.class).getBody();
 
@@ -157,5 +157,12 @@ public class UserAdminController {
     @PostMapping("/users/deletes")
     public ModelAndView deletes(HttpServletRequest request){
 
+        String result = userService.deletesByAdmin(request);
+
+        ModelAndView modelAndView = getAllUser(1, 5, "all", "all"
+                , "all", "all",null);
+        modelAndView.addObject("result", result);
+
+        return modelAndView;
     }
 }

@@ -19,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -39,7 +40,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ChangeUserAndResult updateByAdmin(HttpServletRequest request) {
-        ChangeUserAndResult changeUserAndResult = setUserDTOAndCheckValid(request);
+        ChangeUserAndResult changeUserAndResult = setUserDTOAndCheckValid(request, false);
 
         if (changeUserAndResult.getResult() != null) {
             return changeUserAndResult;
@@ -53,7 +54,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ChangeUserAndResult createByAdmin(HttpServletRequest request) {
-        ChangeUserAndResult changeUserAndResult = setUserDTOAndCheckValid(request);
+        ChangeUserAndResult changeUserAndResult = setUserDTOAndCheckValid(request, true);
 
         if (changeUserAndResult.getResult() != null) {
             return changeUserAndResult;
@@ -69,12 +70,12 @@ public class UserServiceImpl implements UserService {
         return changeUserAndResult;
     }
 
-    private ChangeUserAndResult setUserDTOAndCheckValid(HttpServletRequest request) {
+    private ChangeUserAndResult setUserDTOAndCheckValid(HttpServletRequest request, boolean isCreate) {
         ChangeUserAndResult changeUserAndResult = new ChangeUserAndResult();
         UserDTO userDTO = getUserDTOByHttpRequest(request);
         changeUserAndResult.setUserDTO(userDTO);
 
-        String valid = checkValid(request.getParameter("ConfirmPassword"), userDTO);
+        String valid = checkValid(request.getParameter("ConfirmPassword"), userDTO, isCreate);
         changeUserAndResult.setResult(StringUtils.isEmpty(valid) ? null : valid);
 
         return changeUserAndResult;
@@ -114,7 +115,7 @@ public class UserServiceImpl implements UserService {
         return userDTO;
     }
 
-    public String checkValid(String confirmPass, UserDTO userDTO) {
+    public String checkValid(String confirmPass, UserDTO userDTO, boolean isCreate) {
         Pattern mailPattern = Pattern.compile(Constant.EMAIL_PATTERN);
         Pattern phonePattern = Pattern.compile(Constant.PHONE_PATTERN);
 
@@ -122,48 +123,64 @@ public class UserServiceImpl implements UserService {
                 || StringUtils.isEmpty(userDTO.getEmail()) || CollectionUtils.isEmpty(userDTO.getRoles())
                 || StringUtils.isEmpty(userDTO.getPhone()) || (StringUtils.isEmpty(confirmPass) && !StringUtils.isEmpty(userDTO.getPassword()))
                 || (!StringUtils.isEmpty(confirmPass) && StringUtils.isEmpty(userDTO.getPassword()))) {
-            return Constant.USER_ERROR_MESSAGE.FILL_INFO;
+            return Constant.ERROR_MESSAGE.FILL_INFO;
         } else if (!confirmPass.equals(userDTO.getPassword())) {
-            return Constant.USER_ERROR_MESSAGE.CONFIRM_PASS_NOT_CORRECT;
+            return Constant.ERROR_MESSAGE.CONFIRM_PASS_NOT_CORRECT;
         } else if (!mailPattern.matcher(userDTO.getEmail()).matches()) {
-            return Constant.USER_ERROR_MESSAGE.EMAIL_NOT_CORRECT;
+            return Constant.ERROR_MESSAGE.EMAIL_NOT_CORRECT;
         }
 
         if (!phonePattern.matcher(userDTO.getPhone()).matches()) {
-            return Constant.USER_ERROR_MESSAGE.PHONE_NOT_CORRECT;
+            return Constant.ERROR_MESSAGE.PHONE_NOT_CORRECT;
         } else if (!(userDTO.getPhone().length() == 10 || userDTO.getPhone().length() == 11)) {
-            return Constant.USER_ERROR_MESSAGE.PHONE_NOT_CORRECT;
+            return Constant.ERROR_MESSAGE.PHONE_NOT_CORRECT;
         }
         if (!(StringUtils.isEmpty(confirmPass) && StringUtils.isEmpty(userDTO.getPassword())) && userDTO.getPassword().length() < 6 && userDTO.getPassword().length() > 20) {
-            return Constant.USER_ERROR_MESSAGE.PASS_LENGTH_NOT_CORRECT;
+            return Constant.ERROR_MESSAGE.PASS_LENGTH_NOT_CORRECT;
         }
         if (userDTO.getUserName().length() < 3 && userDTO.getUserName().length() > 20) {
-            return Constant.USER_ERROR_MESSAGE.USERNAME_LENGTH_NOT_CORRECT;
+            return Constant.ERROR_MESSAGE.USERNAME_LENGTH_NOT_CORRECT;
         }
         if (userDTO.getFullName().length() < 3 && userDTO.getFullName().length() > 20) {
-            return Constant.USER_ERROR_MESSAGE.FULL_NAME_LENGTH_NOT_CORRECT;
+            return Constant.ERROR_MESSAGE.FULL_NAME_LENGTH_NOT_CORRECT;
         }
 
-        return checkDuplicateUserInfo(userDTO);
+        return checkDuplicateUserInfo(userDTO, isCreate);
     }
 
-    public String checkDuplicateUserInfo(UserDTO userDTO) {
-        ResponseEntity<String> checkDuplicateMessage = restTemplate.exchange("http://localhost:8888/api/web/user/check-duplicates-user-info?userName="
-                        + userDTO.getUserName() + "&email=" + userDTO.getEmail() + "&phone=" + userDTO.getPhone(), HttpMethod.GET
-                , new HttpEntity<>(userDTO, securityService.getHeaders()), new ParameterizedTypeReference<String>() {
-                });
-        if (Constant.USER_ERROR_MESSAGE_RESPONSE.USERNAME_EXISTED.equals(checkDuplicateMessage.getBody())) {
-            return Constant.USER_ERROR_MESSAGE.USERNAME_EXISTED;
-        } else if (Constant.USER_ERROR_MESSAGE_RESPONSE.PHONE_EXISTED.equals(checkDuplicateMessage.getBody())) {
-            return Constant.USER_ERROR_MESSAGE.PHONE_EXISTED;
-        } else if (Constant.USER_ERROR_MESSAGE_RESPONSE.EMAIL_EXISTED.equals(checkDuplicateMessage.getBody())) {
-            return Constant.USER_ERROR_MESSAGE.EMAIL_EXISTED;
+    public String checkDuplicateUserInfo(UserDTO userDTO, boolean isCreate) {
+        ResponseEntity<String> checkDuplicateMessage;
+        if (isCreate){
+            checkDuplicateMessage = restTemplate.exchange("http://localhost:8888/api/web/user/check-duplicates-user-info?userName="
+                            + userDTO.getUserName() + "&email=" + userDTO.getEmail() + "&phone=" + userDTO.getPhone(), HttpMethod.GET
+                    , new HttpEntity<>(userDTO, securityService.getHeaders()), new ParameterizedTypeReference<String>() {});
+        } else {
+            checkDuplicateMessage = restTemplate.exchange("http://localhost:8888/api/web/user/check-duplicates-user-info-for-update?userName="
+                            + userDTO.getUserName() + "&email=" + userDTO.getEmail() + "&phone=" + userDTO.getPhone(), HttpMethod.GET
+                    , new HttpEntity<>(userDTO, securityService.getHeaders()), new ParameterizedTypeReference<String>() {});
+        }
+
+        if (Constant.ERROR_MESSAGE_RESPONSE.USERNAME_EXISTED.equals(checkDuplicateMessage.getBody())) {
+            return Constant.ERROR_MESSAGE.USERNAME_EXISTED;
+        } else if (Constant.ERROR_MESSAGE_RESPONSE.PHONE_EXISTED.equals(checkDuplicateMessage.getBody())) {
+            return Constant.ERROR_MESSAGE.PHONE_EXISTED;
+        } else if (Constant.ERROR_MESSAGE_RESPONSE.EMAIL_EXISTED.equals(checkDuplicateMessage.getBody())) {
+            return Constant.ERROR_MESSAGE.EMAIL_EXISTED;
         }
         return null;
     }
 
     @Override
     public String deletesByAdmin(HttpServletRequest request) {
-        return null;
+        String idString = request.getParameter("userIds");
+        List<Long> ids = Arrays.stream(idString.split(",")).map(Long::parseLong).collect(Collectors.toList());
+        ResponseEntity<String> deletes = restTemplate.exchange("http://localhost:8888/api/admin/users", HttpMethod.DELETE
+                , new HttpEntity<>(ids, securityService.getHeaders()), new ParameterizedTypeReference<String>() {
+                });
+        if (HttpStatus.OK.equals(deletes.getStatusCode())){
+            return Constant.DELETE_RESULT.SUCCESS;
+        } else {
+            return Constant.DELETE_RESULT.ERROR;
+        }
     }
 }

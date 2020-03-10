@@ -53,7 +53,7 @@
 
 
                                 <form:form action="/admin/user" method="post" id="formUpdateOrCreate">
-                                    <div class="form-group row" style="size: 20px;color: #ff4f65;align-content: center">
+                                    <div class="form-group row" align="center" style="size: 20px;color: deeppink">
                                             <p>
                                                 <label >
                                                 </label> ${result}
