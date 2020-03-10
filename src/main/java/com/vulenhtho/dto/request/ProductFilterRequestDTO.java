@@ -23,7 +23,7 @@ public class ProductFilterRequestDTO {
 
     private Boolean trend;
 
-    private String  discountId;
+    private String discountId;
 
     private Integer page;
 

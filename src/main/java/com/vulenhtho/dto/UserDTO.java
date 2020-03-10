@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -44,7 +43,7 @@ public class UserDTO {
 
     private String createdBy;
 
-    private String  createdDate;
+    private String createdDate;
 
     private String lastModifiedBy;
 

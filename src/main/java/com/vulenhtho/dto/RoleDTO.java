@@ -1,9 +1,5 @@
 package com.vulenhtho.dto;
 
-import com.vulenhtho.config.Constant;
-import lombok.Getter;
-import lombok.Setter;
-
 public class RoleDTO {
     private Long id;
 

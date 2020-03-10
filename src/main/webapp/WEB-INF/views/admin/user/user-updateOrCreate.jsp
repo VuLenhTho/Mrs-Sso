@@ -39,7 +39,7 @@
                 </div>
                 <div class="col p-0">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/users">Quản lý người dùng</a>
+                        <li class="breadcrumb-item"><a href="<c:url value="/admin/users"/>">Quản lý người dùng</a>
                         </li>
                         <li class="breadcrumb-item active">Thêm tài khoản</li>
                     </ol>
@@ -53,7 +53,7 @@
 
 
                                 <form:form action="/admin/user" method="post" id="formUpdateOrCreate">
-                                    <div class="form-group row" style="size: 20px;color: #ff4f65">
+                                    <div class="form-group row" style="size: 20px;color: #ff4f65;align-content: center">
                                             <p>
                                                 <label >
                                                 </label> ${result}
@@ -62,14 +62,14 @@
                                     <div class="form-group row">
                                         <label class="col-lg-4 col-form-label" for="val-username">Tài khoản
                                         </label>
-                                        <c:if test="${user == null}">
+                                        <c:if test="${submitType == 'Thêm mới'}">
                                             <div class="col-lg-6">
                                                 <input type="text" class="form-control" id="val-username" name="userName"
                                                        maxlength="25" placeholder="Enter a username.."
                                                        value="${user.userName}">
                                             </div>
                                         </c:if>
-                                        <c:if test="${user != null}">
+                                        <c:if test="${submitType == 'Cập nhật'}">
                                             <div class="col-lg-6">
                                                 <input type="text" class="form-control" id="username" name="userName"
                                                        maxlength="25" placeholder="Enter a username.." readonly
@@ -108,7 +108,7 @@
                                         </label>
                                         <div class="col-lg-6">
                                             <input type="email" class="form-control" id="email" name="email"
-                                                   maxlength="30" placeholder="Enter a Email.." value="${user.email}">
+                                                   maxlength="40" placeholder="Enter a Email.." value="${user.email}">
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -275,16 +275,9 @@
 
                                     <div class="form-group row">
                                         <div class="col-lg-8 ml-auto">
-                                            <c:if test="${user==null}">
-                                                <button type="submit" class="btn btn-primary"
-                                                        id="btnAddOrUpdate">Thêm
+                                                <button type="submit" class="btn btn-info"
+                                                        id="btnAddOrUpdate">${submitType}
                                                 </button>
-                                            </c:if>
-                                            <c:if test="${user!=null}">
-                                                <button type="submit" class="btn btn-primary"
-                                                        id="btnAddOrUpdate">Cập nhật
-                                                </button>
-                                            </c:if>
                                         </div>
                                     </div>
 

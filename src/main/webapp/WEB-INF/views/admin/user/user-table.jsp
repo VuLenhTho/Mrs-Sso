@@ -33,7 +33,7 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-body">
-                            <a href="/newUser">
+                            <a href="<c:url value="/admin/user/new"/>">
                                 <button type="button" class="btn btn-rounded btn-info"><span class="btn-icon-left"><i
                                         class="fa fa-plus color-info"></i> </span>Thêm tài khoản
                                 </button>
@@ -212,6 +212,8 @@
                                 <input type="hidden" value="1" id="page" name="page">
                                 <input type="hidden" value="5" id="size" name="size">
 
+                                <input type="hidden" value="" id="userIds" name="userIds">
+
                             </div>
                         </div>
                     </div>
@@ -258,36 +260,17 @@
     $('#btnDelete').click(function (e) {
         e.preventDefault();
 
-        var data = {};
-        var ids = [];
+        var ids = "";
         var userId;
         var formData = $('#formSubmit').serializeArray();
         $.each(formData, function (i, v) {
             if (v.name === "userID") {
                 userId = parseInt(v.value, 10);
-                ids.push(userId);
+                ids = ids + userId.toString();
             }
         });
-        data["ids"] = ids;
-        deleteAccount(data);
 
-
-        function deleteAccount(data) {
-            $.ajax({
-                url: ('http://localhost:8888/user'),
-                type: 'DELETE',
-                contentType: 'application/json',
-                data: JSON.stringify(data),
-                dataType: 'text',
-                success: function () {
-                    alert('Delete success');
-                    location.reload();
-                },
-                error: function () {
-                    alert('Delete failure');
-                }
-            });
-        }
+        document.getElementById("userIds").value = ids;
     })
 
 </script>
