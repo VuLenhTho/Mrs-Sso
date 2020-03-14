@@ -14,41 +14,16 @@ public class Constant {
             + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
     public static final String PHONE_PATTERN = "^[0-9]*$";
 
-    public static class UPDATE_RESULT {
-        public static final String SUCCESS = "Cập nhật thành công!";
-        public static final String ERROR_500 = "Cập nhật thất bai, lỗi SERVER!";
-        public static final String ELSE_ERROR = "Cập nhật thất bại, hãy kiểm tra lại dữ liệu";
+    public static class SUBMIT_TYPE {
+        public static final String CREATE = "Thêm mới";
+        public static final String UPDATE = "Cập nhật";
+
     }
 
-    public static class CREATE_RESULT {
-        public static final String SUCCESS = "Thêm mới thành công!";
-        public static final String ERROR_500 = "Thêm mới thất bai, lỗi SERVER!";
-        public static final String ELSE_ERROR = "Thêm mới thất bại, hãy kiểm tra lại dữ liệu";
+    public static class CRUD_RESULT {
+        public static final String SUCCESS = "SUCCESS";
+        public static final String ERROR = "ERROR";
+        public static final String NOT_FOUND = "NOT_FOUND";
     }
 
-    public static class DELETE_RESULT {
-        public static final String SUCCESS = "Xóa thành công!";
-        public static final String ERROR = "Xóa thất bai, có lỗi xảy ra!";
-    }
-
-    public static class ERROR_MESSAGE_RESPONSE {
-        //for user
-        public static final String USERNAME_EXISTED = "USERNAME_EXISTED";
-        public static final String PHONE_EXISTED = "PHONE_EXISTED";
-        public static final String EMAIL_EXISTED = "EMAIL_EXISTED";
-    }
-
-    public static class ERROR_MESSAGE {
-        public static final String FILL_INFO = "Vui lòng điền đầy đủ thông tin!";
-        //for user update, create and delete
-        public static final String USERNAME_EXISTED = "Tên tài khoản đã tồn tại!";
-        public static final String PHONE_EXISTED = "Số điện thoại đã tồn tại!";
-        public static final String EMAIL_EXISTED = "Email đã tồn tại!";
-        public static final String CONFIRM_PASS_NOT_CORRECT = "Mật khẩu không khớp!";
-        public static final String EMAIL_NOT_CORRECT = "Email không đúng!";
-        public static final String PHONE_NOT_CORRECT = "Số điện thoại không hợp lệ!";
-        public static final String PASS_LENGTH_NOT_CORRECT = "Mật khẩu cần từ 6 đến 20 kí tự";
-        public static final String USERNAME_LENGTH_NOT_CORRECT = "Tài khoản cần từ 3 đến 20 kí tự";
-        public static final String FULL_NAME_LENGTH_NOT_CORRECT = "Tên cần từ 3 đến 20 kí tự";
-    }
 }

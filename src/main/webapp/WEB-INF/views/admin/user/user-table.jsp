@@ -6,14 +6,17 @@
     <meta charset="charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Mobile</title>
+    <title>Mrs-Sso Admin</title>
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" href="<c:url value="/template/assets/images/favicon.png"/>">
     <!-- wysihtml5 -->
     <link rel="stylesheet" href="<c:url value="/template/assets/plugins/wysihtml5/css/bootstrap-wysihtml5.css"/>">
+    <!-- Sweetalert -->
+    <link href="<c:url value="/template/assets/plugins/sweetalert/css/sweetalert.css"/>" rel="stylesheet">
     <!-- Custom Stylesheet -->
     <link href="<c:url value="/template/css/style.css"/>" rel="stylesheet">
     <script src="<c:url value="/template/js/modernizr-3.6.0.min.js"/>"></script>
+
 </head>
 <body class="v-light vertical-nav fix-header fix-sidebar">
 <div id="preloader">
@@ -42,8 +45,6 @@
                             <br>
                             <br>
                             <h4 class="card-title">Danh sách tài khoản</h4>
-
-                            <h3 style="color: deeppink" class="card-title">${result}</h3>
 
                             <div class="form-row align-items-center">
                                 <div class="col-auto my-1">
@@ -161,9 +162,11 @@
                                         <th scope="col">Email</th>
                                         <th scope="col">Giới tính</th>
                                         <th scope="col">Trạng thái</th>
-                                        <th scope="col" align="center" style="align-items: center;align-content: center">
+                                        <th scope="col" align="center"
+                                            style="align-items: center;align-content: center">
                                             Cập nhật hoặc
-                                            <button type="button" style="background-color: #989898;font-weight: bold;border-color: #cdcdcd"
+                                            <button type="button"
+                                                    style="background-color: #989898;font-weight: bold;border-color: #cdcdcd"
                                                     class="btn btn-sm btn-primary" id="btnDelete"
                                                     data-toggle="tooltip" data-html="true" title
                                                     data-original-title="<em>Chọn để xóa</em>">Delete
@@ -203,7 +206,7 @@
                                                    title="" data-original-title="Chỉnh sửa">
                                                     <i class="fa fa-pencil color-muted m-r-5"></i>
                                                 </a>
-                                                <input type="checkbox"  class="check-box" name="userID" title=""
+                                                <input type="checkbox" class="check-box" name="userID" title=""
                                                        value="${user.id}">
                                             </td>
                                         </tr>
@@ -214,6 +217,8 @@
                                 <ul class="pagination" id="pagination"></ul>
                                 <input type="hidden" value="1" id="page" name="page">
                                 <input type="hidden" value="5" id="size" name="size">
+                                <input type="hidden" value="${result}" id="result" name="result">
+
                             </div>
                         </div>
                     </div>
@@ -224,8 +229,8 @@
             <input type="hidden" value="" id="userIds" name="userIds">
         </form:form>
 
-    </div>
     <%@include file="/common/admin/footer.jsp" %>
+
 </div>
 
 
@@ -238,6 +243,7 @@
 <script src="<c:url value="/template/assets/plugins/wysihtml5/js/wysihtml5-init.js"/>"></script>
 <script src="<c:url value="/template/paging/jquery.twbsPagination.js"/>"></script>
 <script src="<c:url value="/template/paging/jquery.twbsPagination.min.js"/>"></script>
+<script src="<c:url value="/template/assets/plugins/sweetalert/js/sweetalert.min.js"/>"></script>
 
 <script type="text/javascript">
 
@@ -260,6 +266,28 @@
         })
     });
 
+
+    $(document).ready(function() {
+        let result = document.getElementById("result").value;
+        switch (result) {
+            case "SUCCESS":
+                swal("Xóa thành công!", {
+                    icon: "success",
+                });
+                break;
+            case "ERROR":
+                swal("Xóa thất bại, có lỗi xảy ra", {
+                    icon: "error",
+                });
+                break;
+            case "NOT_FOUND":
+                swal("Hãy chọn những tài khoản muốn xóa!", {
+                    icon: "info",
+                });
+                break;
+        }
+    });
+
     $('#btnDelete').click(function (e) {
         e.preventDefault();
 
@@ -273,8 +301,37 @@
             }
         });
         document.getElementById("userIds").value = ids;
-        $('#formDelete').submit();
-    })
+        if (ids === "" || ids == null){
+            swal("Hãy chọn những tài khoản muốn xóa!", {
+                icon: "info",
+            });
+        } else {
+            swal({
+                title: "Bạn có chắc không?",
+                text: "Những tài khoản này sẽ bị xóa!",
+                icon: "warning",
+                buttons: {
+                    cancel: {
+                        text: "Quay lại",
+                        visible: true,
+                    },
+                    confirm: {
+                        text: "Xóa",
+                        visible: true,
+                    }
+                },
+                dangerMode: true
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        $('#formDelete').submit();
+                    }
+                });
+        }
+
+
+    });
+
 
 </script>
 

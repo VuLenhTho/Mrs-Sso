@@ -50,15 +50,8 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="form-validation">
-
-
                                 <form:form action="/admin/user" method="post" id="formUpdateOrCreate">
-                                    <div class="form-group row" align="center" style="size: 20px;color: deeppink">
-                                            <p>
-                                                <label >
-                                                </label> ${result}
-                                            </p>
-                                    </div>
+
                                     <div class="form-group row">
                                         <label class="col-lg-4 col-form-label" for="val-username">Tài khoản
                                         </label>
@@ -71,7 +64,7 @@
                                         </c:if>
                                         <c:if test="${submitType == 'Cập nhật'}">
                                             <div class="col-lg-6">
-                                                <input type="text" class="form-control" id="username" name="userName"
+                                                <input type="text" class="form-control" id="userName" name="userName"
                                                        maxlength="25" placeholder="Enter a username.." readonly
                                                        value="${user.userName}">
                                             </div>
@@ -81,17 +74,17 @@
                                         <label class="col-lg-4 col-form-label" for="val-username">Mật khẩu
                                         </label>
                                         <div class="col-lg-6">
-                                            <input type="password" class="form-control" id="Password"
-                                                   maxlength="20" name="password" placeholder="Enter a Password..">
+                                            <input type="password" class="form-control" id="password"
+                                                   maxlength="25" name="password" placeholder="Enter a Password.." value="">
                                         </div>
                                     </div>
                                         <div class="form-group row">
                                             <label class="col-lg-4 col-form-label" for="val-username"> Xác nhận mật khẩu
                                             </label>
                                             <div class="col-lg-6">
-                                                <input type="password" class="form-control" id="ConfirmPassword"
-                                                       maxlength="20" name="ConfirmPassword"
-                                                       placeholder="Confirm Password..">
+                                                <input type="password" class="form-control" id="confirmPassword"
+                                                       maxlength="25" name="confirmPassword"
+                                                       placeholder="Confirm Password.." value="">
                                             </div>
                                         </div>
                                     <div class="form-group row">
@@ -275,7 +268,7 @@
 
                                     <div class="form-group row">
                                         <div class="col-lg-8 ml-auto">
-                                                <button type="submit" class="btn btn-info"
+                                                <button type="button" class="btn btn-info" value="${submitType}"
                                                         id="btnAddOrUpdate">${submitType}
                                                 </button>
                                         </div>
@@ -287,6 +280,7 @@
                     </div>
                 </div>
             </div>
+            <input type="hidden" value="${result}" id="result" name="result">
         </div>
         <!-- #/ container -->
     </div>
@@ -301,10 +295,21 @@
 <script src="<c:url value="/template/assets/plugins/wysihtml5/js/wysihtml5-0.3.0.js"/>"></script>
 <script src="<c:url value="/template/assets/plugins/wysihtml5/js/bootstrap-wysihtml5.js"/>"></script>
 <script src="<c:url value="/template/assets/plugins/wysihtml5/js/wysihtml5-init.js"/>"></script>
+<script src="<c:url value="/template/assets/plugins/sweetalert/js/sweetalert.min.js"/>"></script>
 
 
 <script>
+
     $('#btnAddOrUpdate').click(function (e) {
+        var textError = checkValid();
+        if (textError !== ""){
+            swal({
+                title: textError,
+                icon: "error",
+            });
+            return;
+        }
+
         var roleIds = "";
         var formData = $('#formUpdateOrCreate').serializeArray();
 
@@ -315,9 +320,108 @@
             }
         });
 
+        if (roleIds === ""){
+            swal({
+                title: "Hãy chọn quyền người dùng!",
+                icon: "error",
+            });
+            return;
+        }
+
         document.getElementById("roles").value = roleIds;
+        $('#formUpdateOrCreate').submit();
     });
 
+    function checkValid() {
+        var user;
+        if (document.getElementById("btnAddOrUpdate").value === "Thêm mới"){
+            user = document.getElementById("val-username").value;
+        } else {
+            user = document.getElementById("userName").value;
+        }
+        var pass = document.getElementById("password").value;
+        var confirmPass = document.getElementById("confirmPassword").value;
+        var email = document.getElementById('email').value;
+        var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+        var phoneFilter = /^[0-9]*$/;
+        var fullName = document.getElementById("fullName").value;
+        var phone = document.getElementById("phone").value;
+
+        var textError = "";
+        if ((pass !== '' && confirmPass === '') || (pass === '' && confirmPass !== '') || email === ''
+            || user === '' || fullName === '' || phone === '') {
+
+            textError = "Vui lòng điện đầy đủ thông tin";
+        } else if (user != null && user.length < 3) {
+            textError = "Tên tài khoản cần ít nhất 3 kí tự!";
+            $('#val-username').focus();
+        } else if (pass !== '' && pass.length < 3) {
+            textError = "Mật khẩu cần ít nhất 6 kí tự!";
+            $('#password').focus();
+        } else if (fullName.length < 3) {
+            textError = "Tên cần ít nhất 3 kí tự!";
+            $('#password').focus();
+        } else if ((pass !== confirmPass)) {
+            textError = "Mật khẩu không trùng khớp!";
+            $('#password').focus();
+        } else if (!filter.test(email)) {
+            textError = "Email không đúng!";
+            $('#email').focus();
+        } else if (!phoneFilter.test(phone)) {
+            textError = "Số điện thoại không đúng!";
+            $('#phone').focus();
+        }
+        return textError;
+    }
+
+    $(document).ready(function() {
+        let result = document.getElementById("result").value;
+        switch (result) {
+            case "USERNAME_EXISTED":
+                swal({
+                    title: "Lỗi!...",
+                    text: "Tên tài khoản đã tồn tại!",
+                    icon: "error",
+                });
+                $('val-username').focus();
+                break;
+            case "PHONE_EXISTED":
+                swal({
+                    title: "Lỗi!...",
+                    text: "Số điện thoại đã tồn tại!",
+                    icon: "error",
+                });
+                $('phone').focus();
+                break;
+            case "EMAIL_EXISTED":
+                swal({
+                    title: "Lỗi!...",
+                    text: "Email đã tồn tại!",
+                    icon: "error",
+                });
+                $('email').focus();
+                break;
+            case "ERROR":
+                swal({
+                    title: "Có lỗi xảy ra!...",
+                    text: "Hãy kiểm tra dữ liệu và thử lại!",
+                    icon: "error",
+                });
+                break;
+            case "SUCCESS":
+                swal({
+                    title: "Thành công!",
+                    icon: "success",
+                    buttons: {
+                        cancel: {
+                            text: "Quay lại",
+                            visible: true,
+                        }
+                    }
+                });
+                break;
+        }
+    });
 </script>
 </body>
 </html>

@@ -141,12 +141,12 @@ public class UserAdminController {
         if (!StringUtils.isEmpty(id)) {
             changeUserAndResult = userService.updateByAdmin(request);
             modelAndView = update(Long.parseLong(id));
-            modelAndView.addObject("submitType", "Cập nhật");
+            modelAndView.addObject("submitType", Constant.SUBMIT_TYPE.UPDATE);
         } else {
             changeUserAndResult = userService.createByAdmin(request);
             modelAndView = new ModelAndView("admin/user/user-updateOrCreate");
             modelAndView.addObject("roles", getRole());
-            modelAndView.addObject("submitType", "Thêm mới");
+            modelAndView.addObject("submitType", Constant.SUBMIT_TYPE.CREATE);
         }
         modelAndView.addObject("user", changeUserAndResult.getUserDTO());
         modelAndView.addObject("result", changeUserAndResult.getResult());

@@ -9,9 +9,8 @@
 
     <http auto-config="false" use-expressions="true" disable-url-rewriting="true" realm="Contact Realm">
         <intercept-url pattern="/admin/**" access="hasAnyRole('ROLE_ADMIN')"/>
-        <intercept-url pattern="/users" access="hasAnyRole('ROLE_ADMIN')"/>
-        <intercept-url pattern="/user/**" access="hasAnyRole('ROLE_ADMIN')"/>
-        <intercept-url pattern="/web/**" access="permitAll()"/>
+        <intercept-url pattern="/sale/**" access="hasAnyRole('ROLE_SALE')"/>
+        <intercept-url pattern="/**" access="permitAll()"/>
 
 
         <access-denied-handler error-page="/accessDenied"/>

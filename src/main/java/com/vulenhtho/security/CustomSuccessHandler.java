@@ -29,14 +29,20 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         if (isAdmin(grantedAuthorities)) {
             url = "/admin/home";
+        } else if (isSale(grantedAuthorities)) {
+            url = "/sale/home";
         } else if (isUser(grantedAuthorities)) {
-            url = "/web";
+            url = "/";
         }
         return url;
     }
 
     private boolean isUser(Set<GrantedAuthority> grantedAuthorities) {
         return grantedAuthorities.stream().anyMatch(role -> Constant.ROLE_USER.equals(role.getAuthority()));
+    }
+
+    private boolean isSale(Set<GrantedAuthority> grantedAuthorities) {
+        return grantedAuthorities.stream().anyMatch(role -> Constant.ROLE_SALE.equals(role.getAuthority()));
     }
 
     private boolean isAdmin(Set<GrantedAuthority> grantedAuthorities) {
