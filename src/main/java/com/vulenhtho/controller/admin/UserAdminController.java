@@ -1,8 +1,6 @@
 package com.vulenhtho.controller.admin;
 
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vulenhtho.config.Constant;
 import com.vulenhtho.dto.ChangeUserAndResult;
 import com.vulenhtho.dto.RoleDTO;
@@ -12,6 +10,7 @@ import com.vulenhtho.dto.response.UserFilterResponse;
 import com.vulenhtho.service.SecurityService;
 import com.vulenhtho.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Controller;
@@ -74,7 +73,7 @@ public class UserAdminController {
         if (!StringUtils.isEmpty(search)) url += "&search=" + search;
         if (!"all".equals(roles)) url += "&roles=" + roles;
 
-        PageUserRequest users = restTemplate.exchange(url, HttpMethod.GET, new HttpEntity<>(securityService.getHeaders()), PageUserRequest.class).getBody();
+        PageUserRequest users = restTemplate.exchange(url, HttpMethod.GET, new HttpEntity<>(securityService.getHeadersWithToken()), PageUserRequest.class).getBody();
 
         mav.addObject("data", users);
         UserFilterResponse userFilterResponse = new UserFilterResponse(sort, search, sex, status, roles);
@@ -85,7 +84,7 @@ public class UserAdminController {
     @GetMapping("/user/{id}")
     public ModelAndView update(@PathVariable Long id) {
         ModelAndView mav = new ModelAndView("admin/user/user-updateOrCreate");
-        UserDTO user = restTemplate.exchange("http://localhost:8888/api/admin/user/" + id, HttpMethod.GET, new HttpEntity<>(securityService.getHeaders()), UserDTO.class).getBody();
+        UserDTO user = restTemplate.exchange("http://localhost:8888/api/admin/user/" + id, HttpMethod.GET, new HttpEntity<>(securityService.getHeadersWithToken()), UserDTO.class).getBody();
 
         mav.addObject("roles", getRole());
         mav.addObject("user", user);
@@ -95,11 +94,9 @@ public class UserAdminController {
     }
 
     private List<RoleDTO> getRole() {
-        List<RoleDTO> roles = restTemplate.exchange("http://localhost:8888/api/admin/roles", HttpMethod.GET, new HttpEntity<>(securityService.getHeaders()), List.class).getBody();
-
-        ObjectMapper mapper = new ObjectMapper();
-        List<RoleDTO> roleDTOS = mapper.convertValue(roles, new TypeReference<List<RoleDTO>>() {
-        });
+        List<RoleDTO> roleDTOS = restTemplate.exchange("http://localhost:8888/api/admin/roles", HttpMethod.GET
+                , new HttpEntity<List<RoleDTO>>(securityService.getHeadersWithToken()), new ParameterizedTypeReference<List<RoleDTO>>() {
+                }).getBody();
         roleDTOS.forEach(roleDTO -> {
             if (Constant.ROLE_USER.equals(roleDTO.getName())) {
                 roleDTO.setDescription(Constant.ROLE_USER_DESCRIPTION);

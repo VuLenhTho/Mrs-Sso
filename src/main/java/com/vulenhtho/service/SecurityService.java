@@ -20,7 +20,7 @@ public class SecurityService {
         return null;
     }
 
-    public HttpHeaders getHeaders() {
+    public HttpHeaders getHeadersWithToken() {
         if (getToken() != null) {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
@@ -28,6 +28,13 @@ public class SecurityService {
             return headers;
         }
         return null;
+    }
+
+    public HttpHeaders getHeaders() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return headers;
+
     }
 
     public String getToken() {

@@ -20,7 +20,7 @@
                     login-processing-url="/login"
                     authentication-success-handler-ref="customSuccessHandler"
                     authentication-failure-url="/login"/>
-        <session-management invalid-session-url="/login"/>
+        <session-management invalid-session-url="/home"/>
         <logout delete-cookies="JSESSIONID"/>
     </http>
 

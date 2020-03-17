@@ -8,23 +8,18 @@
                 <div class="text-slid-box">
                     <div id="offer-box" class="carouselTicker">
                         <ul class="offer-box">
-                            <li>
-                                <i class="fab fa-opencart"></i> Bộ sưu tập thu đông 2019
-                            </li>
-                            <li>
-                                <i class="fab fa-opencart"></i> Giảm giá 50% áo phông nữ
-                            </li>
-                            <li>
-                                <i class="fab fa-opencart"></i> Nhập mã tho-dz để được chiết khấu 20% tổng hóa đơn
-                            </li>
-
+                            <c:forEach items="${topSale}" var="sale">
+                                <li>
+                                    <i class="fab fa-opencart"></i> ${sale}
+                                </li>
+                            </c:forEach>
                         </ul>
                     </div>
                 </div>
             </div>
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                 <div class="right-phone-box">
-                    <p>Hotline : <a href="#">+84 353 113 548</a></p>
+                    <p>HotLine : <a href="#">+84 353 113 548</a></p>
                 </div>
                 <div class="our-link">
                     <c:set value="<%=SecurityUtil.getUserName()%>" var="name"/>
@@ -53,58 +48,38 @@
         <div class="container">
             <!-- Start Header Navigation -->
             <div class="navbar-header">
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-menu" aria-controls="navbars-rs-food" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-menu"
+                        aria-controls="navbars-rs-food" aria-expanded="false" aria-label="Toggle navigation">
                     <i class="fa fa-bars"></i>
                 </button>
-                <a class="navbar-brand" href="/web"><img src="<c:url value="/shoptemplate/images/logo3.png"/>" class="logo" alt=""></a>
+                <a class="navbar-brand" href="/home"><img src="<c:url value="/shoptemplate/images/logo3.png"/>"
+                                                          class="logo" alt=""></a>
             </div>
             <!-- End Header Navigation -->
 
             <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" style="font-family: Helvetica,Arial; font-size: 200px" id="navbar-menu">
+            <div class="collapse navbar-collapse" style="font-family: Helvetica,Arial; font-size: 200px"
+                 id="navbar-menu">
                 <ul class="nav navbar-nav ml-auto" data-in="fadeInDown" data-out="fadeOutUp">
-                    <li class="nav-item active"><a class="nav-link" href="/web">Trang chủ</a></li>
+                    <li class="nav-item active"><a class="nav-link" href="/home">Trang chủ</a></li>
                     <li class="dropdown megamenu-fw">
                         <a href="/web/products" class="nav-link dropdown-toggle" data-toggle="dropdown">Sản phẩm</a>
                         <ul class="dropdown-menu megamenu-content" role="menu">
                             <li>
                                 <div class="row">
-                                    <div class="col-menu col-md-6">
-                                        <h6 class="title">Nam</h6>
-                                        <div class="content">
-                                            <ul class="menu-col" style="display: inline-block">
-                                                <li><a href="/web/products?categoryId=1&sex=men">Áo phông</a></li>
-                                                <li><a href="/web/products?categoryId=7&sex=men">Áo sơ mi</a></li>
-                                                <li><a href="/web/products?categoryId=3&sex=men">Quần jean</a></li>
-                                            </ul>
-                                           <p style="display: inline-block">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-                                            <ul class="menu-col" style="display: inline-block">
-                                                <li><a href="/web/products?categoryId=2&sex=men">Áo khoác</a></li>
-                                                <li><a href="/web/products?categoryId=5&sex=men">Hoodie</a></li>
-                                            </ul>
+                                    <c:forEach items="${category}" var="category">
+                                        <div class="col-menu col-md-3">
+                                            <h6 class="title">${category.name}</h6>
+                                            <div class="content">
+                                                <ul class="menu-col">
+                                                    <c:forEach items="${category.subCategoryDTOS}" var="subCategory">
+                                                        <li><a href="${subCategory.linkToPage}">${subCategory.name}</a>
+                                                        </li>
+                                                    </c:forEach>
+                                                </ul>
+                                            </div>
                                         </div>
-                                    </div>
-
-                                    <!-- end col-3 -->
-                                    <div class="col-menu col-md-6" >
-                                        <h6 class="title">Nữ</h6>
-                                        <div class="content">
-                                            <ul class="menu-col" style="display: inline-block">
-                                                <li><a href="/web/products?categoryId=1&sex=women">Áo phông</a></li>
-                                                <li><a href="/web/products?categoryId=2&sex=women">Áo khoác</a></li>
-                                                <li><a href="/web/products?categoryId=3&sex=women">Quần jean</a></li>
-                                            </ul>
-                                            <p style="display: inline-block">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-
-                                            <ul class="menu-col" style="display: inline-block">
-                                                <li><a href="/web/products?categoryId=5&sex=women">Hoodie</a></li>
-                                                <li><a href="/web/products?categoryId=6&sex=women">Chân váy</a></li>
-                                                <li><a href="/web/products?categoryId=4&sex=women">Váy</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <!-- end col-3 -->
-
+                                    </c:forEach>
                                 </div>
                                 <!-- end row -->
                             </li>
@@ -143,17 +118,20 @@
             <li class="cart-box">
                 <ul class="cart-list">
                     <li>
-                        <a href="#" class="photo"><img src="<c:url value="/shoptemplate/images/img-pro-01.jpg"/>" class="cart-thumb" alt="" /></a>
+                        <a href="#" class="photo"><img src="<c:url value="/shoptemplate/images/img-pro-01.jpg"/>"
+                                                       class="cart-thumb" alt=""/></a>
                         <h6><a href="#">Delica omtantur </a></h6>
                         <p>1x - <span class="price">$80.00</span></p>
                     </li>
                     <li>
-                        <a href="#" class="photo"><img src="<c:url value="/shoptemplate/images/img-pro-02.jpg"/>" class="cart-thumb" alt="" /></a>
+                        <a href="#" class="photo"><img src="<c:url value="/shoptemplate/images/img-pro-02.jpg"/>"
+                                                       class="cart-thumb" alt=""/></a>
                         <h6><a href="#">Omnes ocurreret</a></h6>
                         <p>1x - <span class="price">$60.00</span></p>
                     </li>
                     <li>
-                        <a href="#" class="photo"><img src="<c:url value="/shoptemplate/images/img-pro-03.jpg"/>" class="cart-thumb" alt="" /></a>
+                        <a href="#" class="photo"><img src="<c:url value="/shoptemplate/images/img-pro-03.jpg"/>"
+                                                       class="cart-thumb" alt=""/></a>
                         <h6><a href="#">Agam facilisis</a></h6>
                         <p>1x - <span class="price">$40.00</span></p>
                     </li>
@@ -173,13 +151,13 @@
 <!-- Start Top Search -->
 <div class="top-search" style="font-family: Helvetica,Arial">
     <form action="<c:url value="/web/products"/>" id="formSearchHeader" method="get">
-    <div class="container">
-        <div class="input-group">
+        <div class="container">
+            <div class="input-group">
                 <span class="input-group-addon"><i class="fa fa-search"></i></span>
                 <input type="text" name="search" id="search" class="form-control" placeholder="Search">
                 <span class="input-group-addon close-search"><i class="fa fa-times"></i></span>
+            </div>
         </div>
-    </div>
     </form>
 </div>
 <!-- End Top Search -->

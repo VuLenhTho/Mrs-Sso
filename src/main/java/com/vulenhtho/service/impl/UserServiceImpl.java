@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
             return changeUserAndResult;
         }
         ResponseEntity responseEntity = restTemplate.exchange("http://localhost:8888/api/admin/user"
-                , HttpMethod.PUT, new HttpEntity<>(changeUserAndResult.getUserDTO(), securityService.getHeaders()), ResponseEntity.class);
+                , HttpMethod.PUT, new HttpEntity<>(changeUserAndResult.getUserDTO(), securityService.getHeadersWithToken()), ResponseEntity.class);
         checkResponseStatus(changeUserAndResult, responseEntity.getStatusCode(), true);
 
         return changeUserAndResult;
@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
             return changeUserAndResult;
         }
         ResponseEntity<UserDTO> responseEntity = restTemplate.exchange("http://localhost:8888/api/admin/user"
-                , HttpMethod.POST, new HttpEntity<>(changeUserAndResult.getUserDTO(), securityService.getHeaders())
+                , HttpMethod.POST, new HttpEntity<>(changeUserAndResult.getUserDTO(), securityService.getHeadersWithToken())
                 , new ParameterizedTypeReference<UserDTO>() {
                 });
 
@@ -116,12 +116,12 @@ public class UserServiceImpl implements UserService {
         if (isCreate) {
             checkDuplicateMessage = restTemplate.exchange("http://localhost:8888/api/web/user/check-duplicates-user-info?userName="
                             + userDTO.getUserName() + "&email=" + userDTO.getEmail() + "&phone=" + userDTO.getPhone(), HttpMethod.GET
-                    , new HttpEntity<>(userDTO, securityService.getHeaders()), new ParameterizedTypeReference<String>() {
+                    , new HttpEntity<>(userDTO, securityService.getHeadersWithToken()), new ParameterizedTypeReference<String>() {
                     });
         } else {
             checkDuplicateMessage = restTemplate.exchange("http://localhost:8888/api/web/user/check-duplicates-user-info-for-update?userName="
                             + userDTO.getUserName() + "&email=" + userDTO.getEmail() + "&phone=" + userDTO.getPhone(), HttpMethod.GET
-                    , new HttpEntity<>(userDTO, securityService.getHeaders()), new ParameterizedTypeReference<String>() {
+                    , new HttpEntity<>(userDTO, securityService.getHeadersWithToken()), new ParameterizedTypeReference<String>() {
                     });
         }
 
@@ -139,7 +139,7 @@ public class UserServiceImpl implements UserService {
         }
         List<Long> ids = Arrays.stream(idString.split(",")).map(Long::parseLong).collect(Collectors.toList());
         ResponseEntity<String> deletes = restTemplate.exchange("http://localhost:8888/api/admin/users", HttpMethod.DELETE
-                , new HttpEntity<>(ids, securityService.getHeaders()), new ParameterizedTypeReference<String>() {
+                , new HttpEntity<>(ids, securityService.getHeadersWithToken()), new ParameterizedTypeReference<String>() {
                 });
         if (HttpStatus.OK.equals(deletes.getStatusCode())) {
             return Constant.CRUD_RESULT.SUCCESS;

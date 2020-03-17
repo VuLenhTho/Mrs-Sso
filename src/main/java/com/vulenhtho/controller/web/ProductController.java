@@ -2,10 +2,11 @@ package com.vulenhtho.controller.web;
 
 import com.vulenhtho.model.request.*;
 import com.vulenhtho.model.response.ProductFilterWebResponse;
+import com.vulenhtho.service.ProductService;
+import com.vulenhtho.service.SecurityService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
@@ -18,28 +19,20 @@ import java.util.Set;
 public class ProductController {
     private RestTemplate restTemplate;
 
-    public ProductController(RestTemplate restTemplate) {
+    private SecurityService securityService;
+
+    private ProductService productService;
+
+    public ProductController(RestTemplate restTemplate, SecurityService securityService, ProductService productService) {
         this.restTemplate = restTemplate;
+        this.securityService = securityService;
+        this.productService = productService;
     }
 
 
-    @GetMapping("/")
+    @GetMapping("/home")
     public ModelAndView webHome() {
-        ModelAndView modelAndView = new ModelAndView("/web/home");
-
-        BriefProductFilterWebRequest trendProducts = restTemplate.getForObject("http://localhost:8888/web/products?page=0&size=8&sort=date-des&trend=true", BriefProductFilterWebRequest.class);
-        BriefProductFilterWebRequest bestSaleProducts = restTemplate.getForObject("http://localhost:8888/web/products?page=0&size=8&sort=hot-des", BriefProductFilterWebRequest.class);
-        for (BriefProductWebRequest p : trendProducts.getProducts()) {
-            p.setPrice(countPrice(p.getDiscount(), p.getPrice()));
-        }
-        for (BriefProductWebRequest p : bestSaleProducts.getProducts()) {
-            p.setPrice(countPrice(p.getDiscount(), p.getPrice()));
-        }
-
-        modelAndView.addObject("trendProducts", trendProducts.getProducts());
-        modelAndView.addObject("bestSaleProducts", bestSaleProducts.getProducts());
-
-        return modelAndView;
+        return productService.getWelcomePage();
     }
 
 

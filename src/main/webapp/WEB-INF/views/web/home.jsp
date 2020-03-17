@@ -15,42 +15,20 @@
     <!-- Start Slider -->
     <div id="slides-shop" class="cover-slides" style="font-family: Helvetica,Arial">
         <ul class="slides-container">
-            <li class="text-left">
-                <img src="<c:url value="/shoptemplate/images/banner-01.jpg"/>" alt="">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <h1 class="m-b-20"><strong>Thời trang thu đông <br>SnowQueen</strong></h1>
-                            <p class="m-b-40">Sản phẩm mới 2019</p>
-                            <p><a class="btn hvr-hover" href="#">Xem ngay</a></p>
+            <c:forEach items="${welcomeSlide}" var="slide">
+                <li class="text-center">
+                    <img src="<c:url value="${slide.imageUrl}"/>" alt="photo">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h1 class="m-b-20"><strong>${slide.title}</strong></h1>
+                                <p class="m-b-40">${slide.description}</p>
+                                <p><a class="btn hvr-hover" href="#">Khám phá</a></p>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </li>
-            <li class="text-center">
-                <img src="<c:url value="/shoptemplate/images/banner-02.jpg"/>" alt="">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <h1 class="m-b-20"><strong>Phong cách quý ông </strong></h1>
-                            <p class="m-b-40">Lịch lãm và sang trọng</p>
-                            <p><a class="btn hvr-hover" href="#">Khám phá</a></p>
-                        </div>
-                    </div>
-                </div>
-            </li>
-            <li class="text-right">
-                <img src="<c:url value="/shoptemplate/images/banner-03.jpg"/>" alt="">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <h1 class="m-b-20"><strong>Trẻ trung và năng động </strong></h1>
-                            <p class="m-b-40">Thể hiện cá tính của riêng bạn</p>
-                            <p><a class="btn hvr-hover" href="#">Khám phá</a></p>
-                        </div>
-                    </div>
-                </div>
-            </li>
+                </li>
+            </c:forEach>
         </ul>
         <div class="slides-navigation">
             <a href="#" class="next"><i class="fa fa-angle-right" aria-hidden="true"></i></a>
@@ -80,33 +58,33 @@
             </div>
 
             <div class="row special-list">
-                <c:forEach items="${trendProducts}" var="trend">
+                <c:forEach items="${trendProducts}" var="trendProduct">
                     <div class="col-lg-3 col-md-6 special-grid top-featured">
-                        <a href="/web/product/${trend.id}">
+                        <a href="/product/${trendProduct.id}">
                             <div class="products-single fix">
                                 <div class="box-img-hover">
-                                    <c:if test="${trend.discount.size()>0}">
+                                    <c:if test="${trendProduct.isDiscount == true}">
                                         <div class="type-lb">
                                             <p class="sale">Sale</p>
                                         </div>
                                     </c:if>
-                                    <c:if test="${trend.discount.size()<1}">
+                                    <c:if test="${trendProduct.isDiscount == false}">
                                         <div class="type-lb">
                                             <p class="new">Mới</p>
                                         </div>
                                     </c:if>
-                                    <img src="${trend.thumbnail}" class="img-fluid"
+                                    <img src="${trendProduct.thumbnail}" class="img-fluid"
                                          alt="Image">
                                 </div>
 
                                 <div class="why-text">
-                                    <h4>${trend.name}</h4>
-                                    <c:if test="${trend.discount.size()>0}">
-                                        <h6 style="display: inline-block">Chỉ còn:&nbsp;</h6><h5
-                                            style="color: red;display: inline-block"> ${trend.price}</h5>
+                                    <h4>${trendProduct.name}</h4>
+                                    <c:if test="${trendProduct.isDiscount == true}">
+                                        <p style="display: inline-block">Chỉ còn:&nbsp;</p><h4
+                                            style="color: red;display: inline-block"> ${trendProduct.vnPrice}</h4>
                                     </c:if>
-                                    <c:if test="${trend.discount.size()<1}">
-                                        <h5>${trend.price}</h5>
+                                    <c:if test="${trendProduct.isDiscount != true}">
+                                        <h4 style="color: black;display: inline-block"> ${trendProduct.vnPrice}</h4>
                                     </c:if>
                                 </div>
 
@@ -120,7 +98,7 @@
                         <a href="/web/product/${bestSale.id}">
                             <div class="products-single fix">
                                 <div class="box-img-hover">
-                                    <c:if test="${bestSale.discount.size()>0}">
+                                    <c:if test="${bestSale.isDiscount == true}">
                                         <div class="type-lb">
                                             <p class="sale">Sale</p>
                                         </div>
@@ -131,12 +109,12 @@
 
                                 <div class="why-text">
                                     <h4>${bestSale.name}</h4>
-                                    <c:if test="${bestSale.discount.size()>0}">
-                                        <h6 style="display: inline-block">Chỉ còn:&nbsp;</h6><h5
-                                            style="color: red;display: inline-block"> ${bestSale.price}</h5>
+                                    <c:if test="${bestSale.isDiscount == true}">
+                                        <p style="display: inline-block">Chỉ còn:&nbsp;</p>
+                                        <h4 style="color: red;display: inline-block"> ${bestSale.vnPrice}</h4>
                                     </c:if>
-                                    <c:if test="${bestSale.discount.size()<1}">
-                                        <h5>${bestSale.price}</h5>
+                                    <c:if test="${bestSale.isDiscount != true}">
+                                        <h4 style="color: black;display: inline-block"> ${bestSale.vnPrice}</h4>
                                     </c:if></div>
 
                             </div>
