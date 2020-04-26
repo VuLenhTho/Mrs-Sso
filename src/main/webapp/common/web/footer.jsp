@@ -7,12 +7,12 @@
             <div class="row">
                 <div class="col-lg-4 col-md-12 col-sm-12">
                     <div class="footer-widget">
-                        <h4>SnowQueen</h4>
-                        <p>SnowQueen Fashion, một sản phẩm của Vũ Lệnh Thọ
-                        <br>với Spring Framework. Phát triển ngày 5/10/2019</p>
+                        <h4>Mrs. Sso</h4>
+                        <p>Produced by Vu Lenh Tho </p>
                         <ul>
                             <li><a href="https://www.facebook.com/vulenhtho" target="_blank"><i class="fab fa-facebook"
-                                                                                aria-hidden="true"></i></a></li>
+                                                                                                aria-hidden="true"></i></a>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -54,8 +54,9 @@
 
 <!-- Start copyright -->
 <div class="footer-copyright">
-    <p class="footer-company">All Rights Reserved. &copy; 2018 <a href="#">ThewayShop</a> Design By :
-        <a href="https://html.design/" target="_blank">html design</a></p>
+    <p class="footer-company">All Rights Reserved. &copy; 2020 <a href="<c:url value="/home"/>">Mrs. Sso</a> Produced by
+        :
+        <a href="https://www.facebook.com/vulenhtho" target="_blank">Vu Lenh Tho</a></p>
 </div>
 <!-- End copyright -->
 

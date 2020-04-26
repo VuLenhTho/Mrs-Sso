@@ -6,8 +6,6 @@
 
 <head>
     <%@include file="/common/web/head.jsp" %>
-    <%--<script src="https://code.jquery.com/jquery-latest.js"></script>--%>
-
 </head>
 
 <body>
@@ -20,7 +18,7 @@
             <div class="col-lg-12">
                 <h2>Shop</h2>
                 <ul class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="/web">Trang chủ</a></li>
+                    <li class="breadcrumb-item"><a href="<c:url value="/home"/>">Trang chủ</a></li>
                     <li class="breadcrumb-item active">Sản phẩm</li>
                 </ul>
             </div>
@@ -31,22 +29,24 @@
 
 <!-- Start Shop Page  -->
 <div class="shop-box-inner" style="font-family: Helvetica,Arial">
-    <form action="<c:url value="/web/products"/>" id="formSubmit" method="get">
+    <form action="<c:url value="/products"/>" id="formSubmit" method="get">
         <div class="container">
             <div class="row">
                 <div class="col-xl-3 col-lg-3 col-sm-12 col-xs-12 sidebar-shop-left">
                     <div class="product-categori">
                         <div class="search-product">
                             <c:if test="${filter.search != null}">
-                                <input class="form-control" placeholder="Tìm kiếm..." type="text" value="${filter.search}" name="search">
+                                <input class="form-control" placeholder="Tìm kiếm..." type="text"
+                                       value="${filter.search}" name="search" id="search1">
                             </c:if>
                             <c:if test="${filter.search == null}">
-                                <input class="form-control" placeholder="Tìm kiếm..." type="text" name="search">
+                                <input class="form-control" placeholder="Tìm kiếm..." type="text" name="search"
+                                       id="search2">
                             </c:if>
-                            <button type="submit" id="searchButton"><i class="fa fa-search"></i></button>
+                            <button type="button" id="searchButton"><i class="fa fa-search"></i></button>
 
-                            <input  type="hidden" name="sex" value="${filter.sex}" id="sex">
-                            <input  type="hidden" name="categoryId" value="${filter.categoryId}" id="categoryId">
+                            <input type="hidden" name="subCategoryId" value="${filter.subCategoryId}"
+                                   id="subCategoryId">
                         </div>
                         <div class="filter-sidebar-left">
                             <div class="title-left">
@@ -54,55 +54,25 @@
                             </div>
                             <div class="list-group list-group-collapse list-group-sm list-group-tree"
                                  id="list-group-men" data-children=".sub-men">
-                                <div class="list-group-collapse sub-men">
-                                    <a class="list-group-item list-group-item-action" href="#sub-men1"
-                                       data-toggle="collapse" aria-expanded="true" aria-controls="sub-men1">Nam
-                                    </a>
-                                    <div class="collapse show" id="sub-men1" data-parent="#list-group-men">
-                                        <div class="list-group">
-                                            <a href="/web/products?categoryId=1&sex=men"
-                                               class="list-group-item list-group-item-action">Áo phông
-                                            </a>
-                                            <a href="/web/products?categoryId=7&sex=men"
-                                               class="list-group-item list-group-item-action">Áo sơ mi
-                                            </a>
-                                            <a href="/web/products?categoryId=3&sex=men"
-                                               class="list-group-item list-group-item-action">Quần jean
-                                            </a>
-                                            <a href="/web/products?categoryId=2&sex=men"
-                                               class="list-group-item list-group-item-action">Áo khoác</a>
-                                            <a href="/web/products?categoryId=5&sex=men"
-                                               class="list-group-item list-group-item-action">Hoodie</a>
+                                <c:forEach items="${category}" var="category">
+                                    <div class="list-group-collapse sub-men">
+                                        <a class="list-group-item list-group-item-action"
+                                           href="<c:url value="#sub-men${category.id}"/>"
+                                           data-toggle="collapse" aria-expanded="true"
+                                           aria-controls="sub-men${category.id}">${category.name}
+                                        </a>
+                                        <div class="collapse show" id="sub-men${category.id}"
+                                             data-parent="#list-group-men">
+                                            <div class="list-group">
+                                                <c:forEach items="${category.subCategoryDTOS}" var="subCategory">
+                                                    <a href="<c:url value="/products?subCategoryId=${subCategory.id}"/>"
+                                                       class="list-group-item list-group-item-action">${subCategory.name}
+                                                    </a>
+                                                </c:forEach>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="list-group-collapse sub-men">
-                                    <a class="list-group-item list-group-item-action" href="#sub-men2"
-                                       data-toggle="collapse" aria-expanded="true" aria-controls="sub-men2">Nữ
-                                    </a>
-                                    <div class="collapse show" id="sub-men2" data-parent="#list-group-men">
-                                        <div class="list-group">
-                                            <a href="/web/products?categoryId=1&sex=women"
-                                               class="list-group-item list-group-item-action">Áo phông
-                                            </a>
-                                            <a href="/web/products?categoryId=2&sex=women"
-                                               class="list-group-item list-group-item-action">Áo khoác
-                                            </a>
-                                            <a href="/web/products?categoryId=3&sex=women"
-                                               class="list-group-item list-group-item-action">Quần jean
-                                            </a>
-                                            <a href="/web/products?categoryId=5&sex=women"
-                                               class="list-group-item list-group-item-action">Hoodie
-                                            </a>
-                                            <a href="/web/products?categoryId=6&sex=women"
-                                               class="list-group-item list-group-item-action">Chân váy
-                                            </a>
-                                            <a href="/web/products?categoryId=4&sex=women"
-                                               class="list-group-item list-group-item-action">Váy
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
+                                </c:forEach>
 
                             </div>
                         </div>
@@ -154,13 +124,13 @@
                             <div class="tab-content">
                                 <div role="tabpanel" class="tab-pane fade show active" id="grid-view">
                                     <div class="row">
-                                        <c:forEach items="${data.products}" var="product">
+                                        <c:forEach items="${productList}" var="product">
 
                                             <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4">
-                                                <a href="/web/product/${product.id}">
+                                                <a href="/product/${product.id}">
                                                     <div class="products-single fix">
                                                         <div class="box-img-hover">
-                                                            <c:if test="${product.discount.size()>0}">
+                                                            <c:if test="${product.isDiscount == true}">
                                                                 <div class="type-lb">
                                                                     <p class="sale">Sale</p>
                                                                 </div>
@@ -172,14 +142,17 @@
                                                         </div>
                                                         <div class="why-text">
                                                             <h4>${product.name}</h4>
-                                                            <c:if test="${product.discount.size()>0}">
-                                                                <h6 style="display: inline-block">Chỉ còn:&nbsp;</h6><h5
-                                                                    style="color: red;display: inline-block"> ${product.price}</h5>
+                                                            <c:if test="${product.isDiscount == true}">
+                                                                <p style="display: inline-block">
+                                                                    <del>${product.originalPrice}</del>
+                                                                    Chỉ còn:&nbsp;
+                                                                </p>
+                                                                <h4 style="color: red;display: inline-block"> ${product.vnPrice}</h4>
                                                             </c:if>
-                                                            <c:if test="${product.discount.size()<1}">
-                                                                <h5>${product.price}</h5>
+                                                            <c:if test="${product.isDiscount != true}">
+                                                                <h4>${product.vnPrice}</h4>
                                                             </c:if>
-                                                            <%--<a href="/web/addToCart?productId=12"> cart</a>--%>
+                                                                <%--<a href="/web/addToCart?productId=12"> cart</a>--%>
                                                         </div>
                                                     </div>
                                                 </a>
@@ -200,6 +173,10 @@
                 </div>
             </div>
         </div>
+    </form>
+
+    <form action="<c:url value="/products"/>" id="formSearch" method="get">
+        <input type="hidden" id="search-data" name="search">
     </form>
 
 </div>
@@ -237,10 +214,21 @@
             $('#formSubmit').submit();
         });
     });
+
+    $('#searchButton').click(function () {
+        var search1 = document.getElementById("search1");
+        var search2 = document.getElementById("search2");
+        if (search1 != null) {
+            document.getElementById("search-data").value = search1.value;
+        } else {
+            document.getElementById("search-data").value = search2.value;
+        }
+        $('#formSearch').submit();
+    })
 </script>
 <script type="text/javascript">
-    var totalPages = ${data.totalPages};
-    var currentPage = ${data.currentPage+1};
+    var totalPages = ${totalPage};
+    var currentPage = ${currentPage + 1};
     var limit = 12;
     $(function () {
         window.pagObj = $('#pagination').twbsPagination({

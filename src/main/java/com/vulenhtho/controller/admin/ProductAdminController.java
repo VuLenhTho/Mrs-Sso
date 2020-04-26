@@ -74,7 +74,7 @@ public class ProductAdminController {
         }
         modelAndView.addObject("data", data);
 
-        ProductFilterWebResponse filterWebResponse = new ProductFilterWebResponse(search, sort, sex, categoryId);
+        ProductFilterWebResponse filterWebResponse = new ProductFilterWebResponse(search, sort, categoryId);
         modelAndView.addObject("filter", filterWebResponse);
         return modelAndView;
     }

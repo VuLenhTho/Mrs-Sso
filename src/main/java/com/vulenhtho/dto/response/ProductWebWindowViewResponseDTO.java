@@ -13,6 +13,8 @@ public class ProductWebWindowViewResponseDTO {
 
     private Long price;
 
+    private Long originalPrice;
+
     private String vnPrice;
 
     private ProductStatus status;

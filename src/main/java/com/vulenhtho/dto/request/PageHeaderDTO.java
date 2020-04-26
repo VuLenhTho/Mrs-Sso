@@ -9,7 +9,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class HeaderRequest {
+public class PageHeaderDTO {
 
     private List<CategoryDTO> categoryDTOS = new ArrayList<>();
 

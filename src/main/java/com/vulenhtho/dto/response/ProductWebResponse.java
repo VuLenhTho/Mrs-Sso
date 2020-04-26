@@ -10,18 +10,23 @@ import java.util.Set;
 
 @Getter
 @Setter
-public class ProductWebResponseDTO {
+public class ProductWebResponse {
+
     private Long id;
 
     private String name;
 
     private Long price;
 
+    private String vnPrice;
+
+    private Long originalPrice;
+
+    private String vnOriginalPrice;
+
     private String shortDescription;
 
-    private ProductStatus status;
-
-    private String thumbnail;
+    private String status;
 
     private String photoList;
 
@@ -29,7 +34,7 @@ public class ProductWebResponseDTO {
 
     private Boolean trend;
 
-    private CategoryDTO categoryDTO;
+    private SubCategoryDTO subCategoryDTO;
 
     private Set<ProductColorSizeDTO> productColorSizeDTOS = new HashSet<>();
 

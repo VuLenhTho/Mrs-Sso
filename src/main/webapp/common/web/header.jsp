@@ -26,10 +26,10 @@
                     <ul>
                         <c:if test="${name != null && name != 'anonymousUser'}">
                             <li><a href="/#">Xin chào <span><%=SecurityUtil.getUserName()%></span></a></li>
-                            <li><a href="/logout">Đăng xuất</a></li>
+                            <li><a href="<c:url value="/logout"/>">Đăng xuất</a></li>
                         </c:if>
                         <c:if test="${name == null || name == 'anonymousUser'}">
-                            <li><a href="/login">Đăng nhập</a></li>
+                            <li><a href="<c:url value="/login"/>">Đăng nhập</a></li>
                             <li><a href="#">Đăng ký</a></li>
                         </c:if>
 
@@ -52,8 +52,9 @@
                         aria-controls="navbars-rs-food" aria-expanded="false" aria-label="Toggle navigation">
                     <i class="fa fa-bars"></i>
                 </button>
-                <a class="navbar-brand" href="/home"><img src="<c:url value="/shoptemplate/images/logo3.png"/>"
-                                                          class="logo" alt=""></a>
+                <a class="navbar-brand" href="<c:url value="/home"/>"><img
+                        src="<c:url value="/shoptemplate/images/logo3.png"/>"
+                        class="logo" alt=""></a>
             </div>
             <!-- End Header Navigation -->
 
@@ -61,9 +62,10 @@
             <div class="collapse navbar-collapse" style="font-family: Helvetica,Arial; font-size: 200px"
                  id="navbar-menu">
                 <ul class="nav navbar-nav ml-auto" data-in="fadeInDown" data-out="fadeOutUp">
-                    <li class="nav-item active"><a class="nav-link" href="/home">Trang chủ</a></li>
+                    <li class="nav-item active"><a class="nav-link" href="<c:url value="/home"/>">Trang chủ</a></li>
                     <li class="dropdown megamenu-fw">
-                        <a href="/web/products" class="nav-link dropdown-toggle" data-toggle="dropdown">Sản phẩm</a>
+                        <a href="<c:url value="/products"/>" class="nav-link dropdown-toggle" data-toggle="dropdown">Sản
+                            phẩm</a>
                         <ul class="dropdown-menu megamenu-content" role="menu">
                             <li>
                                 <div class="row">
@@ -150,11 +152,11 @@
 
 <!-- Start Top Search -->
 <div class="top-search" style="font-family: Helvetica,Arial">
-    <form action="<c:url value="/web/products"/>" id="formSearchHeader" method="get">
+    <form action="<c:url value="/products"/>" id="formSearchHeader" method="get">
         <div class="container">
             <div class="input-group">
                 <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                <input type="text" name="search" id="search" class="form-control" placeholder="Search">
+                <input type="text" name="search" id="search" class="form-control" placeholder="Tìm kiếm">
                 <span class="input-group-addon close-search"><i class="fa fa-times"></i></span>
             </div>
         </div>

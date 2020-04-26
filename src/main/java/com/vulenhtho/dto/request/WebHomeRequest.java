@@ -20,6 +20,6 @@ public class WebHomeRequest {
 
     private List<WelcomeSlideDTO> welcomeSlideDTOS = new ArrayList<>();
 
-    private HeaderRequest headerResponse;
+    private PageHeaderDTO headerResponse;
 
 }

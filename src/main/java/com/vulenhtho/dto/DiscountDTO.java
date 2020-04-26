@@ -1,5 +1,6 @@
 package com.vulenhtho.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,9 +19,9 @@ public class DiscountDTO {
 
     private String content;
 
-    private Instant startDate;
+    private String startDate;
 
-    private Instant endDate;
+    private String endDate;
 
     private Boolean isForProduct;
 }

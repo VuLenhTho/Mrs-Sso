@@ -10,8 +10,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductFilterWebResponse {
+
     private String search;
+
     private String sort;
-    private String sex;
-    private String categoryId;
+
+    private String subCategoryId;
 }

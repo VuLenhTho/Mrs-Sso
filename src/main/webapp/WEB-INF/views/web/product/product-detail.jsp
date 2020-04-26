@@ -7,7 +7,6 @@
 
 <head>
     <%@include file="/common/web/head.jsp" %>
-    <%--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>--%>
 </head>
 
 <body>
@@ -20,8 +19,10 @@
             <div class="col-lg-12">
                 <h2></h2>
                 <ul class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="/web">Trang chủ</a></li>
-                    <li class="breadcrumb-item"><a href="/web/products">Sản phẩm</a></li>
+                    <li class="breadcrumb-item"><a href="<c:url value="/home"/>">Trang chủ</a></li>
+                    <li class="breadcrumb-item"><a
+                            href="<c:url value="/products?subCategoryId=${product.subCategoryDTO.id}"/>">${product.subCategoryDTO.name}</a>
+                    </li>
                     <li class="breadcrumb-item active">${product.name}</li>
                 </ul>
             </div>
@@ -70,15 +71,18 @@
             <div class="col-xl-7 col-lg-7 col-md-6" style="font-family: Helvetica,Arial">
                 <div class="single-product-details">
                     <h2>${product.name}</h2>
-                    <c:if test="${newPrice == product.price}">
-                        <h5> ${product.price} VNĐ</h5>
+                    <c:if test="${product.discountDTOS.size() < 1}">
+                        <h5> ${product.vnPrice} VNĐ</h5>
                         <h4>Mô tả sản phẩm:</h4>
                         <p>${product.shortDescription}</p>
                     </c:if>
-                    <c:if test="${newPrice != product.price}">
-                        <h5><del>${product.price}</del> ${newPrice} VNĐ</h5>
+                    <c:if test="${product.discountDTOS.size() > 0}">
+                        <h5>
+                            <del>${product.vnOriginalPrice}</del>
+                                ${product.vnOriginalPrice} VNĐ
+                        </h5>
                         <h4>Khuyến mại:</h4>
-                        <c:forEach items="${product.discounts}" var="discount">
+                        <c:forEach items="${product.discountDTOS}" var="discount">
                             <p>- ${discount.content}</p>
                         </c:forEach>
                         <h4>Mô tả sản phẩm:</h4>
@@ -91,7 +95,7 @@
                                 <label class="size-label">Size</label>
                                 <select id="size"  class="selectpicker show-tick form-control">
                                     <option value="0" selected="selected">Chọn size</option>
-                                    <c:forEach items="${product.sizes}" var="size">
+                                    <c:forEach items="${product.sizeDTOS}" var="size">
                                         <option value="${size.id}">${size.name}</option>
                                     </c:forEach>
                                 </select>
@@ -104,7 +108,7 @@
                                 <label class="size-label">Màu</label>
                                 <select id="color" class="selectpicker show-tick form-control" >
                                     <option value="0" selected="selected">Chọn màu</option>
-                                    <c:forEach items="${product.colors}" var="color">
+                                    <c:forEach items="${product.colorDTOS}" var="color">
                                         <option value="${color.id}">${color.name}</option>
                                     </c:forEach>
                                 </select>
@@ -140,7 +144,7 @@
                     <h1>Sản phẩm tương tự</h1>
                 </div>
                 <div class="featured-products-box owl-carousel owl-theme">
-                    <c:forEach items="${briefProducts}" var="product">
+                    <c:forEach items="${sameCategoryProducts}" var="product">
                         <a href="/web/product/${product.id}">
                             <div class="item">
                                 <div class="products-single fix">
@@ -149,12 +153,15 @@
                                     </div>
                                     <div class="why-text">
                                         <h4>${product.name}</h4>
-                                        <c:if test="${product.discount.size()>0}">
-                                            <h6 style="display: inline-block">Chỉ còn:&nbsp;</h6><h5
-                                                style="color: red;display: inline-block"> ${product.price}</h5>
+                                        <c:if test="${product.isDiscount == true}">
+                                            <p style="display: inline-block">
+                                                <del>${product.originalPrice}</del>
+                                                Chỉ còn:&nbsp;
+                                            </p>
+                                            <h4 style="color: red;display: inline-block"> ${product.vnPrice}</h4>
                                         </c:if>
-                                        <c:if test="${product.discount.size()<1}">
-                                            <h5>${product.price}</h5>
+                                        <c:if test="${product.isDiscount != true}">
+                                            <h5>${product.vnPrice}</h5>
                                         </c:if>
                                     </div>
                                 </div>
@@ -195,12 +202,12 @@
 <script src="<c:url value="/shoptemplate/js/custom.js"/>"></script>
 <%--<script src="https://code.jquery.com/jquery-latest.js"></script>--%>
 
-<script >
+<script>
     var size = document.getElementById("size").value;
     var color = document.getElementById("color").value;
     var sizes = ${sizes};
     var colors = ${colors};
-    var amounts = ${amounts};
+    var quantity = ${quantity};
     var text = document.getElementById("status");
     handleStatus();
 
@@ -215,15 +222,16 @@
         });
 
     });
+
     function handleStatus() {
         if (size == 0 || color == 0) {
             text.innerHTML = "";
             return;
-        }else {
+        } else {
             text.innerHTML = "Hết hàng";
         }
         for (var i = 0; i < sizes.length; i++) {
-            if (sizes[i] == size && colors[i] == color && amounts[i] > 0) {
+            if (sizes[i] == size && colors[i] == color && quantity[i] > 0) {
                 text.innerHTML = "Còn hàng";
             }
         }
