@@ -1,14 +1,15 @@
 package com.vulenhtho.controller.admin;
 
 
+import com.vulenhtho.config.APIConstant;
 import com.vulenhtho.config.Constant;
 import com.vulenhtho.dto.ChangeUserAndResult;
 import com.vulenhtho.dto.RoleDTO;
 import com.vulenhtho.dto.UserDTO;
 import com.vulenhtho.dto.request.PageUserRequest;
 import com.vulenhtho.dto.response.UserFilterResponse;
-import com.vulenhtho.service.SecurityService;
 import com.vulenhtho.service.UserService;
+import com.vulenhtho.service.impl.SecurityServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -29,12 +30,12 @@ public class UserAdminController {
 
     private RestTemplate restTemplate;
 
-    private SecurityService securityService;
+    private SecurityServiceImpl securityService;
 
     private UserService userService;
 
     @Autowired
-    public UserAdminController(RestTemplate restTemplate, SecurityService securityService, UserService userService) {
+    public UserAdminController(RestTemplate restTemplate, SecurityServiceImpl securityService, UserService userService) {
         this.restTemplate = restTemplate;
         this.securityService = securityService;
         this.userService = userService;
@@ -57,7 +58,7 @@ public class UserAdminController {
 
         page = page != null ? page : 1;
         ModelAndView mav = new ModelAndView("admin/user/user-table");
-        String url = "http://localhost:8888/api/admin/users?page=" + (page - 1) + "&size=" + size;
+        String url = APIConstant.ADMIN_URI + "/users?page=" + (page - 1) + "&size=" + size;
 
         if (!"all".equals(sex)) url += "&sex=" + sex;
 
@@ -84,7 +85,7 @@ public class UserAdminController {
     @GetMapping("/user/{id}")
     public ModelAndView update(@PathVariable Long id) {
         ModelAndView mav = new ModelAndView("admin/user/user-updateOrCreate");
-        UserDTO user = restTemplate.exchange("http://localhost:8888/api/admin/user/" + id, HttpMethod.GET, new HttpEntity<>(securityService.getHeadersWithToken()), UserDTO.class).getBody();
+        UserDTO user = restTemplate.exchange(APIConstant.ADMIN_URI + "/user/" + id, HttpMethod.GET, new HttpEntity<>(securityService.getHeadersWithToken()), UserDTO.class).getBody();
 
         mav.addObject("roles", getRole());
         mav.addObject("user", user);
@@ -94,7 +95,7 @@ public class UserAdminController {
     }
 
     private List<RoleDTO> getRole() {
-        List<RoleDTO> roleDTOS = restTemplate.exchange("http://localhost:8888/api/admin/roles", HttpMethod.GET
+        List<RoleDTO> roleDTOS = restTemplate.exchange(APIConstant.ADMIN_URI + "/roles", HttpMethod.GET
                 , new HttpEntity<List<RoleDTO>>(securityService.getHeadersWithToken()), new ParameterizedTypeReference<List<RoleDTO>>() {
                 }).getBody();
         roleDTOS.forEach(roleDTO -> {

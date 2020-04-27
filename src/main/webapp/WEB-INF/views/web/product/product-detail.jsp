@@ -72,14 +72,14 @@
                 <div class="single-product-details">
                     <h2>${product.name}</h2>
                     <c:if test="${product.discountDTOS.size() < 1}">
-                        <h5> ${product.vnPrice} VNĐ</h5>
+                        <h5> ${product.vnPrice}</h5>
                         <h4>Mô tả sản phẩm:</h4>
                         <p>${product.shortDescription}</p>
                     </c:if>
                     <c:if test="${product.discountDTOS.size() > 0}">
                         <h5>
                             <del>${product.vnOriginalPrice}</del>
-                                ${product.vnOriginalPrice} VNĐ
+                                ${product.vnOriginalPrice}
                         </h5>
                         <h4>Khuyến mại:</h4>
                         <c:forEach items="${product.discountDTOS}" var="discount">
@@ -145,7 +145,7 @@
                 </div>
                 <div class="featured-products-box owl-carousel owl-theme">
                     <c:forEach items="${sameCategoryProducts}" var="product">
-                        <a href="/web/product/${product.id}">
+                        <a href="/product/${product.id}">
                             <div class="item">
                                 <div class="products-single fix">
                                     <div class="box-img-hover">
@@ -208,7 +208,8 @@
     var sizes = ${sizes};
     var colors = ${colors};
     var quantity = ${quantity};
-    var text = document.getElementById("status");
+    var productStatus = '${productStatus}';
+    var productStatusMessage = document.getElementById("status");
     handleStatus();
 
     $(function () {
@@ -224,17 +225,25 @@
     });
 
     function handleStatus() {
-        if (size == 0 || color == 0) {
-            text.innerHTML = "";
+        if (productStatus === 'COMING_SOON') {
+            productStatusMessage.innerHTML = "Sắp có";
             return;
-        } else {
-            text.innerHTML = "Hết hàng";
+        }
+        if (productStatus === 'OUT_OF_STOCK') {
+            productStatusMessage.innerHTML = "Hết hàng";
+            return;
+        }
+        if (size == 0 || color == 0) {
+            productStatusMessage.innerHTML = "";
+            return;
         }
         for (var i = 0; i < sizes.length; i++) {
             if (sizes[i] == size && colors[i] == color && quantity[i] > 0) {
-                text.innerHTML = "Còn hàng";
+                productStatusMessage.innerHTML = "Còn hàng";
+                return;
             }
         }
+        productStatusMessage.innerHTML = "Hết hàng";
     }
 </script>
 </body>

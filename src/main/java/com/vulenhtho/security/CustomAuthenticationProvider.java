@@ -1,5 +1,6 @@
 package com.vulenhtho.security;
 
+import com.vulenhtho.config.APIConstant;
 import com.vulenhtho.dto.UserDTO;
 import com.vulenhtho.dto.response.JwtResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +33,10 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         userDTO.setPassword(authentication.getCredentials().toString());
 
         HttpEntity<UserDTO> entity = new HttpEntity<>(userDTO, headers);
-        JwtResponse jwtResponse = restTemplate.postForObject("http://localhost:8888/api/auth/login", entity, JwtResponse.class);
+        JwtResponse jwtResponse = restTemplate.postForObject(APIConstant.HOST + "/api/auth/login", entity, JwtResponse.class);
 
-        Set<GrantedAuthority> authoritySet = jwtResponse.getUserDTO().getRoles().stream().map(roleDTO -> new SimpleGrantedAuthority(roleDTO.getName())).collect(Collectors.toSet());
+        Set<GrantedAuthority> authoritySet = jwtResponse.getUserDTO().getRoles().stream()
+                .map(roleDTO -> new SimpleGrantedAuthority(roleDTO.getName())).collect(Collectors.toSet());
 
         CustomUserDetail customUserDetail = new CustomUserDetail(jwtResponse.getUserDTO().getUserName(), authentication.getCredentials().toString(), authoritySet);
         customUserDetail.setToken(jwtResponse.getToken());
@@ -42,6 +44,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         customUserDetail.setFullName(jwtResponse.getUserDTO().getFullName());
 
         return new UsernamePasswordAuthenticationToken(customUserDetail, userDTO.getPassword(), authoritySet);
+
     }
 
     @Override

@@ -1,10 +1,10 @@
 package com.vulenhtho.service.impl;
 
+import com.vulenhtho.config.APIConstant;
 import com.vulenhtho.config.Constant;
 import com.vulenhtho.dto.ChangeUserAndResult;
 import com.vulenhtho.dto.RoleDTO;
 import com.vulenhtho.dto.UserDTO;
-import com.vulenhtho.service.SecurityService;
 import com.vulenhtho.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
@@ -27,11 +27,11 @@ public class UserServiceImpl implements UserService {
 
     private RestTemplate restTemplate;
 
-    private SecurityService securityService;
+    private SecurityServiceImpl securityService;
 
 
     @Autowired
-    public UserServiceImpl(RestTemplate restTemplate, SecurityService securityService) {
+    public UserServiceImpl(RestTemplate restTemplate, SecurityServiceImpl securityService) {
         this.restTemplate = restTemplate;
         this.securityService = securityService;
     }
@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
         if (changeUserAndResult.getResult() != null) {
             return changeUserAndResult;
         }
-        ResponseEntity responseEntity = restTemplate.exchange("http://localhost:8888/api/admin/user"
+        ResponseEntity responseEntity = restTemplate.exchange(APIConstant.ADMIN_URI + "/user"
                 , HttpMethod.PUT, new HttpEntity<>(changeUserAndResult.getUserDTO(), securityService.getHeadersWithToken()), ResponseEntity.class);
         checkResponseStatus(changeUserAndResult, responseEntity.getStatusCode(), true);
 
@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
         if (changeUserAndResult.getResult() != null) {
             return changeUserAndResult;
         }
-        ResponseEntity<UserDTO> responseEntity = restTemplate.exchange("http://localhost:8888/api/admin/user"
+        ResponseEntity<UserDTO> responseEntity = restTemplate.exchange(APIConstant.ADMIN_URI + "/user"
                 , HttpMethod.POST, new HttpEntity<>(changeUserAndResult.getUserDTO(), securityService.getHeadersWithToken())
                 , new ParameterizedTypeReference<UserDTO>() {
                 });
@@ -114,12 +114,12 @@ public class UserServiceImpl implements UserService {
     public String checkDuplicateUserInfo(UserDTO userDTO, boolean isCreate) {
         ResponseEntity<String> checkDuplicateMessage;
         if (isCreate) {
-            checkDuplicateMessage = restTemplate.exchange("http://localhost:8888/api/web/user/check-duplicates-user-info?userName="
+            checkDuplicateMessage = restTemplate.exchange(APIConstant.WEB_URI + "/user/check-duplicates-user-info?userName="
                             + userDTO.getUserName() + "&email=" + userDTO.getEmail() + "&phone=" + userDTO.getPhone(), HttpMethod.GET
                     , new HttpEntity<>(userDTO, securityService.getHeadersWithToken()), new ParameterizedTypeReference<String>() {
                     });
         } else {
-            checkDuplicateMessage = restTemplate.exchange("http://localhost:8888/api/web/user/check-duplicates-user-info-for-update?userName="
+            checkDuplicateMessage = restTemplate.exchange(APIConstant.WEB_URI + "/user/check-duplicates-user-info-for-update?userName="
                             + userDTO.getUserName() + "&email=" + userDTO.getEmail() + "&phone=" + userDTO.getPhone(), HttpMethod.GET
                     , new HttpEntity<>(userDTO, securityService.getHeadersWithToken()), new ParameterizedTypeReference<String>() {
                     });
@@ -138,7 +138,7 @@ public class UserServiceImpl implements UserService {
             return Constant.CRUD_RESULT.NOT_FOUND;
         }
         List<Long> ids = Arrays.stream(idString.split(",")).map(Long::parseLong).collect(Collectors.toList());
-        ResponseEntity<String> deletes = restTemplate.exchange("http://localhost:8888/api/admin/users", HttpMethod.DELETE
+        ResponseEntity<String> deletes = restTemplate.exchange(APIConstant.ADMIN_URI + "/users", HttpMethod.DELETE
                 , new HttpEntity<>(ids, securityService.getHeadersWithToken()), new ParameterizedTypeReference<String>() {
                 });
         if (HttpStatus.OK.equals(deletes.getStatusCode())) {

@@ -1,5 +1,6 @@
 package com.vulenhtho.controller.admin;
 
+import com.vulenhtho.config.APIConstant;
 import com.vulenhtho.model.request.*;
 import com.vulenhtho.model.response.ProductFilterWebResponse;
 import org.springframework.stereotype.Controller;
@@ -28,8 +29,8 @@ public class ProductAdminController {
     public ModelAndView webHome() {
         ModelAndView modelAndView = new ModelAndView("home");
 
-        BriefProductFilterWebRequest trendProducts = restTemplate.getForObject("http://localhost:8888/web/products?page=0&size=8&sort=date-des&trend=true", BriefProductFilterWebRequest.class);
-        BriefProductFilterWebRequest bestSaleProducts = restTemplate.getForObject("http://localhost:8888/web/products?page=0&size=8&sort=hot-des", BriefProductFilterWebRequest.class);
+        BriefProductFilterWebRequest trendProducts = restTemplate.getForObject(APIConstant.WEB_URI + "/products?page=0&size=8&sort=date-des&trend=true", BriefProductFilterWebRequest.class);
+        BriefProductFilterWebRequest bestSaleProducts = restTemplate.getForObject(APIConstant.WEB_URI + "/products?page=0&size=8&sort=hot-des", BriefProductFilterWebRequest.class);
         for (BriefProductWebRequest p : trendProducts.getProducts()) {
             p.setPrice(countPrice(p.getDiscount(), p.getPrice()));
         }
@@ -55,7 +56,7 @@ public class ProductAdminController {
         ModelAndView modelAndView = new ModelAndView("product-list");
         String pageSt = Integer.toString(page - 1);
         String sizeSt = Integer.toString(size);
-        String url = "http://localhost:8888/web/products?page=" + pageSt + "&size=" + sizeSt;
+        String url = APIConstant.WEB_URI + "/products?page=" + pageSt + "&size=" + sizeSt;
         if (search == null || search.length() < 1) {
             if (categoryId != null && categoryId.length() > 0) url += "&categoryId=" + categoryId;
             if (sex != null && sex.length() > 0) url += "&sex=" + sex;
@@ -82,7 +83,7 @@ public class ProductAdminController {
     @GetMapping("/web/product/{id}")
     public ModelAndView webProductDetail(@PathVariable String id) {
         ModelAndView modelAndView = new ModelAndView("product-detail");
-        ProductWebRequest productWebRequest = restTemplate.getForObject("http://localhost:8888/web/product/" + id, ProductWebRequest.class);
+        ProductWebRequest productWebRequest = restTemplate.getForObject(APIConstant.WEB_URI + "/product/" + id, ProductWebRequest.class);
         modelAndView.addObject("product", productWebRequest);
         modelAndView.addObject("newPrice", countPrice(productWebRequest.getDiscounts(), productWebRequest.getPrice()));
         setSizeColorAmount(modelAndView, productWebRequest.getProductColorSizes());
@@ -136,7 +137,7 @@ public class ProductAdminController {
 
     private void setSameProduct(ModelAndView modelAndView, Long categoryId) {
         String id = String.valueOf(categoryId);
-        BriefProductFilterWebRequest request = restTemplate.getForObject("http://localhost:8888/web/products?page=0&size=7&sort=date-des&categoryId=" + id, BriefProductFilterWebRequest.class);
+        BriefProductFilterWebRequest request = restTemplate.getForObject(APIConstant.WEB_URI + "products?page=0&size=7&sort=date-des&categoryId=" + id, BriefProductFilterWebRequest.class);
         for (BriefProductWebRequest p : request.getProducts()) {
             p.setPrice(countPrice(p.getDiscount(), p.getPrice()));
         }

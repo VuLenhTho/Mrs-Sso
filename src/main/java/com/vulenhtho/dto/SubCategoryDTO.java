@@ -16,5 +16,4 @@ public class SubCategoryDTO {
 
     private String categoryName;
 
-    private String linkToPage;
 }

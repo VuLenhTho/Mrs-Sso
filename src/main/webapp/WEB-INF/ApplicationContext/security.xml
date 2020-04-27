@@ -7,17 +7,17 @@
             http://www.springframework.org/schema/security
             http://www.springframework.org/schema/security/spring-security-4.2.xsd">
 
-    <http auto-config="false" use-expressions="true" disable-url-rewriting="true" realm="Contact Realm">
-        <intercept-url pattern="/admin/**" access="hasAnyRole('ROLE_ADMIN')"/>
-        <intercept-url pattern="/sale/**" access="hasAnyRole('ROLE_SALE')"/>
-        <intercept-url pattern="/**" access="permitAll()"/>
+<http auto-config="false" use-expressions="true" disable-url-rewriting="true" realm="Contact Realm">
+    <intercept-url pattern="/admin/**" access="hasAnyRole('ROLE_ADMIN')"/>
+    <intercept-url pattern="/sale/**" access="hasAnyRole('ROLE_SALE')"/>
+    <intercept-url pattern="/**" access="permitAll()"/>
 
 
-        <access-denied-handler error-page="/accessDenied"/>
-        <form-login login-page="/login"
-                    username-parameter="userName"
-                    password-parameter="password"
-                    login-processing-url="/login"
+    <access-denied-handler error-page="/accessDenied"/>
+    <form-login login-page="/login"
+                username-parameter="userName"
+                password-parameter="password"
+                login-processing-url="/login"
                     authentication-success-handler-ref="customSuccessHandler"
                     authentication-failure-url="/login"/>
         <session-management invalid-session-url="/home"/>

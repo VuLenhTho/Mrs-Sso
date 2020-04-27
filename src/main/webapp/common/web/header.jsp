@@ -75,7 +75,8 @@
                                             <div class="content">
                                                 <ul class="menu-col">
                                                     <c:forEach items="${category.subCategoryDTOS}" var="subCategory">
-                                                        <li><a href="${subCategory.linkToPage}">${subCategory.name}</a>
+                                                        <li>
+                                                            <a href="<c:url value="/products?subCategoryId=${subCategory.id}"/>">${subCategory.name}</a>
                                                         </li>
                                                     </c:forEach>
                                                 </ul>

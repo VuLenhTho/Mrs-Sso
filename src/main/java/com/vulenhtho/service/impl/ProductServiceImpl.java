@@ -1,5 +1,6 @@
 package com.vulenhtho.service.impl;
 
+import com.vulenhtho.config.APIConstant;
 import com.vulenhtho.dto.ProductColorSizeDTO;
 import com.vulenhtho.dto.request.FilterProductRequest;
 import com.vulenhtho.dto.request.ListProductPageRequest;
@@ -7,10 +8,8 @@ import com.vulenhtho.dto.request.PageHeaderDTO;
 import com.vulenhtho.dto.request.WebHomeRequest;
 import com.vulenhtho.dto.response.ProductWebResponse;
 import com.vulenhtho.dto.response.ProductWebWindowViewResponseDTO;
-import com.vulenhtho.model.request.DiscountRequest;
 import com.vulenhtho.model.response.ProductFilterWebResponse;
 import com.vulenhtho.service.ProductService;
-import com.vulenhtho.service.SecurityService;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -27,9 +26,9 @@ import java.util.*;
 public class ProductServiceImpl implements ProductService {
 
     private RestTemplate restTemplate;
-    private SecurityService securityService;
+    private SecurityServiceImpl securityService;
 
-    public ProductServiceImpl(RestTemplate restTemplate, SecurityService securityService) {
+    public ProductServiceImpl(RestTemplate restTemplate, SecurityServiceImpl securityService) {
         this.restTemplate = restTemplate;
         this.securityService = securityService;
     }
@@ -37,18 +36,14 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ModelAndView getWelcomePage() {
         ModelAndView modelAndView = new ModelAndView("/web/home");
-        ResponseEntity<WebHomeRequest> allPageDataResponse = restTemplate.exchange("http://localhost:8888/api/web/welcome-page"
+        ResponseEntity<WebHomeRequest> allPageDataResponse = restTemplate.exchange(APIConstant.WEB_URI + "/welcome-page"
                 , HttpMethod.GET, new HttpEntity<WebHomeRequest>(securityService.getHeaders()), WebHomeRequest.class);
         //todo
         if (!HttpStatus.OK.equals(allPageDataResponse.getStatusCode())) {
             return new ModelAndView("/web/home");
         }
         WebHomeRequest webHomeRequest = allPageDataResponse.getBody();
-        webHomeRequest.getHeaderResponse().getCategoryDTOS().forEach(categoryDTO -> {
-            categoryDTO.getSubCategoryDTOS().forEach(subCategoryDTO -> {
-                subCategoryDTO.setLinkToPage("/products?subCategoryId=" + subCategoryDTO.getId());
-            });
-        });
+
         webHomeRequest.getTrendProductList().forEach(product -> product.setVnPrice(convertToVnCurrency(product.getPrice())));
         webHomeRequest.getHotProductList().forEach(product -> product.setVnPrice(convertToVnCurrency(product.getPrice())));
 
@@ -60,14 +55,14 @@ public class ProductServiceImpl implements ProductService {
         return modelAndView;
     }
 
-    private String convertToVnCurrency(Long longPrice){
+    private String convertToVnCurrency(Long longPrice) {
         Locale localeVN = new Locale("vi", "VN");
         NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
 
         return currencyVN.format(longPrice);
     }
 
-    private void setHeaderToModelAndView(ModelAndView modelAndView, PageHeaderDTO pageHeaderDTO){
+    private void setHeaderToModelAndView(ModelAndView modelAndView, PageHeaderDTO pageHeaderDTO) {
         modelAndView.addObject("category", pageHeaderDTO.getCategoryDTOS());
         modelAndView.addObject("topSale", pageHeaderDTO.getDiscounts());
     }
@@ -75,7 +70,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ModelAndView getListProductPage(FilterProductRequest filter) {
         ModelAndView modelAndView = new ModelAndView("web/product/product-list");
-        String url = "http://localhost:8888/api/web/products/window-view?page=" + (Integer.parseInt(filter.getPage()) - 1) + "&size=" + filter.getSize();
+        String url = APIConstant.WEB_URI + "/products/window-view?page=" + (Integer.parseInt(filter.getPage()) - 1) + "&size=" + filter.getSize();
         if (StringUtils.isEmpty(filter.getSearch())) {
             if (!StringUtils.isEmpty(filter.getSubCategoryId())) url += "&subCategoryId=" + filter.getSubCategoryId();
         } else {
@@ -88,41 +83,16 @@ public class ProductServiceImpl implements ProductService {
                 , new HttpEntity<ListProductPageRequest>(securityService.getHeaders()), ListProductPageRequest.class);
 
         //todo
-        if (!HttpStatus.OK.equals(productPageRequest.getStatusCode())){
+        if (!HttpStatus.OK.equals(productPageRequest.getStatusCode())) {
             return new ModelAndView("web/product/product-list");
         }
         List<ProductWebWindowViewResponseDTO> productWindowViews = productPageRequest.getBody().getProducts();
         productWindowViews.forEach(product -> product.setVnPrice(convertToVnCurrency(product.getPrice())));
 
-        Comparator<ProductWebWindowViewResponseDTO> comparator = null;
-        if ( "price-des".equals(filter.getSort()) ) {
-            comparator = (o1, o2) -> {
-                if (o1.getPrice() < o2.getPrice()) {
-                    return 1;
-                } else if (o1.getPrice().equals(o2.getPrice())) {
-                    return 0;
-                } else {
-                    return -1;
-                }
-            };
-        }else if ("price-asc".equals(filter.getSort())) {
-            comparator = (o1, o2) -> {
-                if (o1.getPrice() > o2.getPrice()) {
-                    return 1;
-                } else if (o1.getPrice().equals(o2.getPrice())) {
-                    return 0;
-                } else {
-                    return -1;
-                }
-            };
-        }
-        if (comparator != null){
-            productWindowViews.sort(comparator);
-        }
         modelAndView.addObject("productList", productWindowViews);
         modelAndView.addObject("totalPage", productPageRequest.getBody().getTotalPage());
         modelAndView.addObject("currentPage", productPageRequest.getBody().getCurrentPage());
-       setHeaderToModelAndView(modelAndView, productPageRequest.getBody().getHeader());
+        setHeaderToModelAndView(modelAndView, productPageRequest.getBody().getHeader());
 
         ProductFilterWebResponse filterWebResponse = new ProductFilterWebResponse(filter.getSearch(), filter.getSort(), filter.getSubCategoryId());
         modelAndView.addObject("filter", filterWebResponse);
@@ -132,22 +102,24 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ModelAndView getDetailProductPage(Long productId) {
         ModelAndView modelAndView = new ModelAndView("/web/product/product-detail");
-        ResponseEntity<ProductWebResponse> productResponseEntity = restTemplate.exchange("http://localhost:8888/api/web/product/" + productId
+        ResponseEntity<ProductWebResponse> productResponseEntity = restTemplate.exchange(APIConstant.WEB_URI + "/product/" + productId
                 , HttpMethod.GET, new HttpEntity<ProductWebResponse>(securityService.getHeaders()), ProductWebResponse.class);
 
         //todo
-        if (!HttpStatus.OK.equals(productResponseEntity.getStatusCode())){
+        if (!HttpStatus.OK.equals(productResponseEntity.getStatusCode())) {
             return new ModelAndView("/web/product/product-detail");
         }
         ProductWebResponse productWebResponse = productResponseEntity.getBody();
         productWebResponse.setVnPrice(convertToVnCurrency(productWebResponse.getPrice()));
-        productWebResponse.setVnOriginalPrice(convertToVnCurrency(productWebResponse.getOriginalPrice()));
-
+        if (productWebResponse.getOriginalPrice() != null) {
+            productWebResponse.setVnOriginalPrice(convertToVnCurrency(productWebResponse.getOriginalPrice()));
+        }
         modelAndView.addObject("product", productWebResponse);
         setSizeColorAmount(modelAndView, productWebResponse.getProductColorSizeDTOS());
         setPhotoList(modelAndView, productWebResponse.getPhotoList());
         setProductHasSameSubCategory(modelAndView, productWebResponse.getSubCategoryDTO().getId());
-
+        setHeaderToModelAndView(modelAndView, productResponseEntity.getBody().getHeader());
+        modelAndView.addObject("productStatus", productWebResponse.getStatus());
         return modelAndView;
     }
 
@@ -168,22 +140,12 @@ public class ProductServiceImpl implements ProductService {
 
     private void setPhotoList(ModelAndView modelAndView, String photos) {
         String[] photoList = photos.split(",");
-        List<String> bigImg = new ArrayList<>();
-        List<String> smImg = new ArrayList<>();
-        //big img first, after is small img
-        for (int i = 0; i < photoList.length; i++) {
-            if (i % 2 == 0) {
-                bigImg.add(photoList[i]);
-            } else {
-                smImg.add(photoList[i]);
-            }
-        }
+        List<String> bigImg = new ArrayList<>(Arrays.asList(photoList));
         modelAndView.addObject("bigImg", bigImg);
-        modelAndView.addObject("smImg", smImg);
     }
 
     private void setProductHasSameSubCategory(ModelAndView modelAndView, Long subCategoryId) {
-        ResponseEntity<ListProductPageRequest> productPageRequest = restTemplate.exchange("http://localhost:8888/api/web/products/window-view?page=0&size=7&subCategoryId=" + subCategoryId
+        ResponseEntity<ListProductPageRequest> productPageRequest = restTemplate.exchange(APIConstant.WEB_URI + "/products/window-view?page=0&size=7&subCategoryId=" + subCategoryId
                 , HttpMethod.GET, new HttpEntity<ListProductPageRequest>(securityService.getHeaders()), ListProductPageRequest.class);
 
         List<ProductWebWindowViewResponseDTO> products = productPageRequest.getBody().getProducts();

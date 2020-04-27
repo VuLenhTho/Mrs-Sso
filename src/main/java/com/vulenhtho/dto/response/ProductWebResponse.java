@@ -2,9 +2,12 @@ package com.vulenhtho.dto.response;
 
 import com.vulenhtho.dto.*;
 import com.vulenhtho.dto.enumeration.ProductStatus;
+import com.vulenhtho.dto.request.PageHeaderDTO;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,13 +23,15 @@ public class ProductWebResponse {
 
     private String vnPrice;
 
+    //has value if product has discount
     private Long originalPrice;
 
     private String vnOriginalPrice;
 
     private String shortDescription;
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private ProductStatus status;
 
     private String photoList;
 
@@ -43,5 +48,7 @@ public class ProductWebResponse {
     private Set<DiscountDTO> discountDTOS = new HashSet<>();
 
     private Set<SizeDTO> sizeDTOS = new HashSet<>();
+
+    private PageHeaderDTO header;
 
 }

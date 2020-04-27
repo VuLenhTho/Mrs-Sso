@@ -1,38 +1,21 @@
 package com.vulenhtho.controller.web;
 
 import com.vulenhtho.dto.request.FilterProductRequest;
-import com.vulenhtho.dto.response.ProductWebResponse;
-import com.vulenhtho.model.request.*;
-import com.vulenhtho.model.response.ProductFilterWebResponse;
 import com.vulenhtho.service.ProductService;
-import com.vulenhtho.service.SecurityService;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import com.vulenhtho.service.impl.SecurityServiceImpl;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
 @Controller
 public class ProductController {
-    private RestTemplate restTemplate;
 
-    private SecurityService securityService;
+    private final ProductService productService;
 
-    private ProductService productService;
-
-    public ProductController(RestTemplate restTemplate, SecurityService securityService, ProductService productService) {
-        this.restTemplate = restTemplate;
-        this.securityService = securityService;
+    public ProductController(RestTemplate restTemplate, SecurityServiceImpl securityService, ProductService productService) {
         this.productService = productService;
     }
 
