@@ -1,72 +1,44 @@
 package com.vulenhtho.controller.web;
 
-import com.vulenhtho.model.request.ProductWebRequest;
-import com.vulenhtho.model.response.CartResponse;
-import com.vulenhtho.model.response.ItemResponse;
+import com.vulenhtho.dto.ItemDTO;
+import com.vulenhtho.service.ProductService;
+import com.vulenhtho.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 public class CartController {
-    private RestTemplate restTemplate;
+
+    private final ProductService productService;
+
+    private final UserService userService;
 
     @Autowired
-    public CartController(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
+    public CartController(ProductService productService, UserService userService) {
+        this.productService = productService;
+        this.userService = userService;
     }
 
-    @GetMapping("/web/cart")
+    @GetMapping("/cart")
     public ModelAndView cart() {
         return new ModelAndView("cart");
     }
 
-    @GetMapping("/web/addToCart")
-    public ModelAndView addToCart(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        if (req.getParameter("productId") != null) {
-            ProductWebRequest product = restTemplate.getForObject
-                    ("http://localhost:8888/web/product/"
-                                    + req.getParameter("productId")
-                            , ProductWebRequest.class);
-            if (product != null) {
-                HttpSession session = req.getSession();
-                if (session.getAttribute("cart") == null) {
-                    CartResponse cartResponse = new CartResponse();
-                    List<ItemResponse> itemList = new ArrayList<>();
-                    ItemResponse item = new ItemResponse(
-                            product, product.getPrice(), 1L);
-                    itemList.add(item);
-                    cartResponse.setItems(itemList);
-                    session.setAttribute("cart", cartResponse);
-                } else {
-                    CartResponse cartResponse = (CartResponse) session.getAttribute("cart");
-                    List<ItemResponse> itemList = cartResponse.getItems();
+    @GetMapping("/addToCart")
+    public ResponseEntity<?> addToCart(@RequestParam Long price, @RequestParam Long productId
+            , @RequestParam Long colorId, @RequestParam Long sizeId
+            , @RequestParam Long quantity) {
 
-                    boolean checkExist = false;
-                    for (ItemResponse item : itemList) {
-                        if (item.getProduct().getId().equals(product.getId())) {
-                            item.setAmount(item.getAmount() + 1);
-                            checkExist = true;
-                        }
-                    }
-                    if (!checkExist) {
-                        ItemResponse itemResponse = new ItemResponse(product, product.getPrice(), 1L);
-                        itemList.add(itemResponse);
-                    }
-                    session.setAttribute("cart", cartResponse);
-                }
-            }
-            System.out.println("vào");
+        if (!userService.isLogged()) {
+            return ResponseEntity.badRequest().build();
         }
-        return new ModelAndView("cart");
+        ItemDTO itemDTO = new ItemDTO(productId, colorId, sizeId, price, quantity);
+
+        productService.addProductToCart(itemDTO);
+        return ResponseEntity.ok().build();
     }
 }

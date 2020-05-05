@@ -7,6 +7,8 @@
 
 <head>
     <%@include file="/common/web/head.jsp" %>
+    <!-- Sweetalert -->
+    <link href="<c:url value="/template/assets/plugins/sweetalert/css/sweetalert.css"/>" rel="stylesheet">
 </head>
 
 <body>
@@ -19,9 +21,9 @@
             <div class="col-lg-12">
                 <h2></h2>
                 <ul class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="<c:url value="/home"/>">Trang chủ</a></li>
+                    <li class="breadcrumb-item"><a href="/home">Trang chủ</a></li>
                     <li class="breadcrumb-item"><a
-                            href="<c:url value="/products?subCategoryId=${product.subCategoryDTO.id}"/>">${product.subCategoryDTO.name}</a>
+                            href="/products?subCategoryId=${product.subCategoryDTO.id}"> ${product.subCategoryDTO.name}</a>
                     </li>
                     <li class="breadcrumb-item active">${product.name}</li>
                 </ul>
@@ -38,10 +40,12 @@
             <div class="col-xl-5 col-lg-5 col-md-6">
                 <div id="carousel-example-1" class="single-product-slider carousel slide" data-ride="carousel">
                     <div class="carousel-inner" role="listbox">
-                        <div class="carousel-item active"> <img class="d-block w-100" src="${bigImg[0]}" alt="First slide"> </div>
+                        <div class="carousel-item active"><img class="d-block w-100" src="${bigImg[0]}"
+                                                               alt="First slide"></div>
                         <c:forEach items="${bigImg}" var="img">
                             <c:if test="${img != bigImg[0]}">
-                                <div class="carousel-item"> <img class="d-block w-100" src="${img}" alt="First slide"> </div>
+                                <div class="carousel-item"><img class="d-block w-100" src="${img}" alt="First slide">
+                                </div>
                             </c:if>
                         </c:forEach>
                     </div>
@@ -55,12 +59,12 @@
                     </a>
                     <ol class="carousel-indicators">
                         <li data-target="#carousel-example-1" data-slide-to="0" class="active">
-                            <img class="d-block w-100 img-fluid" src="${smImg[0]}" alt="" />
+                            <img class="d-block w-100 img-fluid" src="${smImg[0]}" alt=""/>
                         </li>
                         <c:forEach items="${smImg}" var="img">
                             <c:if test="${img != smImg[0]}">
                                 <li data-target="#carousel-example-1" data-slide-to="1">
-                                    <img class="d-block w-100 img-fluid" src="${img}" alt="" />
+                                    <img class="d-block w-100 img-fluid" src="${img}" alt=""/>
                                 </li>
                             </c:if>
                         </c:forEach>
@@ -93,7 +97,7 @@
                         <li>
                             <div class="form-group size-st">
                                 <label class="size-label">Size</label>
-                                <select id="size"  class="selectpicker show-tick form-control">
+                                <select id="size" class="selectpicker show-tick form-control">
                                     <option value="0" selected="selected">Chọn size</option>
                                     <c:forEach items="${product.sizeDTOS}" var="size">
                                         <option value="${size.id}">${size.name}</option>
@@ -106,7 +110,7 @@
                         <li>
                             <div class="form-group size-st">
                                 <label class="size-label">Màu</label>
-                                <select id="color" class="selectpicker show-tick form-control" >
+                                <select id="color" class="selectpicker show-tick form-control">
                                     <option value="0" selected="selected">Chọn màu</option>
                                     <c:forEach items="${product.colorDTOS}" var="color">
                                         <option value="${color.id}">${color.name}</option>
@@ -118,15 +122,19 @@
                         <li>
                             <div class="form-group quantity-box">
                                 <label class="control-label">Số lượng</label>
-                                <input class="form-control" id="amount" value="0" max="30" min="0" type="number">
+                                <input class="form-control" id="quantityPurchased" value="0" max="30" min="0"
+                                       type="number">
                             </div>
                         </li>
                     </ul>
                     <div class="price-box-bar">
-                        <div class="cart-and-bay-btn">
-                            <a class="btn hvr-hover" data-fancybox-close="" href="#">Thêm vào giỏ hàng</a>
-                        </div>
+                        <button id="btnAddToCart" type="button" class="btn btn-danger"><span class="btn-icon-right"><i
+                                class="fa fa-shopping-cart"></i>
+                            Thêm vào giỏ hàng
+                        </span>
+                        </button>
                     </div>
+
 
                     <div class="add-to-btn">
                         <div class="add-comp">
@@ -168,7 +176,6 @@
                             </div>
                         </a>
                     </c:forEach>
-
                 </div>
             </div>
         </div>
@@ -200,16 +207,19 @@
 <script src="<c:url value="/shoptemplate/js/form-validator.min.js"/>"></script>
 <script src="<c:url value="/shoptemplate/js/contact-form-script.js"/>"></script>
 <script src="<c:url value="/shoptemplate/js/custom.js"/>"></script>
+<script src="<c:url value="/template/assets/plugins/sweetalert/js/sweetalert.min.js"/>"></script>
+
 <%--<script src="https://code.jquery.com/jquery-latest.js"></script>--%>
 
 <script>
-    var size = document.getElementById("size").value;
-    var color = document.getElementById("color").value;
-    var sizes = ${sizes};
-    var colors = ${colors};
-    var quantity = ${quantity};
-    var productStatus = '${productStatus}';
-    var productStatusMessage = document.getElementById("status");
+    let size = document.getElementById("size").value;
+    let color = document.getElementById("color").value;
+    let sizes = ${sizes};
+    let colors = ${colors};
+    let quantity = ${quantity};
+    let productStatus = '${productStatus}';
+    let productStatusMessage = document.getElementById("status");
+    let btnAddToCart = document.getElementById("btnAddToCart");
     handleStatus();
 
     $(function () {
@@ -227,24 +237,63 @@
     function handleStatus() {
         if (productStatus === 'COMING_SOON') {
             productStatusMessage.innerHTML = "Sắp có";
+            btnAddToCart.disabled = true;
             return;
         }
         if (productStatus === 'OUT_OF_STOCK') {
             productStatusMessage.innerHTML = "Hết hàng";
+            btnAddToCart.disabled = true;
             return;
         }
         if (size == 0 || color == 0) {
             productStatusMessage.innerHTML = "";
+            btnAddToCart.disabled = true;
             return;
         }
         for (var i = 0; i < sizes.length; i++) {
             if (sizes[i] == size && colors[i] == color && quantity[i] > 0) {
                 productStatusMessage.innerHTML = "Còn hàng";
+                btnAddToCart.disabled = false;
                 return;
             }
         }
         productStatusMessage.innerHTML = "Hết hàng";
+        btnAddToCart.disabled = true;
     }
+</script>
+<script>
+    document.getElementById("btnAddToCart").onclick = function () {
+        addToCart()
+    };
+
+    function addToCart() {
+        let productInfo = {
+            productId: '${product.id}',
+            colorId: document.getElementById("color").value,
+            sizeId: document.getElementById("size").value,
+            quantity: document.getElementById("quantityPurchased").value,
+            price: '${product.price}'
+        }
+
+        addProductToCart(productInfo);
+    }
+
+    function addProductToCart(productInfo) {
+        $.ajax({
+            url: ('http://localhost:8080/addToCart?productId=' + productInfo.productId + '&colorId=' + productInfo.colorId
+                + '&sizeId=' + productInfo.sizeId + '&price=' + productInfo.price + '&quantity=' + productInfo.quantity),
+            type: 'GET',
+            contentType: 'application/json',
+            dataType: 'text',
+            success: function () {
+                swal("Thành công!", "Sản phẩm đã được thêm vào giỏ hàng", "success")
+            },
+            error: function () {
+                swal("Có lỗi xảy ra!!", "Liên hệ nhân viên bán hàng để được hỗ trợ!", "error")
+            }
+        });
+    }
+
 </script>
 </body>
 

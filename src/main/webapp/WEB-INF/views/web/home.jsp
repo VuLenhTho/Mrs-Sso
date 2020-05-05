@@ -60,8 +60,9 @@
             <div class="row special-list">
                 <c:forEach items="${trendProducts}" var="trendProduct">
                     <div class="col-lg-3 col-md-6 special-grid top-featured">
-                        <a href="/product/${trendProduct.id}">
-                            <div class="products-single fix">
+                        <div class="products-single fix">
+                            <a href="/product/${trendProduct.id}">
+
                                 <div class="box-img-hover">
                                     <c:if test="${trendProduct.isDiscount == true}">
                                         <div class="type-lb">
@@ -87,16 +88,16 @@
                                         <h4 style="color: black;display: inline-block"> ${trendProduct.vnPrice}</h4>
                                     </c:if>
                                 </div>
-
-                            </div>
-                        </a>
+                            </a>
+                        </div>
                     </div>
                 </c:forEach>
 
                 <c:forEach items="${bestSaleProducts}" var="bestSale">
                     <div class="col-lg-3 col-md-6 special-grid best-seller">
-                        <a href="/web/product/${bestSale.id}">
-                            <div class="products-single fix">
+                        <div class="products-single fix">
+                            <a href="/web/product/${bestSale.id}">
+
                                 <div class="box-img-hover">
                                     <c:if test="${bestSale.isDiscount == true}">
                                         <div class="type-lb">
@@ -115,10 +116,10 @@
                                     </c:if>
                                     <c:if test="${bestSale.isDiscount != true}">
                                         <h4 style="color: black;display: inline-block"> ${bestSale.vnPrice}</h4>
-                                    </c:if></div>
-
-                            </div>
-                        </a>
+                                    </c:if>
+                                </div>
+                            </a>
+                        </div>
                     </div>
                 </c:forEach>
             </div>

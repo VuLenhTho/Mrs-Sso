@@ -1,6 +1,8 @@
 package com.vulenhtho.service.impl;
 
 import com.vulenhtho.config.APIConstant;
+import com.vulenhtho.dto.CartDTO;
+import com.vulenhtho.dto.ItemDTO;
 import com.vulenhtho.dto.ProductColorSizeDTO;
 import com.vulenhtho.dto.request.FilterProductRequest;
 import com.vulenhtho.dto.request.ListProductPageRequest;
@@ -9,11 +11,14 @@ import com.vulenhtho.dto.request.WebHomeRequest;
 import com.vulenhtho.dto.response.ProductWebResponse;
 import com.vulenhtho.dto.response.ProductWebWindowViewResponseDTO;
 import com.vulenhtho.model.response.ProductFilterWebResponse;
+import com.vulenhtho.security.CustomUserDetail;
 import com.vulenhtho.service.ProductService;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
@@ -153,5 +158,51 @@ public class ProductServiceImpl implements ProductService {
 
         modelAndView.addObject("sameCategoryProducts", products);
     }
+
+    @Override
+    public void addProductToCart(ItemDTO itemDTO) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (isLoggedAndAlreadyExistCart(authentication)) {
+            addProductToAlreadyExistCart(itemDTO);
+        } else {
+            addProductToNewCart(itemDTO);
+        }
+    }
+
+    private boolean isLoggedAndAlreadyExistCart(Authentication authentication) {
+        return authentication != null && authentication.getPrincipal() instanceof CustomUserDetail
+                && ((CustomUserDetail) authentication.getPrincipal()).getCartDTO() != null;
+    }
+
+    private void addProductToNewCart(ItemDTO itemDTO) {
+        CartDTO cartDTO = new CartDTO();
+        cartDTO.getItemList().add(itemDTO);
+
+        if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof CustomUserDetail) {
+            ((CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).setCartDTO(cartDTO);
+        }
+    }
+
+    private void addProductToAlreadyExistCart(ItemDTO itemDTO) {
+        Set<ItemDTO> itemDTOSet = ((CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCartDTO().getItemList();
+        boolean productNotExistInCart = true;
+        for (ItemDTO item : itemDTOSet) {
+            if (isSameProductByColorAndSize(item, itemDTO)) {
+                Long newQuantity = item.getQuantity() + itemDTO.getQuantity();
+                item.setQuantity(newQuantity);
+                productNotExistInCart = false;
+            }
+        }
+        if (productNotExistInCart) {
+            itemDTOSet.add(itemDTO);
+        }
+        ((CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCartDTO().setItemList(itemDTOSet);
+    }
+
+    private boolean isSameProductByColorAndSize(ItemDTO itemDTO1, ItemDTO itemDTO2) {
+        return itemDTO1.getProductId().equals(itemDTO2.getProductId()) && itemDTO1.getColorId().equals(itemDTO2.getColorId())
+                && itemDTO1.getSizeId().equals(itemDTO2.getSizeId());
+    }
+
 
 }

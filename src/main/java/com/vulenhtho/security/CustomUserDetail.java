@@ -1,5 +1,6 @@
 package com.vulenhtho.security;
 
+import com.vulenhtho.dto.CartDTO;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,6 +16,8 @@ public class CustomUserDetail extends User {
     private String token;
 
     private String type;
+
+    private CartDTO cartDTO;
 
     public CustomUserDetail(String username, String password, Collection<? extends GrantedAuthority> authorities) {
         super(username, password, authorities);

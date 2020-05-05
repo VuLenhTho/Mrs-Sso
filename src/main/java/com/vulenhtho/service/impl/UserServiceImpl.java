@@ -12,12 +12,15 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -146,5 +149,15 @@ public class UserServiceImpl implements UserService {
         } else {
             return Constant.CRUD_RESULT.ERROR;
         }
+    }
+
+    @Override
+    public boolean isLogged() {
+        Collection<? extends GrantedAuthority> authoritySet = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+        return authoritySet.stream().anyMatch(role -> hasARoleInRoleList(role.getAuthority()));
+    }
+
+    private boolean hasARoleInRoleList(String role) {
+        return Constant.ROLE_ADMIN.equals(role) || Constant.ROLE_SALE.equals(role) || Constant.ROLE_USER.equals(role);
     }
 }

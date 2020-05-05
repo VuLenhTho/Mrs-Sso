@@ -13,10 +13,9 @@ public class SecurityServiceImpl implements SecurityService {
 
     public String getUserName() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null) {
-            if (authentication.getPrincipal() instanceof CustomUserDetail) {
-                return ((CustomUserDetail) authentication.getPrincipal()).getFullName();
-            }
+        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetail) {
+            return ((CustomUserDetail) authentication.getPrincipal()).getFullName();
+
         }
         return null;
     }

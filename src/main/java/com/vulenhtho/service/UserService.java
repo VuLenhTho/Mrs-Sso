@@ -10,4 +10,6 @@ public interface UserService {
     ChangeUserAndResult createByAdmin(HttpServletRequest request);
 
     String deletesByAdmin(HttpServletRequest request);
+
+    boolean isLogged();
 }

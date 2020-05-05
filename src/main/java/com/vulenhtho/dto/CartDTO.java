@@ -6,8 +6,8 @@ import lombok.Setter;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -28,7 +28,5 @@ public class CartDTO {
 
     private Long finalMoney;
 
-    private List<ItemDTO> itemList = new ArrayList<>();
-
-    private List<Long> discountIds = new ArrayList<>();
+    private Set<ItemDTO> itemList = new HashSet<>();
 }

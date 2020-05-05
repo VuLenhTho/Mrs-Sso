@@ -6,6 +6,13 @@
 
 <head>
     <%@include file="/common/web/head.jsp" %>
+    <style>
+        #addCartButton {
+            display: block;
+            background-color: black;
+            border-bottom-color: black;
+        }
+    </style>
 </head>
 
 <body>
@@ -127,8 +134,8 @@
                                         <c:forEach items="${productList}" var="product">
 
                                             <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4">
-                                                <a href="/product/${product.id}">
-                                                    <div class="products-single fix">
+                                                <div class="products-single fix">
+                                                    <a href="/product/${product.id}">
                                                         <div class="box-img-hover">
                                                             <c:if test="${product.isDiscount == true}">
                                                                 <div class="type-lb">
@@ -152,15 +159,11 @@
                                                             <c:if test="${product.isDiscount != true}">
                                                                 <h4>${product.vnPrice}</h4>
                                                             </c:if>
-                                                                <%--<a href="/web/addToCart?productId=12"> cart</a>--%>
                                                         </div>
-                                                    </div>
-                                                </a>
-
+                                                    </a>
+                                                </div>
                                             </div>
-
                                         </c:forEach>
-
                                     </div>
                                 </div>
                             </div>

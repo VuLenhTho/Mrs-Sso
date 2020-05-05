@@ -4,21 +4,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="charset=UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%@include file="/common/admin/head.jsp" %>
     <c:if test="${user == null}">
         <title>Thêm tài khoản</title>
     </c:if>
     <title>Cập nhật tài khoản</title>
-    <!-- Favicon icon -->
-    <link rel="icon" type="image/png" sizes="16x16" href="<c:url value="/template/assets/images/favicon.png"/>">
-    <!-- wysihtml5 -->
-    <link rel="stylesheet" href="<c:url value="/template/assets/plugins/wysihtml5/css/bootstrap-wysihtml5.css"/>">
-    <!-- Custom Stylesheet -->
-    <link href="<c:url value="/template/css/style.css"/>" rel="stylesheet">
-    <script src="<c:url value="/template/js/modernizr-3.6.0.min.js"/>"></script>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jQuery/2.1.3/jQuery.min.js"> </script>
+
 </head>
 <body class="v-light vertical-nav fix-header fix-sidebar">
 <div id="preloader">
