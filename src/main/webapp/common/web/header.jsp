@@ -91,7 +91,7 @@
                     <li class="dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Cửa hàng</a>
                         <ul class="dropdown-menu">
-                            <li><a href="#">Giỏ hàng</a></li>
+                            <li><a href="/cart">Giỏ hàng</a></li>
                             <li><a href="#">Giao hàng và thanh toán</a></li>
                             <li><a href="#">Chính sách bảo hành</a></li>
                             <li><a href="#contact">Giới thiệu</a></li>
@@ -107,45 +107,14 @@
             <div class="attr-nav">
                 <ul>
                     <li class="search"><a href="#"><i class="fa fa-search"></i></a></li>
-                    <li class="side-menu"><a href="#">
-                        <i class="fa fa-shopping-bag"></i>
-                        <span class="badge">3</span>
+                    <li><a href="/cart" data-toggle="tooltip" data-placement="right" title="Giỏ hàng">
+                        <i class="fa fa-shopping-cart"></i>
                     </a></li>
                 </ul>
             </div>
             <!-- End Atribute Navigation -->
         </div>
-        <!-- Start Side Menu -->
-        <div class="side">
-            <a href="#" class="close-side"><i class="fa fa-times"></i></a>
-            <li class="cart-box">
-                <ul class="cart-list">
-                    <li>
-                        <a href="#" class="photo"><img src="<c:url value="/shoptemplate/images/img-pro-01.jpg"/>"
-                                                       class="cart-thumb" alt=""/></a>
-                        <h6><a href="#">Delica omtantur </a></h6>
-                        <p>1x - <span class="price">$80.00</span></p>
-                    </li>
-                    <li>
-                        <a href="#" class="photo"><img src="<c:url value="/shoptemplate/images/img-pro-02.jpg"/>"
-                                                       class="cart-thumb" alt=""/></a>
-                        <h6><a href="#">Omnes ocurreret</a></h6>
-                        <p>1x - <span class="price">$60.00</span></p>
-                    </li>
-                    <li>
-                        <a href="#" class="photo"><img src="<c:url value="/shoptemplate/images/img-pro-03.jpg"/>"
-                                                       class="cart-thumb" alt=""/></a>
-                        <h6><a href="#">Agam facilisis</a></h6>
-                        <p>1x - <span class="price">$40.00</span></p>
-                    </li>
-                    <li class="total">
-                        <a href="#" class="btn btn-default hvr-hover btn-cart">VIEW CART</a>
-                        <span class="float-right"><strong>Total</strong>: $180.00</span>
-                    </li>
-                </ul>
-            </li>
-        </div>
-        <!-- End Side Menu -->
+
     </nav>
     <!-- End Navigation -->
 </header>

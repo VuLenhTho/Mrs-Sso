@@ -79,7 +79,7 @@
                                 </div>
 
                                 <div class="why-text">
-                                    <h4>${trendProduct.name}</h4>
+                                    <h4 style=" white-space: nowrap;text-overflow: ellipsis; overflow: hidden;">${trendProduct.name}</h4>
                                     <c:if test="${trendProduct.isDiscount == true}">
                                         <p style="display: inline-block">Chỉ còn:&nbsp;</p><h4
                                             style="color: red;display: inline-block"> ${trendProduct.vnPrice}</h4>

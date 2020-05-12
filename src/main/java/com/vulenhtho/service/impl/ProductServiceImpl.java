@@ -1,9 +1,7 @@
 package com.vulenhtho.service.impl;
 
 import com.vulenhtho.config.APIConstant;
-import com.vulenhtho.dto.CartDTO;
-import com.vulenhtho.dto.ItemDTO;
-import com.vulenhtho.dto.ProductColorSizeDTO;
+import com.vulenhtho.dto.*;
 import com.vulenhtho.dto.request.FilterProductRequest;
 import com.vulenhtho.dto.request.ListProductPageRequest;
 import com.vulenhtho.dto.request.PageHeaderDTO;
@@ -26,6 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.text.NumberFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -169,6 +168,7 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
+
     private boolean isLoggedAndAlreadyExistCart(Authentication authentication) {
         return authentication != null && authentication.getPrincipal() instanceof CustomUserDetail
                 && ((CustomUserDetail) authentication.getPrincipal()).getCartDTO() != null;
@@ -204,5 +204,65 @@ public class ProductServiceImpl implements ProductService {
                 && itemDTO1.getSizeId().equals(itemDTO2.getSizeId());
     }
 
+    @Override
+    public ModelAndView getCart() {
+        ModelAndView modelAndView = new ModelAndView("/web/cart");
+        if (!(SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof CustomUserDetail)) {
+            return new ModelAndView("/web/login");
+        }
+        CartDTO cartDTO = ((CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCartDTO();
+        if (cartDTO == null) {
+            return modelAndView;
+        }
+
+        HttpEntity<?> httpEntity = new HttpEntity<Object>(cartDTO.getItemList(), securityService.getHeaders());
+        ResponseEntity<ItemsForCartAndHeader> itemsForCartAndHeaderResponseEntity = restTemplate.exchange(APIConstant.WEB_URI + "/products/itemInCart"
+                , HttpMethod.POST, httpEntity, ItemsForCartAndHeader.class);
+
+        ItemsForCartAndHeader itemsForCartAndHeader = itemsForCartAndHeaderResponseEntity.getBody();
+        List<ItemShowInCartDTO> itemShowInCartDTOS = itemsForCartAndHeader.getItemShowInCartDTOS().stream().peek(item -> {
+            item.setVnPrice(convertToVnCurrency(item.getPrice()));
+            item.setVnTotalPrice(convertToVnCurrency(item.getTotalPrice()));
+        }).collect(Collectors.toList());
+
+        modelAndView.addObject("itemList", itemShowInCartDTOS);
+        setHeaderToModelAndView(modelAndView, itemsForCartAndHeaderResponseEntity.getBody().getHeaderDTO());
+        return modelAndView;
+    }
+
+    @Override
+    public Long updateProductQuantity(Long newQuantity, Long productId) {
+        long newTotalPrice = 0;
+        Set<ItemDTO> itemDTOSet = ((CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCartDTO().getItemList();
+        for (ItemDTO item : itemDTOSet) {
+            if (item.getProductId().equals(productId)) {
+                item.setQuantity(newQuantity);
+                newTotalPrice = newQuantity * item.getPrice();
+            }
+        }
+        ((CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCartDTO().setItemList(itemDTOSet);
+        return newTotalPrice;
+    }
+
+    @Override
+    public void updateCart(String productIds, String quantity, String productIdsToDelete) {
+        List<Long> ids = Arrays.stream(productIds.split(",")).filter(st -> !StringUtils.isEmpty(st)).map(Long::parseLong).collect(Collectors.toList());
+        List<Long> quantityList = Arrays.stream(quantity.split(",")).filter(st -> !StringUtils.isEmpty(st)).map(Long::parseLong).collect(Collectors.toList());
+        List<Long> productIdsToDel = Arrays.stream(productIdsToDelete.split(",")).filter(st -> !StringUtils.isEmpty(st)).map(Long::parseLong).collect(Collectors.toList());
+        Set<ItemDTO> itemDTOSet = ((CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCartDTO().getItemList();
+
+        productIdsToDel.forEach(idToDel -> {
+            itemDTOSet.removeIf(item -> item.getProductId().equals(idToDel));
+        });
+
+        for (int i = 0; i < ids.size(); i++) {
+            for (ItemDTO item : itemDTOSet) {
+                if (item.getProductId().equals(ids.get(i))) {
+                    item.setQuantity(quantityList.get(i));
+                }
+            }
+        }
+        ((CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCartDTO().setItemList(itemDTOSet);
+    }
 
 }

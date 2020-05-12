@@ -12,4 +12,10 @@ public interface ProductService {
     ModelAndView getDetailProductPage(Long productId);
 
     void addProductToCart(ItemDTO itemDTO);
+
+    ModelAndView getCart();
+
+    Long updateProductQuantity(Long newQuantity, Long productId);
+
+    void updateCart(String productIds, String quantity, String productIdsToDelete);
 }

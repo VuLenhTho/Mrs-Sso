@@ -4,6 +4,7 @@ import com.vulenhtho.dto.ItemDTO;
 import com.vulenhtho.service.ProductService;
 import com.vulenhtho.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,22 +24,32 @@ public class CartController {
         this.userService = userService;
     }
 
-    @GetMapping("/cart")
-    public ModelAndView cart() {
-        return new ModelAndView("cart");
-    }
-
     @GetMapping("/addToCart")
     public ResponseEntity<?> addToCart(@RequestParam Long price, @RequestParam Long productId
             , @RequestParam Long colorId, @RequestParam Long sizeId
             , @RequestParam Long quantity) {
 
         if (!userService.isLogged()) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        ItemDTO itemDTO = new ItemDTO(productId, colorId, sizeId, price, quantity);
+        try {
+            ItemDTO itemDTO = new ItemDTO(productId, colorId, sizeId, price, quantity);
 
-        productService.addProductToCart(itemDTO);
+            productService.addProductToCart(itemDTO);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    @GetMapping("/cart")
+    public ModelAndView getCart() {
+        return productService.getCart();
+    }
+
+    @GetMapping("/updateCart")
+    public ResponseEntity<?> updateCart(@RequestParam String productIds, @RequestParam String quantity, @RequestParam String productIdsToDelete) {
+        productService.updateCart(productIds, quantity, productIdsToDelete);
         return ResponseEntity.ok().build();
     }
 }

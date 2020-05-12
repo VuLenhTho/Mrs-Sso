@@ -122,7 +122,7 @@
                         <li>
                             <div class="form-group quantity-box">
                                 <label class="control-label">Số lượng</label>
-                                <input class="form-control" id="quantityPurchased" value="0" max="30" min="0"
+                                <input class="form-control" id="quantityPurchased" value="1" max="30" min="1"
                                        type="number">
                             </div>
                         </li>
@@ -285,11 +285,16 @@
             type: 'GET',
             contentType: 'application/json',
             dataType: 'text',
+            statusCode: {
+                401: function () {
+                    window.location = "http://localhost:8080/login";
+                },
+                400: function () {
+                    swal("Có lỗi xảy ra!!", "Liên hệ nhân viên bán hàng để được hỗ trợ!", "error")
+                }
+            },
             success: function () {
                 swal("Thành công!", "Sản phẩm đã được thêm vào giỏ hàng", "success")
-            },
-            error: function () {
-                swal("Có lỗi xảy ra!!", "Liên hệ nhân viên bán hàng để được hỗ trợ!", "error")
             }
         });
     }
