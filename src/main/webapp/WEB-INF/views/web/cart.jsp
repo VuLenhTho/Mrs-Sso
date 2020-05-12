@@ -99,13 +99,72 @@
             </div>
         </div>
 
+        <div class="row">
+            <div class="col-sm-6 col-lg-6 mb-3"></div>
+            <div class="col-sm-6 col-lg-6 mb-3">
+                <div class="checkout-address">
+                    <div class="title-left">
+                        <h3>Thông tin đơn hàng</h3>
+                    </div>
+                    <form class="needs-validation" novalidate>
+                        <div class="mb-3">
+                            <label for="firstName">Họ tên người nhận</label>
+                            <input type="text" class="form-control" id="firstName" placeholder="" value="" required>
+                            <div class="invalid-feedback"> Vui lòng điền mục này!</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="address">Địa chỉ nhận hàng</label>
+                            <input type="text" class="form-control" id="address" placeholder="" required>
+                            <div class="invalid-feedback"> Vui lòng điền mục này!</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="firstName">Số điện thoại người nhận</label>
+                            <input type="text" class="form-control" id="phone" placeholder="" value="" required>
+                            <div class="invalid-feedback"> Vui lòng điền mục này!</div>
+                        </div>
+                        <hr class="mb-4">
+                        <div class="title"><span>Phương thức thanh toán</span></div>
+                        <div class="d-block my-3">
+                            <div class="custom-control custom-radio">
+                                <input id="credit" name="paymentMethod" type="radio" class="custom-control-input"
+                                       checked required>
+                                <label class="custom-control-label" for="credit">Thanh toán khi nhận hàng</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input id="debit" name="paymentMethod" type="radio" class="custom-control-input"
+                                       required>
+                                <label class="custom-control-label" for="debit">Chuyển khoản</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input id="paypal" name="paymentMethod" type="radio" class="custom-control-input"
+                                       required>
+                                <label class="custom-control-label" for="paypal">Paypal</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="cc-name">Tên chủ tài khoản</label>
+                                <input type="text" class="form-control" id="cc-name" placeholder="" required>
+                                <div class="invalid-feedback"> Vui lòng điền mục này!</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="cc-number">Số tải khoản</label>
+                                <input type="text" class="form-control" id="cc-number" placeholder="" required>
+                                <div class="invalid-feedback"> Vui lòng điền mục này!</div>
+                            </div>
+                        </div>
+                        <hr class="mb-1">
+                    </form>
+                </div>
+            </div>
+        </div>
         <div class="row my-5">
             <div class="col-lg-8 col-sm-12"></div>
             <div class="col-lg-4 col-sm-12">
                 <div class="order-box">
                     <div class="d-flex gr-total">
                         <h5>Tổng tiền hàng</h5>
-                        <p class="ml-auto h5"> $ 388 </p>
+                        <p class="ml-auto h5"> ${costOfCart} </p>
                     </div>
                     <hr>
                 </div>

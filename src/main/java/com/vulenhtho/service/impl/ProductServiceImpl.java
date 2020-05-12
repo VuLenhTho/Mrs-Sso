@@ -225,7 +225,10 @@ public class ProductServiceImpl implements ProductService {
             item.setVnTotalPrice(convertToVnCurrency(item.getTotalPrice()));
         }).collect(Collectors.toList());
 
+        Long costOfCart = itemShowInCartDTOS.stream().mapToLong(ItemShowInCartDTO::getTotalPrice).sum();
+
         modelAndView.addObject("itemList", itemShowInCartDTOS);
+        modelAndView.addObject("costOfCart", convertToVnCurrency(costOfCart));
         setHeaderToModelAndView(modelAndView, itemsForCartAndHeaderResponseEntity.getBody().getHeaderDTO());
         return modelAndView;
     }
