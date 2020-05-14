@@ -13,6 +13,10 @@ import java.util.Collection;
 public class CustomUserDetail extends User {
     private String fullName;
 
+    private String phone;
+
+    private String address;
+
     private String token;
 
     private String type;

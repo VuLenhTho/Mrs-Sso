@@ -1,6 +1,6 @@
 package com.vulenhtho.dto;
 
-import com.vulenhtho.dto.enumeration.PaymentType;
+import com.vulenhtho.dto.enumeration.PaymentMethod;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,13 +20,17 @@ public class CartDTO {
     private String address;
 
     @Enumerated(EnumType.STRING)
-    private PaymentType paymentType;
+    private PaymentMethod paymentMethod;
 
-    private Long discountMoney;
+    private String accountName;
+
+    private String accountNumber;
+
+    private Long totalImportMoney;
 
     private Long totalMoney;
 
-    private Long finalMoney;
+    private Long finalPayMoney;
 
     private Set<ItemDTO> itemList = new HashSet<>();
 }

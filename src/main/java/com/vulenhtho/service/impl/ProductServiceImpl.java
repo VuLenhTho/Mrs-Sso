@@ -2,6 +2,7 @@ package com.vulenhtho.service.impl;
 
 import com.vulenhtho.config.APIConstant;
 import com.vulenhtho.dto.*;
+import com.vulenhtho.dto.enumeration.PaymentMethod;
 import com.vulenhtho.dto.request.FilterProductRequest;
 import com.vulenhtho.dto.request.ListProductPageRequest;
 import com.vulenhtho.dto.request.PageHeaderDTO;
@@ -22,6 +23,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.text.NumberFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -158,6 +160,11 @@ public class ProductServiceImpl implements ProductService {
         modelAndView.addObject("sameCategoryProducts", products);
     }
 
+    private boolean isSameProductByColorAndSize(ItemDTO itemDTO1, ItemDTO itemDTO2) {
+        return itemDTO1.getProductId().equals(itemDTO2.getProductId()) && itemDTO1.getColorId().equals(itemDTO2.getColorId())
+                && itemDTO1.getSizeId().equals(itemDTO2.getSizeId());
+    }
+
     @Override
     public void addProductToCart(ItemDTO itemDTO) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -168,19 +175,25 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
-
     private boolean isLoggedAndAlreadyExistCart(Authentication authentication) {
         return authentication != null && authentication.getPrincipal() instanceof CustomUserDetail
                 && ((CustomUserDetail) authentication.getPrincipal()).getCartDTO() != null;
     }
 
-    private void addProductToNewCart(ItemDTO itemDTO) {
+    private CartDTO createCart() {
+        CustomUserDetail customUserDetail = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         CartDTO cartDTO = new CartDTO();
-        cartDTO.getItemList().add(itemDTO);
+        cartDTO.setReceiver(customUserDetail.getFullName());
+        cartDTO.setPhone(customUserDetail.getPhone());
+        cartDTO.setPaymentMethod(PaymentMethod.PAY_ON_DELIVERY);
+        ((CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).setCartDTO(cartDTO);
+        return cartDTO;
+    }
 
-        if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof CustomUserDetail) {
-            ((CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).setCartDTO(cartDTO);
-        }
+    private void addProductToNewCart(ItemDTO itemDTO) {
+        CartDTO cartDTO = createCart();
+        cartDTO.getItemList().add(itemDTO);
+        ((CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).setCartDTO(cartDTO);
     }
 
     private void addProductToAlreadyExistCart(ItemDTO itemDTO) {
@@ -199,19 +212,20 @@ public class ProductServiceImpl implements ProductService {
         ((CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCartDTO().setItemList(itemDTOSet);
     }
 
-    private boolean isSameProductByColorAndSize(ItemDTO itemDTO1, ItemDTO itemDTO2) {
-        return itemDTO1.getProductId().equals(itemDTO2.getProductId()) && itemDTO1.getColorId().equals(itemDTO2.getColorId())
-                && itemDTO1.getSizeId().equals(itemDTO2.getSizeId());
-    }
-
     @Override
     public ModelAndView getCart() {
         ModelAndView modelAndView = new ModelAndView("/web/cart");
         if (!(SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof CustomUserDetail)) {
             return new ModelAndView("/web/login");
         }
-        CartDTO cartDTO = ((CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCartDTO();
+        CustomUserDetail customUserDetail = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        CartDTO cartDTO = customUserDetail.getCartDTO();
         if (cartDTO == null) {
+            ResponseEntity<PageHeaderDTO> headerDTOResponseEntity = restTemplate.exchange(APIConstant.WEB_URI + "/header"
+                    , HttpMethod.GET, new HttpEntity<PageHeaderDTO>(securityService.getHeaders()), PageHeaderDTO.class);
+            cartDTO = createCart();
+            setHeaderToModelAndView(modelAndView, headerDTOResponseEntity.getBody());
+            modelAndView.addObject("cartDTO", cartDTO);
             return modelAndView;
         }
 
@@ -226,25 +240,19 @@ public class ProductServiceImpl implements ProductService {
         }).collect(Collectors.toList());
 
         Long costOfCart = itemShowInCartDTOS.stream().mapToLong(ItemShowInCartDTO::getTotalPrice).sum();
+        Long importPrice = itemShowInCartDTOS.stream().mapToLong(ItemShowInCartDTO::getImportPrice).sum();
+        Long discountInBill = itemsForCartAndHeader.getDiscountDTOS().stream().mapToLong(DiscountDTO::getAmount).sum();
+        cartDTO.setTotalMoney(costOfCart);
+        cartDTO.setTotalImportMoney(importPrice);
+        cartDTO.setFinalPayMoney(costOfCart - discountInBill);
 
         modelAndView.addObject("itemList", itemShowInCartDTOS);
         modelAndView.addObject("costOfCart", convertToVnCurrency(costOfCart));
+        modelAndView.addObject("discountInBill", convertToVnCurrency(discountInBill));
+        modelAndView.addObject("finalPay", convertToVnCurrency(costOfCart - discountInBill));
+        modelAndView.addObject("cartDTO", cartDTO);
         setHeaderToModelAndView(modelAndView, itemsForCartAndHeaderResponseEntity.getBody().getHeaderDTO());
         return modelAndView;
-    }
-
-    @Override
-    public Long updateProductQuantity(Long newQuantity, Long productId) {
-        long newTotalPrice = 0;
-        Set<ItemDTO> itemDTOSet = ((CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCartDTO().getItemList();
-        for (ItemDTO item : itemDTOSet) {
-            if (item.getProductId().equals(productId)) {
-                item.setQuantity(newQuantity);
-                newTotalPrice = newQuantity * item.getPrice();
-            }
-        }
-        ((CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCartDTO().setItemList(itemDTOSet);
-        return newTotalPrice;
     }
 
     @Override
@@ -252,8 +260,11 @@ public class ProductServiceImpl implements ProductService {
         List<Long> ids = Arrays.stream(productIds.split(",")).filter(st -> !StringUtils.isEmpty(st)).map(Long::parseLong).collect(Collectors.toList());
         List<Long> quantityList = Arrays.stream(quantity.split(",")).filter(st -> !StringUtils.isEmpty(st)).map(Long::parseLong).collect(Collectors.toList());
         List<Long> productIdsToDel = Arrays.stream(productIdsToDelete.split(",")).filter(st -> !StringUtils.isEmpty(st)).map(Long::parseLong).collect(Collectors.toList());
-        Set<ItemDTO> itemDTOSet = ((CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCartDTO().getItemList();
-
+        CartDTO cartDTO = ((CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCartDTO();
+        if (cartDTO == null) {
+            return;
+        }
+        Set<ItemDTO> itemDTOSet = cartDTO.getItemList();
         productIdsToDel.forEach(idToDel -> {
             itemDTOSet.removeIf(item -> item.getProductId().equals(idToDel));
         });
@@ -266,6 +277,18 @@ public class ProductServiceImpl implements ProductService {
             }
         }
         ((CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCartDTO().setItemList(itemDTOSet);
+    }
+
+    @Override
+    public void updateBillInfo(HttpServletRequest request) {
+        CartDTO cartDTO = ((CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCartDTO();
+        cartDTO.setReceiver(request.getParameter("receiver"));
+        cartDTO.setPhone(request.getParameter("phone"));
+        cartDTO.setAddress(request.getParameter("address"));
+        cartDTO.setPaymentMethod(PaymentMethod.valueOf(request.getParameter("paymentMethod")));
+        cartDTO.setAccountName(request.getParameter("accountName"));
+        cartDTO.setAccountNumber(request.getParameter("accountNumber"));
+        ((CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).setCartDTO(cartDTO);
     }
 
 }

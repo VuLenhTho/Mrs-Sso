@@ -42,6 +42,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         customUserDetail.setToken(jwtResponse.getToken());
         customUserDetail.setType(jwtResponse.getType());
         customUserDetail.setFullName(jwtResponse.getUserDTO().getFullName());
+        customUserDetail.setPhone(jwtResponse.getUserDTO().getPhone());
 
         return new UsernamePasswordAuthenticationToken(customUserDetail, userDTO.getPassword(), authoritySet);
 

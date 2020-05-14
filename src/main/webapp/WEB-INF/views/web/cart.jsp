@@ -99,77 +99,96 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-sm-6 col-lg-6 mb-3"></div>
-            <div class="col-sm-6 col-lg-6 mb-3">
-                <div class="checkout-address">
-                    <div class="title-left">
-                        <h3>Thông tin đơn hàng</h3>
+        <form action="/updateBillInfo" id="formBillInfo" method="get">
+            <div class="row">
+                <div class="col-sm-6 col-lg-6 mb-3"></div>
+                <div class="col-sm-6 col-lg-6 mb-3">
+                    <div class="checkout-address">
+                        <div class="title-left">
+                            <h3>Thông tin đơn hàng</h3>
+                        </div>
+                        <form class="needs-validation" novalidate>
+                            <div class="mb-3">
+                                <label for="firstName">Họ tên người nhận</label>
+                                <input type="text" class="form-control" id="firstName" name="receiver" placeholder=""
+                                       value="${cartDTO.receiver}" required maxlength="25">
+                                <div class="invalid-feedback"> Vui lòng điền mục này!</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="firstName">Số điện thoại người nhận</label>
+                                <input type="number" class="form-control" id="phone" name="phone" placeholder=""
+                                       value="${cartDTO.phone}" required maxlength="12">
+                                <div class="invalid-feedback"> Vui lòng điền mục này!</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="address">Địa chỉ nhận hàng</label>
+                                <input type="text" class="form-control" id="address" name="address"
+                                       value="${cartDTO.address}" placeholder="" required maxlength="50">
+                                <div class="invalid-feedback"> Vui lòng điền mục này!</div>
+                            </div>
+
+                            <hr class="mb-4">
+                            <div class="title"><span>Phương thức thanh toán</span></div>
+                            <div class="d-block my-3">
+                                <div class="custom-control custom-radio">
+                                    <input id="credit" name="paymentMethod" type="radio" class="custom-control-input"
+                                           checked required onchange="handleChangePaymentType();"
+                                           value="PAY_ON_DELIVERY">
+                                    <label class="custom-control-label" for="credit">Thanh toán khi nhận hàng</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                    <input id="debit" name="paymentMethod" type="radio" class="custom-control-input"
+                                           required onchange="handleChangePaymentType();" value="PAY_BY_TRANSFER">
+                                    <label class="custom-control-label" for="debit">Chuyển khoản</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                    <input id="paypal" name="paymentMethod" type="radio" class="custom-control-input"
+                                           required onchange="handleChangePaymentType();" value="PAYPAL">
+                                    <label class="custom-control-label" for="paypal">Paypal</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3" id="divPaymentInfo1">
+                                    <label for="cc-name">Tên chủ tài khoản</label>
+                                    <input type="text" class="form-control" id="cc-name" name="accountName"
+                                           placeholder="" required maxlength="25">
+                                    <div class="invalid-feedback"> Vui lòng điền mục này!</div>
+                                </div>
+                                <div class="col-md-6 mb-3" id="divPaymentInfo2">
+                                    <label for="cc-number">Số tải khoản</label>
+                                    <input type="number" class="form-control" id="cc-number" name="accountNumber"
+                                           placeholder="" required maxlength="20">
+                                    <div class="invalid-feedback"> Vui lòng điền mục này!</div>
+                                </div>
+                            </div>
+                            <hr class="mb-1">
+                        </form>
                     </div>
-                    <form class="needs-validation" novalidate>
-                        <div class="mb-3">
-                            <label for="firstName">Họ tên người nhận</label>
-                            <input type="text" class="form-control" id="firstName" placeholder="" value="" required>
-                            <div class="invalid-feedback"> Vui lòng điền mục này!</div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="address">Địa chỉ nhận hàng</label>
-                            <input type="text" class="form-control" id="address" placeholder="" required>
-                            <div class="invalid-feedback"> Vui lòng điền mục này!</div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="firstName">Số điện thoại người nhận</label>
-                            <input type="text" class="form-control" id="phone" placeholder="" value="" required>
-                            <div class="invalid-feedback"> Vui lòng điền mục này!</div>
-                        </div>
-                        <hr class="mb-4">
-                        <div class="title"><span>Phương thức thanh toán</span></div>
-                        <div class="d-block my-3">
-                            <div class="custom-control custom-radio">
-                                <input id="credit" name="paymentMethod" type="radio" class="custom-control-input"
-                                       checked required>
-                                <label class="custom-control-label" for="credit">Thanh toán khi nhận hàng</label>
-                            </div>
-                            <div class="custom-control custom-radio">
-                                <input id="debit" name="paymentMethod" type="radio" class="custom-control-input"
-                                       required>
-                                <label class="custom-control-label" for="debit">Chuyển khoản</label>
-                            </div>
-                            <div class="custom-control custom-radio">
-                                <input id="paypal" name="paymentMethod" type="radio" class="custom-control-input"
-                                       required>
-                                <label class="custom-control-label" for="paypal">Paypal</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="cc-name">Tên chủ tài khoản</label>
-                                <input type="text" class="form-control" id="cc-name" placeholder="" required>
-                                <div class="invalid-feedback"> Vui lòng điền mục này!</div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="cc-number">Số tải khoản</label>
-                                <input type="text" class="form-control" id="cc-number" placeholder="" required>
-                                <div class="invalid-feedback"> Vui lòng điền mục này!</div>
-                            </div>
-                        </div>
-                        <hr class="mb-1">
-                    </form>
                 </div>
             </div>
-        </div>
+        </form>
         <div class="row my-5">
             <div class="col-lg-8 col-sm-12"></div>
             <div class="col-lg-4 col-sm-12">
                 <div class="order-box">
+                    <div class="d-flex">
+                        <h4>Tổng tiền hàng</h4>
+                        <div class="ml-auto font-weight-bold"> ${costOfCart} </div>
+                    </div>
+                    <div class="d-flex">
+                        <h4>Khuyến mại</h4>
+                        <div class="ml-auto font-weight-bold"> ${discountInBill} </div>
+                    </div>
                     <div class="d-flex gr-total">
-                        <h5>Tổng tiền hàng</h5>
-                        <p class="ml-auto h5"> ${costOfCart} </p>
+                        <h5>Thành tiền</h5>
+                        <p class="ml-auto h5"> ${finalPay} </p>
                     </div>
                     <hr>
                 </div>
             </div>
-            <div class="col-12 d-flex shopping-box"><a href="checkout.html" class="ml-auto btn hvr-hover">Mua hàng</a>
+            <div class="col-12 d-flex shopping-box">
+                <button style="margin-right: 0;margin-left: auto" class="btn btn-danger" type="button">Tạo đơn thàng
+                </button>
             </div>
         </div>
     </div>
@@ -198,13 +217,14 @@
 <script src="<c:url value="/shoptemplate/js/custom.js"/>"></script>
 
 <script>
+    //handle update cart
     $('#btnUpdateCart').click(function (e) {
-        e.preventDefault();
 
         let productIds = "";
         let quantityString = "";
         let productIdsToDelete = "";
         let formData = $('#formItemList').serializeArray();
+        console.log(formData);
         $.each(formData, function (i, v) {
             if (v.name === "productIdsToDelete") {
                 productIdsToDelete = productIdsToDelete + v.value + ',';
@@ -216,15 +236,41 @@
                 quantityString = quantityString + v.value + ',';
             }
         });
-        console.log(productIds);
-        console.log(quantityString);
-        console.log(productIdsToDelete);
-        $.get("http://localhost:8080/updateCart?productIds=" + productIds + "&quantity=" + quantityString + "&productIdsToDelete=" + productIdsToDelete, function (data, status) {
-            location.reload();
+
+        $.get("http://localhost:8080/updateCart?productIds=" + productIds + "&quantity=" + quantityString + "&productIdsToDelete=" + productIdsToDelete + "", function (data, status) {
+            $('#formBillInfo').submit();
         });
     });
+</script>
 
+<script>
 
+    function handleChangePaymentType() {
+        let radioButtons = document.getElementsByName("paymentMethod");
+        for (let i = 0; i < radioButtons.length; i++) {
+            if (radioButtons[i].checked === true) {
+                handleShowPaymentInfo(radioButtons[i].value)
+            }
+        }
+    }
+
+    window.onload = function () {
+        document.getElementById("divPaymentInfo1").style.display = 'none';
+        document.getElementById("divPaymentInfo2").style.display = 'none';
+    }
+
+    function handleShowPaymentInfo(paymentMethod) {
+        if (paymentMethod === "PAY_ON_DELIVERY") {
+            document.getElementById("divPaymentInfo1").style.display = 'none';
+            document.getElementById("divPaymentInfo2").style.display = 'none';
+        } else if (paymentMethod === "PAY_BY_TRANSFER") {
+            document.getElementById("divPaymentInfo1").style.display = 'block';
+            document.getElementById("divPaymentInfo2").style.display = 'block';
+        } else if (paymentMethod === "PAYPAL") {
+            document.getElementById("divPaymentInfo1").style.display = 'block';
+            document.getElementById("divPaymentInfo2").style.display = 'block';
+        }
+    }
 </script>
 
 

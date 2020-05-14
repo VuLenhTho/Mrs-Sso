@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Controller
 public class CartController {
 
@@ -34,7 +36,6 @@ public class CartController {
         }
         try {
             ItemDTO itemDTO = new ItemDTO(productId, colorId, sizeId, price, quantity);
-
             productService.addProductToCart(itemDTO);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
@@ -51,5 +52,11 @@ public class CartController {
     public ResponseEntity<?> updateCart(@RequestParam String productIds, @RequestParam String quantity, @RequestParam String productIdsToDelete) {
         productService.updateCart(productIds, quantity, productIdsToDelete);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/updateBillInfo")
+    public ModelAndView updateBillInfo(HttpServletRequest request) {
+        productService.updateBillInfo(request);
+        return productService.getCart();
     }
 }

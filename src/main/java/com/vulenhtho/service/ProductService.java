@@ -4,6 +4,8 @@ import com.vulenhtho.dto.ItemDTO;
 import com.vulenhtho.dto.request.FilterProductRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+
 public interface ProductService {
     ModelAndView getWelcomePage();
 
@@ -15,7 +17,7 @@ public interface ProductService {
 
     ModelAndView getCart();
 
-    Long updateProductQuantity(Long newQuantity, Long productId);
-
     void updateCart(String productIds, String quantity, String productIdsToDelete);
+
+    void updateBillInfo(HttpServletRequest request);
 }
