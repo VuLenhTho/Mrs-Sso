@@ -98,8 +98,7 @@
                 <button id="btnUpdateCart" class="btn btn-danger" type="button">Cập nhật giỏ hàng</button>
             </div>
         </div>
-
-        <form action="/updateBillInfo" id="formBillInfo" method="get">
+        <form:form action="/updateBillInfo" method="get" id="formUpdateBillInfo" class="needs-validation">
             <div class="row">
                 <div class="col-sm-6 col-lg-6 mb-3"></div>
                 <div class="col-sm-6 col-lg-6 mb-3">
@@ -107,15 +106,15 @@
                         <div class="title-left">
                             <h3>Thông tin đơn hàng</h3>
                         </div>
-                        <form class="needs-validation" novalidate>
+                        <form class="needs-validation">
                             <div class="mb-3">
-                                <label for="firstName">Họ tên người nhận</label>
-                                <input type="text" class="form-control" id="firstName" name="receiver" placeholder=""
+                                <label for="receiver">Họ tên người nhận</label>
+                                <input type="text" class="form-control" id="receiver" name="receiver" placeholder=""
                                        value="${cartDTO.receiver}" required maxlength="25">
                                 <div class="invalid-feedback"> Vui lòng điền mục này!</div>
                             </div>
                             <div class="mb-3">
-                                <label for="firstName">Số điện thoại người nhận</label>
+                                <label for="phone">Số điện thoại người nhận</label>
                                 <input type="number" class="form-control" id="phone" name="phone" placeholder=""
                                        value="${cartDTO.phone}" required maxlength="12">
                                 <div class="invalid-feedback"> Vui lòng điền mục này!</div>
@@ -126,39 +125,110 @@
                                        value="${cartDTO.address}" placeholder="" required maxlength="50">
                                 <div class="invalid-feedback"> Vui lòng điền mục này!</div>
                             </div>
-
+                            <div class="mb-3">
+                                <label for="note">Ghi chú</label>
+                                <textarea type="text" class="form-control" id="note" name="note" rows="3"
+                                          placeholder="Lưu ý cho nhân viên giao hàng,..." required
+                                          maxlength="200">${cartDTO.note}</textarea>
+                            </div>
                             <hr class="mb-4">
                             <div class="title"><span>Phương thức thanh toán</span></div>
-                            <div class="d-block my-3">
-                                <div class="custom-control custom-radio">
-                                    <input id="credit" name="paymentMethod" type="radio" class="custom-control-input"
-                                           checked required onchange="handleChangePaymentType();"
-                                           value="PAY_ON_DELIVERY">
-                                    <label class="custom-control-label" for="credit">Thanh toán khi nhận hàng</label>
+
+                            <c:if test="${cartDTO.paymentMethod == 'PAY_ON_DELIVERY'}">
+                                <div class="d-block my-3">
+                                    <div class="custom-control custom-radio">
+                                        <input id="credit" name="paymentMethod" type="radio"
+                                               class="custom-control-input"
+                                               checked required onchange="handleChangePaymentType();"
+                                               value="PAY_ON_DELIVERY">
+                                        <label class="custom-control-label" for="credit">Thanh toán khi nhận
+                                            hàng</label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                        <input id="debit" name="paymentMethod" type="radio" class="custom-control-input"
+                                               required onchange="handleChangePaymentType();" value="PAY_BY_TRANSFER">
+                                        <label class="custom-control-label" for="debit">Thanh toán qua ví điện
+                                            tử</label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                        <input id="paypal" name="paymentMethod" type="radio"
+                                               class="custom-control-input"
+                                               required onchange="handleChangePaymentType();" value="PAYPAL">
+                                        <label class="custom-control-label" for="paypal">Paypal</label>
+                                    </div>
                                 </div>
-                                <div class="custom-control custom-radio">
-                                    <input id="debit" name="paymentMethod" type="radio" class="custom-control-input"
-                                           required onchange="handleChangePaymentType();" value="PAY_BY_TRANSFER">
-                                    <label class="custom-control-label" for="debit">Chuyển khoản</label>
+                            </c:if>
+                            <c:if test="${cartDTO.paymentMethod == 'PAY_BY_TRANSFER'}">
+                                <div class="d-block my-3">
+                                    <div class="custom-control custom-radio">
+                                        <input id="credit1" name="paymentMethod" type="radio"
+                                               class="custom-control-input"
+                                               required onchange="handleChangePaymentType();"
+                                               value="PAY_ON_DELIVERY">
+                                        <label class="custom-control-label" for="credit1">Thanh toán khi nhận
+                                            hàng</label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                        <input id="debit1" name="paymentMethod" type="radio"
+                                               class="custom-control-input"
+                                               required onchange="handleChangePaymentType();" value="PAY_BY_TRANSFER"
+                                               checked>
+                                        <label class="custom-control-label" for="debit1">Thanh toán qua ví điện
+                                            tử</label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                        <input id="paypal1" name="paymentMethod" type="radio"
+                                               class="custom-control-input"
+                                               required onchange="handleChangePaymentType();" value="PAYPAL">
+                                        <label class="custom-control-label" for="paypal1">Paypal</label>
+                                    </div>
                                 </div>
-                                <div class="custom-control custom-radio">
-                                    <input id="paypal" name="paymentMethod" type="radio" class="custom-control-input"
-                                           required onchange="handleChangePaymentType();" value="PAYPAL">
-                                    <label class="custom-control-label" for="paypal">Paypal</label>
+                            </c:if>
+                            <c:if test="${cartDTO.paymentMethod == 'PAYPAL'}">
+                                <div class="d-block my-3">
+                                    <div class="custom-control custom-radio">
+                                        <input id="credit2" name="paymentMethod" type="radio"
+                                               class="custom-control-input"
+                                               required onchange="handleChangePaymentType();"
+                                               value="PAY_ON_DELIVERY">
+                                        <label class="custom-control-label" for="credit2">Thanh toán khi nhận
+                                            hàng</label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                        <input id="debit2" name="paymentMethod" type="radio"
+                                               class="custom-control-input"
+                                               required onchange="handleChangePaymentType();" value="PAY_BY_TRANSFER"
+                                               checked>
+                                        <label class="custom-control-label" for="debit2">Thanh toán qua ví điện
+                                            tử</label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                        <input id="paypal2" name="paymentMethod" type="radio"
+                                               class="custom-control-input"
+                                               required onchange="handleChangePaymentType();" value="PAYPAL">
+                                        <label class="custom-control-label" for="paypal2">Paypal</label>
+                                    </div>
                                 </div>
-                            </div>
+                            </c:if>
+
                             <div class="row">
                                 <div class="col-md-6 mb-3" id="divPaymentInfo1">
                                     <label for="cc-name">Tên chủ tài khoản</label>
                                     <input type="text" class="form-control" id="cc-name" name="accountName"
-                                           placeholder="" required maxlength="25">
+                                           placeholder="" required maxlength="25" value="${cartDTO.accountName}">
                                     <div class="invalid-feedback"> Vui lòng điền mục này!</div>
                                 </div>
                                 <div class="col-md-6 mb-3" id="divPaymentInfo2">
                                     <label for="cc-number">Số tải khoản</label>
                                     <input type="number" class="form-control" id="cc-number" name="accountNumber"
-                                           placeholder="" required maxlength="20">
+                                           placeholder="" required maxlength="20" value="${cartDTO.accountNumber}">
                                     <div class="invalid-feedback"> Vui lòng điền mục này!</div>
+                                </div>
+                                <div class="col-md-12 mb-6">
+                                    <p id="guide">Quý khách vui lòng điền tên chủ tài khoản, số tài khoản theo mẫu và
+                                        thực hiện chuyển tiền đến số tài khoản <b>021543662102</b> để tiến hành thanh
+                                        toán.<br>
+                                        Số tiền cần chuyển là thành tiền của đơn hàng.</p>
                                 </div>
                             </div>
                             <hr class="mb-1">
@@ -166,7 +236,9 @@
                     </div>
                 </div>
             </div>
-        </form>
+        </form:form>
+
+
         <div class="row my-5">
             <div class="col-lg-8 col-sm-12"></div>
             <div class="col-lg-4 col-sm-12">
@@ -175,13 +247,16 @@
                         <h4>Tổng tiền hàng</h4>
                         <div class="ml-auto font-weight-bold"> ${costOfCart} </div>
                     </div>
-                    <div class="d-flex">
-                        <h4>Khuyến mại</h4>
-                        <div class="ml-auto font-weight-bold"> ${discountInBill} </div>
-                    </div>
+                    <c:if test="${discountInBill != '0 đ'}">
+                        <div class="d-flex">
+                            <h4>Khuyến mại</h4>
+                            <div class="ml-auto font-weight-bold"> ${discountInBill} </div>
+                        </div>
+                    </c:if>
+
                     <div class="d-flex gr-total">
                         <h5>Thành tiền</h5>
-                        <p class="ml-auto h5"> ${finalPay} </p>
+                        <p class="ml-auto h5">${finalPay}</p>
                     </div>
                     <hr>
                 </div>
@@ -192,8 +267,10 @@
             </div>
         </div>
     </div>
+
 </div>
 <!-- End Cart -->
+
 
 <%@include file="/common/web/instaggram-box.jsp" %>
 
@@ -219,12 +296,13 @@
 <script>
     //handle update cart
     $('#btnUpdateCart').click(function (e) {
+        e.preventDefault();
 
         let productIds = "";
         let quantityString = "";
         let productIdsToDelete = "";
         let formData = $('#formItemList').serializeArray();
-        console.log(formData);
+
         $.each(formData, function (i, v) {
             if (v.name === "productIdsToDelete") {
                 productIdsToDelete = productIdsToDelete + v.value + ',';
@@ -236,11 +314,35 @@
                 quantityString = quantityString + v.value + ',';
             }
         });
-
-        $.get("http://localhost:8080/updateCart?productIds=" + productIds + "&quantity=" + quantityString + "&productIdsToDelete=" + productIdsToDelete + "", function (data, status) {
-            $('#formBillInfo').submit();
+        $.get("http://localhost:8080/updateCart?productIds=" + productIds + "&quantity=" + quantityString + "&productIdsToDelete="
+            + productIdsToDelete + "", function (data, status) {
         });
+        updateBillInfo();
+        window.location.href = "http://localhost:8080/cart";
+
     });
+
+    function updateBillInfo() {
+        let receiver = document.getElementById("receiver").value;
+        let phone = document.getElementById("phone").value;
+        let address = document.getElementById("address").value;
+        let note = document.getElementById("note").value;
+        let accountName = document.getElementById("cc-name").value;
+        let accountNumber = document.getElementById("cc-number").value;
+        let paymentMethod = "";
+        let radioButtons = document.getElementsByName("paymentMethod");
+
+        for (let i = 0; i < radioButtons.length; i++) {
+            if (radioButtons[i].checked === true) {
+                paymentMethod = radioButtons[i].value;
+            }
+        }
+
+        $.get("http://localhost:8080/updateBillInfo?receiver=" + receiver + "&phone=" + phone + "&address=" + address + "&note=" + note + "&paymentMethod="
+            + paymentMethod + "&accountName=" + accountName + "&accountNumber=" + accountNumber + "", function (data, status) {
+        });
+    }
+
 </script>
 
 <script>
@@ -255,20 +357,27 @@
     }
 
     window.onload = function () {
-        document.getElementById("divPaymentInfo1").style.display = 'none';
-        document.getElementById("divPaymentInfo2").style.display = 'none';
+        if (${cartDTO.paymentMethod != 'PAY_BY_TRANSFER'}) {
+            document.getElementById("divPaymentInfo1").style.display = 'none';
+            document.getElementById("divPaymentInfo2").style.display = 'none';
+            document.getElementById("guide").style.display = 'none';
+        }
     }
 
     function handleShowPaymentInfo(paymentMethod) {
         if (paymentMethod === "PAY_ON_DELIVERY") {
             document.getElementById("divPaymentInfo1").style.display = 'none';
             document.getElementById("divPaymentInfo2").style.display = 'none';
+            document.getElementById("guide").style.display = 'none';
         } else if (paymentMethod === "PAY_BY_TRANSFER") {
             document.getElementById("divPaymentInfo1").style.display = 'block';
             document.getElementById("divPaymentInfo2").style.display = 'block';
+            document.getElementById("guide").style.display = 'block';
+
         } else if (paymentMethod === "PAYPAL") {
             document.getElementById("divPaymentInfo1").style.display = 'block';
             document.getElementById("divPaymentInfo2").style.display = 'block';
+            document.getElementById("guide").style.display = 'block';
         }
     }
 </script>

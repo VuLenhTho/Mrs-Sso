@@ -32,5 +32,7 @@ public class CartDTO {
 
     private Long finalPayMoney;
 
+    private String note;
+
     private Set<ItemDTO> itemList = new HashSet<>();
 }

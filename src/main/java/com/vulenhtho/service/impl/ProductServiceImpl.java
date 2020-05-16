@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
@@ -221,14 +222,8 @@ public class ProductServiceImpl implements ProductService {
         CustomUserDetail customUserDetail = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         CartDTO cartDTO = customUserDetail.getCartDTO();
         if (cartDTO == null) {
-            ResponseEntity<PageHeaderDTO> headerDTOResponseEntity = restTemplate.exchange(APIConstant.WEB_URI + "/header"
-                    , HttpMethod.GET, new HttpEntity<PageHeaderDTO>(securityService.getHeaders()), PageHeaderDTO.class);
-            cartDTO = createCart();
-            setHeaderToModelAndView(modelAndView, headerDTOResponseEntity.getBody());
-            modelAndView.addObject("cartDTO", cartDTO);
-            return modelAndView;
+            return getCartWhenCartNotExist(modelAndView);
         }
-
         HttpEntity<?> httpEntity = new HttpEntity<Object>(cartDTO.getItemList(), securityService.getHeaders());
         ResponseEntity<ItemsForCartAndHeader> itemsForCartAndHeaderResponseEntity = restTemplate.exchange(APIConstant.WEB_URI + "/products/itemInCart"
                 , HttpMethod.POST, httpEntity, ItemsForCartAndHeader.class);
@@ -241,17 +236,36 @@ public class ProductServiceImpl implements ProductService {
 
         Long costOfCart = itemShowInCartDTOS.stream().mapToLong(ItemShowInCartDTO::getTotalPrice).sum();
         Long importPrice = itemShowInCartDTOS.stream().mapToLong(ItemShowInCartDTO::getImportPrice).sum();
-        Long discountInBill = itemsForCartAndHeader.getDiscountDTOS().stream().mapToLong(DiscountDTO::getAmount).sum();
+        Long discountInBill = itemsForCartAndHeader.getDiscountDTOS().stream().mapToLong(DiscountDTO::getPercent).sum();
         cartDTO.setTotalMoney(costOfCart);
         cartDTO.setTotalImportMoney(importPrice);
-        cartDTO.setFinalPayMoney(costOfCart - discountInBill);
+        Long finalPay = costOfCart - (costOfCart * discountInBill) / 100;
+        cartDTO.setFinalPayMoney(finalPay);
+
+        if (CollectionUtils.isEmpty(itemShowInCartDTOS)) {
+            modelAndView.addObject("finalPay", convertToVnCurrency(0L));
+            modelAndView.addObject("discountInBill", convertToVnCurrency(0L));
+        } else {
+            modelAndView.addObject("discountInBill", convertToVnCurrency((costOfCart * discountInBill) / 100));
+            modelAndView.addObject("finalPay", convertToVnCurrency(finalPay));
+        }
 
         modelAndView.addObject("itemList", itemShowInCartDTOS);
         modelAndView.addObject("costOfCart", convertToVnCurrency(costOfCart));
-        modelAndView.addObject("discountInBill", convertToVnCurrency(discountInBill));
-        modelAndView.addObject("finalPay", convertToVnCurrency(costOfCart - discountInBill));
         modelAndView.addObject("cartDTO", cartDTO);
         setHeaderToModelAndView(modelAndView, itemsForCartAndHeaderResponseEntity.getBody().getHeaderDTO());
+        return modelAndView;
+    }
+
+    private ModelAndView getCartWhenCartNotExist(ModelAndView modelAndView) {
+        ResponseEntity<PageHeaderDTO> headerDTOResponseEntity = restTemplate.exchange(APIConstant.WEB_URI + "/header"
+                , HttpMethod.GET, new HttpEntity<PageHeaderDTO>(securityService.getHeaders()), PageHeaderDTO.class);
+        CartDTO cartDTO = createCart();
+        setHeaderToModelAndView(modelAndView, headerDTOResponseEntity.getBody());
+        modelAndView.addObject("finalPay", convertToVnCurrency(0L));
+        modelAndView.addObject("costOfCart", convertToVnCurrency(0L));
+        modelAndView.addObject("discountInBill", convertToVnCurrency(0L));
+        modelAndView.addObject("cartDTO", cartDTO);
         return modelAndView;
     }
 
@@ -288,6 +302,7 @@ public class ProductServiceImpl implements ProductService {
         cartDTO.setPaymentMethod(PaymentMethod.valueOf(request.getParameter("paymentMethod")));
         cartDTO.setAccountName(request.getParameter("accountName"));
         cartDTO.setAccountNumber(request.getParameter("accountNumber"));
+        cartDTO.setNote(request.getParameter("note"));
         ((CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).setCartDTO(cartDTO);
     }
 

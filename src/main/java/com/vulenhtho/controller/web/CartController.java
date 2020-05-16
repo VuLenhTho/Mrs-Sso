@@ -16,9 +16,9 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class CartController {
 
-    private final ProductService productService;
+    private ProductService productService;
 
-    private final UserService userService;
+    private UserService userService;
 
     @Autowired
     public CartController(ProductService productService, UserService userService) {
@@ -54,9 +54,9 @@ public class CartController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/updateBillInfo")
-    public ModelAndView updateBillInfo(HttpServletRequest request) {
+    @GetMapping(value = "/updateBillInfo")
+    public void updateBillInfo(HttpServletRequest request) {
         productService.updateBillInfo(request);
-        return productService.getCart();
     }
+
 }
