@@ -235,10 +235,10 @@ public class ProductServiceImpl implements ProductService {
         }).collect(Collectors.toList());
 
         Long costOfCart = itemShowInCartDTOS.stream().mapToLong(ItemShowInCartDTO::getTotalPrice).sum();
-        Long importPrice = itemShowInCartDTOS.stream().mapToLong(ItemShowInCartDTO::getImportPrice).sum();
+        Long totalImportPrice = itemShowInCartDTOS.stream().mapToLong(item -> item.getImportPrice() * item.getQuantity()).sum();
         Long discountInBill = itemsForCartAndHeader.getDiscountDTOS().stream().mapToLong(DiscountDTO::getPercent).sum();
         cartDTO.setTotalMoney(costOfCart);
-        cartDTO.setTotalImportMoney(importPrice);
+        cartDTO.setTotalImportMoney(totalImportPrice);
         Long finalPay = costOfCart - (costOfCart * discountInBill) / 100;
         cartDTO.setFinalPayMoney(finalPay);
 
@@ -304,6 +304,14 @@ public class ProductServiceImpl implements ProductService {
         cartDTO.setAccountNumber(request.getParameter("accountNumber"));
         cartDTO.setNote(request.getParameter("note"));
         ((CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).setCartDTO(cartDTO);
+    }
+
+    @Override
+    public void createBill() {
+        CartDTO cartDTO = ((CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCartDTO();
+
+        ResponseEntity<CartDTO> responseEntity = restTemplate.exchange(APIConstant.WEB_URI + "/products/createBill"
+                , HttpMethod.POST, new HttpEntity<CartDTO>(cartDTO, securityService.getHeadersWithToken()), CartDTO.class);
     }
 
 }

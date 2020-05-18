@@ -22,6 +22,7 @@
 <div id="main-wrapper">
     <%@include file="/common/admin/header.jsp" %>
     <%@include file="/common/admin/menu.jsp" %>
+
     <div class="content-body">
         <div class="container">
             <div class="row page-titles">

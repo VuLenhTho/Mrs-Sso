@@ -128,7 +128,8 @@
                         </li>
                     </ul>
                     <div class="price-box-bar">
-                        <button id="btnAddToCart" type="button" class="btn btn-danger"><span class="btn-icon-right"><i
+                        <button id="btnAddToCart" type="button" class="btn btn-danger sweet-success"><span
+                                class="btn-icon-right"><i
                                 class="fa fa-shopping-cart"></i>
                             Thêm vào giỏ hàng
                         </span>

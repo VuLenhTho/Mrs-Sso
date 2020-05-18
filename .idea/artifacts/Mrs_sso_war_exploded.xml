@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="Mrs.sso:war exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/Mrs_sso_war_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="Mrs.sso/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="Mrs.sso" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>

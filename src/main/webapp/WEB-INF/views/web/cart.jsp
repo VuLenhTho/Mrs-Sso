@@ -12,6 +12,8 @@
             font-family: Helvetica;
         }
     </style>
+    <!-- Sweetalert -->
+    <link href="<c:url value="/template/assets/plugins/sweetalert/css/sweetalert.css"/>" rel="stylesheet">
 </head>
 
 <body>
@@ -98,7 +100,7 @@
                 <button id="btnUpdateCart" class="btn btn-danger" type="button">Cập nhật giỏ hàng</button>
             </div>
         </div>
-        <form:form action="/updateBillInfo" method="get" id="formUpdateBillInfo" class="needs-validation">
+        <form method="get" id="formUpdateBillInfo">
             <div class="row">
                 <div class="col-sm-6 col-lg-6 mb-3"></div>
                 <div class="col-sm-6 col-lg-6 mb-3">
@@ -106,7 +108,7 @@
                         <div class="title-left">
                             <h3>Thông tin đơn hàng</h3>
                         </div>
-                        <form class="needs-validation">
+                        <div class="needs-validation">
                             <div class="mb-3">
                                 <label for="receiver">Họ tên người nhận</label>
                                 <input type="text" class="form-control" id="receiver" name="receiver" placeholder=""
@@ -128,7 +130,7 @@
                             <div class="mb-3">
                                 <label for="note">Ghi chú</label>
                                 <textarea type="text" class="form-control" id="note" name="note" rows="3"
-                                          placeholder="Lưu ý cho nhân viên giao hàng,..." required
+                                          placeholder="Lưu ý cho nhân viên giao hàng,..."
                                           maxlength="200">${cartDTO.note}</textarea>
                             </div>
                             <hr class="mb-4">
@@ -215,13 +217,13 @@
                                 <div class="col-md-6 mb-3" id="divPaymentInfo1">
                                     <label for="cc-name">Tên chủ tài khoản</label>
                                     <input type="text" class="form-control" id="cc-name" name="accountName"
-                                           placeholder="" required maxlength="25" value="${cartDTO.accountName}">
+                                           placeholder="" maxlength="25" value="${cartDTO.accountName}">
                                     <div class="invalid-feedback"> Vui lòng điền mục này!</div>
                                 </div>
                                 <div class="col-md-6 mb-3" id="divPaymentInfo2">
                                     <label for="cc-number">Số tải khoản</label>
                                     <input type="number" class="form-control" id="cc-number" name="accountNumber"
-                                           placeholder="" required maxlength="20" value="${cartDTO.accountNumber}">
+                                           placeholder="" maxlength="20" value="${cartDTO.accountNumber}">
                                     <div class="invalid-feedback"> Vui lòng điền mục này!</div>
                                 </div>
                                 <div class="col-md-12 mb-6">
@@ -232,40 +234,41 @@
                                 </div>
                             </div>
                             <hr class="mb-1">
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </form:form>
-
-
-        <div class="row my-5">
-            <div class="col-lg-8 col-sm-12"></div>
-            <div class="col-lg-4 col-sm-12">
-                <div class="order-box">
-                    <div class="d-flex">
-                        <h4>Tổng tiền hàng</h4>
-                        <div class="ml-auto font-weight-bold"> ${costOfCart} </div>
-                    </div>
-                    <c:if test="${discountInBill != '0 đ'}">
-                        <div class="d-flex">
-                            <h4>Khuyến mại</h4>
-                            <div class="ml-auto font-weight-bold"> ${discountInBill} </div>
                         </div>
-                    </c:if>
-
-                    <div class="d-flex gr-total">
-                        <h5>Thành tiền</h5>
-                        <p class="ml-auto h5">${finalPay}</p>
                     </div>
-                    <hr>
                 </div>
             </div>
-            <div class="col-12 d-flex shopping-box">
-                <button style="margin-right: 0;margin-left: auto" class="btn btn-danger" type="button">Tạo đơn thàng
-                </button>
+            <div class="row my-5">
+                <div class="col-lg-8 col-sm-12"></div>
+                <div class="col-lg-4 col-sm-12">
+                    <div class="order-box">
+                        <div class="d-flex">
+                            <h4>Tổng tiền hàng</h4>
+                            <div class="ml-auto font-weight-bold"> ${costOfCart} </div>
+                        </div>
+                        <c:if test="${discountInBill != '0 đ'}">
+                            <div class="d-flex">
+                                <h4>Khuyến mại</h4>
+                                <div class="ml-auto font-weight-bold"> ${discountInBill} </div>
+                            </div>
+                        </c:if>
+
+                        <div class="d-flex gr-total">
+                            <h5>Thành tiền</h5>
+                            <p class="ml-auto h5">${finalPay}</p>
+                        </div>
+                        <hr>
+                    </div>
+                </div>
+                <div class="col-12 d-flex shopping-box">
+                    <button style="margin-right: 0;margin-left: auto" class="btn btn-danger" id="createBill"
+                            type="submit">Tạo đơn thàng
+                    </button>
+                </div>
             </div>
-        </div>
+
+        </form>
+
     </div>
 
 </div>
@@ -292,12 +295,20 @@
 <script src="<c:url value="/shoptemplate/js/form-validator.min.js"/>"></script>
 <script src="<c:url value="/shoptemplate/js/contact-form-script.js"/>"></script>
 <script src="<c:url value="/shoptemplate/js/custom.js"/>"></script>
+<script src="<c:url value="/template/assets/plugins/sweetalert/js/sweetalert.min.js"/>"></script>
 
 <script>
     //handle update cart
     $('#btnUpdateCart').click(function (e) {
         e.preventDefault();
 
+        updateItems();
+        updateBillInfo();
+        window.location.href = "http://localhost:8080/cart";
+
+    });
+
+    function updateItems() {
         let productIds = "";
         let quantityString = "";
         let productIdsToDelete = "";
@@ -317,10 +328,7 @@
         $.get("http://localhost:8080/updateCart?productIds=" + productIds + "&quantity=" + quantityString + "&productIdsToDelete="
             + productIdsToDelete + "", function (data, status) {
         });
-        updateBillInfo();
-        window.location.href = "http://localhost:8080/cart";
-
-    });
+    }
 
     function updateBillInfo() {
         let receiver = document.getElementById("receiver").value;
@@ -343,9 +351,48 @@
         });
     }
 
+    $('#formUpdateBillInfo').submit(function (event) {
+        event.preventDefault();
+        swal({
+            title: "Đơn hàng của bạn sẽ được tạo!!",
+            icon: "info",
+            buttons: {
+                cancel: {
+                    text: "Đồng ý!",
+                    visible: true,
+                },
+                confirm: {
+                    text: "Quay lại",
+                    visible: true,
+                }
+            },
+
+        })
+            .then((value) => {
+                swal({
+                    title: "Tạo đơn hàng thành công !!",
+                    text: "Hãy chờ nhân viên cửa hàng liên hệ xác nhận đơn hàng.",
+                    icon: "success"
+                });
+
+                updateItems();
+                updateBillInfo();
+                $.get("http://localhost:8080/createBill", function (data, status) {
+                });
+            });
+
+
+    });
+
 </script>
 
 <script>
+    let payment1 = document.getElementById("divPaymentInfo1");
+    let payment2 = document.getElementById("divPaymentInfo2");
+    let accountName = document.getElementById("cc-name");
+    let accountNumber = document.getElementById("cc-number");
+
+    let guide = document.getElementById("guide");
 
     function handleChangePaymentType() {
         let radioButtons = document.getElementsByName("paymentMethod");
@@ -358,26 +405,32 @@
 
     window.onload = function () {
         if (${cartDTO.paymentMethod != 'PAY_BY_TRANSFER'}) {
-            document.getElementById("divPaymentInfo1").style.display = 'none';
-            document.getElementById("divPaymentInfo2").style.display = 'none';
-            document.getElementById("guide").style.display = 'none';
+            payment1.style.display = 'none';
+            payment2.style.display = 'none';
+            guide.style.display = 'none';
         }
     }
 
     function handleShowPaymentInfo(paymentMethod) {
         if (paymentMethod === "PAY_ON_DELIVERY") {
-            document.getElementById("divPaymentInfo1").style.display = 'none';
-            document.getElementById("divPaymentInfo2").style.display = 'none';
-            document.getElementById("guide").style.display = 'none';
+            payment1.style.display = 'none';
+            payment2.style.display = 'none';
+            accountName.required = false;
+            accountNumber.required = false;
+            guide.style.display = 'none';
         } else if (paymentMethod === "PAY_BY_TRANSFER") {
-            document.getElementById("divPaymentInfo1").style.display = 'block';
-            document.getElementById("divPaymentInfo2").style.display = 'block';
-            document.getElementById("guide").style.display = 'block';
+            accountName.required = true;
+            accountNumber.required = true;
+            payment1.style.display = 'block';
+            payment2.style.display = 'block';
+            guide.style.display = 'block';
 
         } else if (paymentMethod === "PAYPAL") {
-            document.getElementById("divPaymentInfo1").style.display = 'block';
-            document.getElementById("divPaymentInfo2").style.display = 'block';
-            document.getElementById("guide").style.display = 'block';
+            accountName.required = true;
+            accountNumber.required = true;
+            payment1.style.display = 'block';
+            payment2.style.display = 'block';
+            guide.style.display = 'block';
         }
     }
 </script>

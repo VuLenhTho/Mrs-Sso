@@ -49,14 +49,18 @@ public class CartController {
     }
 
     @GetMapping("/updateCart")
-    public ResponseEntity<?> updateCart(@RequestParam String productIds, @RequestParam String quantity, @RequestParam String productIdsToDelete) {
+    public void updateCart(@RequestParam String productIds, @RequestParam String quantity, @RequestParam String productIdsToDelete) {
         productService.updateCart(productIds, quantity, productIdsToDelete);
-        return ResponseEntity.ok().build();
     }
 
-    @GetMapping(value = "/updateBillInfo")
+    @GetMapping("/updateBillInfo")
     public void updateBillInfo(HttpServletRequest request) {
         productService.updateBillInfo(request);
+    }
+
+    @GetMapping("/createBill")
+    public void createBill() {
+        productService.createBill();
     }
 
 }

@@ -20,4 +20,6 @@ public interface ProductService {
     void updateCart(String productIds, String quantity, String productIdsToDelete);
 
     void updateBillInfo(HttpServletRequest request);
+
+    void createBill();
 }

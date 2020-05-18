@@ -17,6 +17,13 @@
         </param-value>
     </context-param>
 
+    <jsp-config>
+        <jsp-property-group>
+            <url-pattern>*.jsp</url-pattern>
+            <page-encoding>UTF-8</page-encoding>
+        </jsp-property-group>
+    </jsp-config>
+
     <servlet>
         <servlet-name>dispatcher</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
@@ -31,7 +38,19 @@
         <url-pattern>/</url-pattern>
     </servlet-mapping>
 
-<!--    &lt;!&ndash;Declare Spring Security Filter &ndash;&gt;-->
+    <!--    &lt;!&ndash;Declare Spring Security Filter &ndash;&gt;-->
+    <filter>
+        <filter-name>encodingFilter</filter-name>
+        <filter-class>com.vulenhtho.config.EncodingFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>encodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>ERROR</dispatcher>
+    </filter-mapping>
+
     <filter>
         <filter-name>springSecurityFilterChain</filter-name>
         <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>

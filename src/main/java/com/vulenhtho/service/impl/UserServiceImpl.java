@@ -41,13 +41,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ChangeUserAndResult updateByAdmin(HttpServletRequest request) {
+
         ChangeUserAndResult changeUserAndResult = setUserDTOAndCheckValid(request, false);
 
         if (changeUserAndResult.getResult() != null) {
             return changeUserAndResult;
         }
-        ResponseEntity responseEntity = restTemplate.exchange(APIConstant.ADMIN_URI + "/user"
-                , HttpMethod.PUT, new HttpEntity<>(changeUserAndResult.getUserDTO(), securityService.getHeadersWithToken()), ResponseEntity.class);
+
+        ResponseEntity<UserDTO> responseEntity = restTemplate.exchange(APIConstant.ADMIN_URI + "/user"
+                , HttpMethod.PUT, new HttpEntity<>(changeUserAndResult.getUserDTO(), securityService.getHeadersWithToken())
+                , new ParameterizedTypeReference<UserDTO>() {
+                });
+
         checkResponseStatus(changeUserAndResult, responseEntity.getStatusCode(), true);
 
         return changeUserAndResult;
