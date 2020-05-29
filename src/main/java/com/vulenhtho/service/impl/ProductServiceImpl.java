@@ -25,9 +25,13 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.text.NumberFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
+
+import static com.vulenhtho.util.CommonUtils.convertToVnCurrency;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -60,13 +64,6 @@ public class ProductServiceImpl implements ProductService {
         modelAndView.addObject("welcomeSlide", webHomeRequest.getWelcomeSlideDTOS());
 
         return modelAndView;
-    }
-
-    private String convertToVnCurrency(Long longPrice) {
-        Locale localeVN = new Locale("vi", "VN");
-        NumberFormat currencyVN = NumberFormat.getCurrencyInstance(localeVN);
-
-        return currencyVN.format(longPrice);
     }
 
     private void setHeaderToModelAndView(ModelAndView modelAndView, PageHeaderDTO pageHeaderDTO) {
@@ -186,6 +183,7 @@ public class ProductServiceImpl implements ProductService {
         CartDTO cartDTO = new CartDTO();
         cartDTO.setReceiver(customUserDetail.getFullName());
         cartDTO.setPhone(customUserDetail.getPhone());
+        cartDTO.setAddress(customUserDetail.getAddress());
         cartDTO.setPaymentMethod(PaymentMethod.PAY_ON_DELIVERY);
         ((CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).setCartDTO(cartDTO);
         return cartDTO;
@@ -213,6 +211,7 @@ public class ProductServiceImpl implements ProductService {
         ((CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getCartDTO().setItemList(itemDTOSet);
     }
 
+
     @Override
     public ModelAndView getCart() {
         ModelAndView modelAndView = new ModelAndView("/web/cart");
@@ -234,11 +233,15 @@ public class ProductServiceImpl implements ProductService {
             item.setVnTotalPrice(convertToVnCurrency(item.getTotalPrice()));
         }).collect(Collectors.toList());
 
+        //total price of cart before discount
         Long costOfCart = itemShowInCartDTOS.stream().mapToLong(ItemShowInCartDTO::getTotalPrice).sum();
+        //total import price
         Long totalImportPrice = itemShowInCartDTOS.stream().mapToLong(item -> item.getImportPrice() * item.getQuantity()).sum();
         Long discountInBill = itemsForCartAndHeader.getDiscountDTOS().stream().mapToLong(DiscountDTO::getPercent).sum();
+
         cartDTO.setTotalMoney(costOfCart);
         cartDTO.setTotalImportMoney(totalImportPrice);
+        //final money client pay
         Long finalPay = costOfCart - (costOfCart * discountInBill) / 100;
         cartDTO.setFinalPayMoney(finalPay);
 
@@ -313,5 +316,6 @@ public class ProductServiceImpl implements ProductService {
         ResponseEntity<CartDTO> responseEntity = restTemplate.exchange(APIConstant.WEB_URI + "/products/createBill"
                 , HttpMethod.POST, new HttpEntity<CartDTO>(cartDTO, securityService.getHeadersWithToken()), CartDTO.class);
     }
+
 
 }

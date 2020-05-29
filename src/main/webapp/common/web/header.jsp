@@ -53,7 +53,7 @@
                     <i class="fa fa-bars"></i>
                 </button>
                 <a class="navbar-brand" href="<c:url value="/home"/>"><img
-                        src="<c:url value="/shoptemplate/images/logo3.png"/>"
+                        src="<c:url value="/shoptemplate/images/logosso.png"/>"
                         class="logo" alt=""></a>
             </div>
             <!-- End Header Navigation -->

@@ -46,18 +46,20 @@
 
                                     <div class="form-group row">
                                         <label class="col-lg-4 col-form-label" for="val-username">Tài khoản
+                                            <span class="text-danger">*</span>
                                         </label>
                                         <c:if test="${submitType == 'Thêm mới'}">
                                             <div class="col-lg-6">
-                                                <input type="text" class="form-control" id="val-username" name="userName"
-                                                       maxlength="25" placeholder="Enter a username.."
+                                                <input type="text" class="form-control" id="val-username"
+                                                       name="userName"
+                                                       maxlength="25" placeholder=""
                                                        value="${user.userName}">
                                             </div>
                                         </c:if>
                                         <c:if test="${submitType == 'Cập nhật'}">
                                             <div class="col-lg-6">
                                                 <input type="text" class="form-control" id="userName" name="userName"
-                                                       maxlength="25" placeholder="Enter a username.." readonly
+                                                       maxlength="25" placeholder="" readonly
                                                        value="${user.userName}">
                                             </div>
                                         </c:if>
@@ -67,25 +69,35 @@
                                         </label>
                                         <div class="col-lg-6">
                                             <input type="password" class="form-control" id="password"
-                                                   maxlength="25" name="password" placeholder="Enter a Password.." value="">
+                                                   maxlength="25" name="password" placeholder="" value="">
                                         </div>
                                     </div>
-                                        <div class="form-group row">
-                                            <label class="col-lg-4 col-form-label" for="val-username"> Xác nhận mật khẩu
-                                            </label>
-                                            <div class="col-lg-6">
-                                                <input type="password" class="form-control" id="confirmPassword"
-                                                       maxlength="25" name="confirmPassword"
-                                                       placeholder="Confirm Password.." value="">
-                                            </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="val-username"> Xác nhận mật khẩu
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="password" class="form-control" id="confirmPassword"
+                                                   maxlength="25" name="confirmPassword"
+                                                   placeholder="" value="">
                                         </div>
+                                    </div>
                                     <div class="form-group row">
                                         <label class="col-lg-4 col-form-label" for="val-username">Họ tên
+                                            <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-lg-6">
                                             <input type="text" class="form-control" id="fullName" name="fullName"
-                                                   maxlength="30" placeholder="Enter a Full Name.."
+                                                   maxlength="30" placeholder=""
                                                    value="${user.fullName}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-4 col-form-label" for="val-username">Điện thoại
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="col-lg-6">
+                                            <input type="text" class="form-control" id="phone" name="phone"
+                                                   maxlength="15" placeholder="" value="${user.phone}">
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -93,15 +105,16 @@
                                         </label>
                                         <div class="col-lg-6">
                                             <input type="email" class="form-control" id="email" name="email"
-                                                   maxlength="40" placeholder="Enter a Email.." value="${user.email}">
+                                                   maxlength="40" placeholder="" value="${user.email}">
                                         </div>
                                     </div>
+
                                     <div class="form-group row">
-                                        <label class="col-lg-4 col-form-label" for="val-username">Điện thoại
+                                        <label class="col-lg-4 col-form-label" for="val-username">Địa chỉ
                                         </label>
                                         <div class="col-lg-6">
-                                            <input type="text" class="form-control" id="phone" name="phone"
-                                                   maxlength="15" placeholder="Enter a Phone.." value="${user.phone}">
+                                            <input type="text" class="form-control" id="address" name="address"
+                                                   maxlength="100" placeholder="" value="${user.address}">
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -340,27 +353,36 @@
         var phone = document.getElementById("phone").value;
 
         var textError = "";
-        if ((pass !== '' && confirmPass === '') || (pass === '' && confirmPass !== '') || email === ''
-            || user === '' || fullName === '' || phone === '') {
+        if (user === '' || fullName === '' || phone === '') {
+            textError = "Vui lòng điện đầy đủ các mục có gắn dấu *";
 
-            textError = "Vui lòng điện đầy đủ thông tin";
+        } else if ((pass !== '' && confirmPass === '') || (pass === '' && confirmPass !== '')) {
+            textError = "Hãy điền cả mật khẩu và xác nhận mật khẩu hoặc bỏ qua nếu không muốn thay đổi!";
+            $('#password').focus();
+
         } else if (user != null && user.length < 3) {
             textError = "Tên tài khoản cần ít nhất 3 kí tự!";
             $('#val-username').focus();
+
         } else if (pass !== '' && pass.length < 3) {
             textError = "Mật khẩu cần ít nhất 6 kí tự!";
             $('#password').focus();
+
         } else if (fullName.length < 3) {
             textError = "Tên cần ít nhất 3 kí tự!";
+
             $('#password').focus();
         } else if ((pass !== confirmPass)) {
             textError = "Mật khẩu không trùng khớp!";
+
             $('#password').focus();
         } else if (!filter.test(email)) {
             textError = "Email không đúng!";
+
             $('#email').focus();
         } else if (!phoneFilter.test(phone)) {
             textError = "Số điện thoại không đúng!";
+
             $('#phone').focus();
         }
         return textError;

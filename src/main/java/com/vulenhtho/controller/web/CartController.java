@@ -59,7 +59,8 @@ public class CartController {
     }
 
     @GetMapping("/createBill")
-    public void createBill() {
+    public void createBill(HttpServletRequest request) {
+        productService.updateBillInfo(request);
         productService.createBill();
     }
 

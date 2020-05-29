@@ -32,7 +32,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         userDTO.setUserName(authentication.getName());
         userDTO.setPassword(authentication.getCredentials().toString());
 
-        HttpEntity<UserDTO> entity = new HttpEntity<>(userDTO, headers);
+        HttpEntity<?> entity = new HttpEntity<Object>(userDTO, headers);
         JwtResponse jwtResponse = restTemplate.postForObject(APIConstant.HOST + "/api/auth/login", entity, JwtResponse.class);
 
         Set<GrantedAuthority> authoritySet = jwtResponse.getUserDTO().getRoles().stream()
@@ -43,6 +43,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         customUserDetail.setType(jwtResponse.getType());
         customUserDetail.setFullName(jwtResponse.getUserDTO().getFullName());
         customUserDetail.setPhone(jwtResponse.getUserDTO().getPhone());
+        customUserDetail.setAddress(jwtResponse.getUserDTO().getAddress());
 
         return new UsernamePasswordAuthenticationToken(customUserDetail, userDTO.getPassword(), authoritySet);
 

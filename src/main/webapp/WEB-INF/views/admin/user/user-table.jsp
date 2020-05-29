@@ -4,7 +4,7 @@
 <html lang="en">
 <head>
     <%@include file="/common/admin/head.jsp" %>
-    <title>Mrs-Sso Admin</title>
+    <title>Quản lý tài khoản</title>
 </head>
 <body class="v-light vertical-nav fix-header fix-sidebar">
 <div id="preloader">
@@ -141,7 +141,7 @@
                                         <col width="auto" span="2">
                                         <col width="200" span="1">
                                     </colgroup>
-                                    <thead class="thead-muted">
+                                    <thead class="thead-info">
                                     <tr>
                                         <th scope="col">ID</th>
                                         <th scope="col">User Name</th>
@@ -157,7 +157,7 @@
                                                     style="background-color: #989898;font-weight: bold;border-color: #cdcdcd"
                                                     class="btn btn-sm btn-primary" id="btnDelete"
                                                     data-toggle="tooltip" data-html="true" title
-                                                    data-original-title="<em>Chọn để xóa</em>">Delete
+                                                    data-original-title="<em>Chọn để xóa</em>">Xóa
                                             </button>
                                         </th>
                                     </tr>
@@ -280,16 +280,14 @@
         e.preventDefault();
 
         var ids = "";
-        var userId;
         var formData = $('#formSubmit').serializeArray();
         $.each(formData, function (i, v) {
             if (v.name === "userID") {
-                userId = parseInt(v.value, 10);
-                ids = ids + userId.toString() + ',';
+                ids = ids + v.value + ',';
             }
         });
         document.getElementById("userIds").value = ids;
-        if (ids === "" || ids == null){
+        if (ids === "" || ids == null) {
             swal("Hãy chọn những tài khoản muốn xóa!", {
                 icon: "info",
             });

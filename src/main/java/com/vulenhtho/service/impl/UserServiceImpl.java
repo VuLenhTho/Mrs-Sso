@@ -103,6 +103,7 @@ public class UserServiceImpl implements UserService {
         userDTO.setPassword(request.getParameter("password"));
         userDTO.setEmail(request.getParameter("email"));
         userDTO.setFullName(request.getParameter("fullName"));
+        userDTO.setAddress(request.getParameter("address"));
         userDTO.setLocked(Boolean.valueOf(request.getParameter("locked")));
         userDTO.setActivated(Boolean.valueOf(request.getParameter("activated")));
         userDTO.setPhone(request.getParameter("phone"));

@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <!-- Site Metas -->
-<title>SnowQueen Fashion</title>
+<title>Mrs Sso</title>
 <meta name="keywords" content="">
 <meta name="description" content="">
 <meta name="author" content="">

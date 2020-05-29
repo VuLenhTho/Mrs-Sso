@@ -71,7 +71,8 @@
                                     <td class="quantity-box">
                                         <input type="number" size="3" value="${item.quantity}" name="quantity"
                                                id="quantity"
-                                               min="1" max="100" step="1" class="c-input-text qty text">
+                                               min="1" max="100" step="1" class="c-input-text qty text"
+                                               onchange="handleShowBtnCreateBill()">
                                         <input type="hidden" name="productId" value="${item.id}">
                                     </td>
                                     <td class="total-pr">
@@ -265,6 +266,8 @@
                             type="submit">Tạo đơn thàng
                     </button>
                 </div>
+                <br>
+                <p style="margin-left: auto; margin-right: 0" id="warningUpdateCartText"></p>
             </div>
 
         </form>
@@ -296,6 +299,14 @@
 <script src="<c:url value="/shoptemplate/js/contact-form-script.js"/>"></script>
 <script src="<c:url value="/shoptemplate/js/custom.js"/>"></script>
 <script src="<c:url value="/template/assets/plugins/sweetalert/js/sweetalert.min.js"/>"></script>
+
+<script>
+    function handleShowBtnCreateBill(e) {
+        let btnCreate = document.getElementById("createBill");
+        btnCreate.disabled = true;
+        document.getElementById("warningUpdateCartText").innerHTML = "Bạn đã thực hiện chỉnh sửa giỏ hàng<br>Vui lòng cập nhật lại trước khi tạo !!";
+    }
+</script>
 
 <script>
     //handle update cart
@@ -354,14 +365,14 @@
     $('#formUpdateBillInfo').submit(function (event) {
         event.preventDefault();
         swal({
-            title: "Đơn hàng của bạn sẽ được tạo!!",
+            title: "Đơn hàng của bạn sẽ được tạo?",
             icon: "info",
             buttons: {
-                cancel: {
+                confirm: {
                     text: "Đồng ý!",
                     visible: true,
                 },
-                confirm: {
+                cancel: {
                     text: "Quay lại",
                     visible: true,
                 }
@@ -369,16 +380,32 @@
 
         })
             .then((value) => {
-                swal({
-                    title: "Tạo đơn hàng thành công !!",
-                    text: "Hãy chờ nhân viên cửa hàng liên hệ xác nhận đơn hàng.",
-                    icon: "success"
-                });
+                if (value) {
+                    swal({
+                        title: "Tạo đơn hàng thành công !!",
+                        text: "Hãy chờ nhân viên cửa hàng liên hệ xác nhận đơn hàng.",
+                        icon: "success"
+                    });
+                    let receiver = document.getElementById("receiver").value;
+                    let phone = document.getElementById("phone").value;
+                    let address = document.getElementById("address").value;
+                    let note = document.getElementById("note").value;
+                    let accountName = document.getElementById("cc-name").value;
+                    let accountNumber = document.getElementById("cc-number").value;
+                    let paymentMethod = "";
+                    let radioButtons = document.getElementsByName("paymentMethod");
 
-                updateItems();
-                updateBillInfo();
-                $.get("http://localhost:8080/createBill", function (data, status) {
-                });
+                    for (let i = 0; i < radioButtons.length; i++) {
+                        if (radioButtons[i].checked === true) {
+                            paymentMethod = radioButtons[i].value;
+                        }
+                    }
+
+                    $.get("http://localhost:8080/createBill?receiver=" + receiver + "&phone=" + phone + "&address=" + address + "&note=" + note + "&paymentMethod="
+                        + paymentMethod + "&accountName=" + accountName + "&accountNumber=" + accountNumber + "", function (data, status) {
+                    });
+                }
+
             });
 
 
