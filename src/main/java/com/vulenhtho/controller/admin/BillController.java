@@ -34,9 +34,7 @@ public class BillController {
 
     @GetMapping("/bills/deletes")
     public ModelAndView deletes(HttpServletRequest request) {
-
         String result = billService.deletes(request);
-
         ModelAndView modelAndView = getListBill(1, 5, "all", "all"
                 , "all", null);
         modelAndView.addObject("result", result);

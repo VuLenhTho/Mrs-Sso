@@ -34,7 +34,7 @@ public class ProductController {
             , @RequestParam(required = false, defaultValue = "date-des") String sort
     ) {
         FilterProductRequest filterProductRequest = new FilterProductRequest(subCategoryId, page, size, sort, search);
-        return productService.getListProductPage(filterProductRequest);
+        return productService.getListProductPage(filterProductRequest, false);
 
     }
 

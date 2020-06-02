@@ -56,7 +56,7 @@ public class BillServiceImpl implements BillService {
             itemDTO.setVnTotalPrice(CommonUtils.convertToVnCurrency(itemDTO.getPrice() * itemDTO.getQuantity()));
         });
         modelAndView.addObject("bill", bill);
-        if (PaymentMethod.PAY_BY_TRANSFER.equals(bill.getPaymentMethod())) {
+        if (PaymentMethod.PAY_BY_TRANSFER.equals(bill.getPaymentMethod()) && bill.getPaymentInfo() != null) {
             List<String> paymentInfo = Arrays.stream(bill.getPaymentInfo().split(",")).collect(Collectors.toList());
             modelAndView.addObject("accName", paymentInfo.get(0));
             modelAndView.addObject("accNumber", paymentInfo.get(1));

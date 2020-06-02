@@ -12,4 +12,6 @@ public interface UserService {
     String deletesByAdmin(HttpServletRequest request);
 
     boolean isLogged();
+
+    boolean isAdmin();
 }

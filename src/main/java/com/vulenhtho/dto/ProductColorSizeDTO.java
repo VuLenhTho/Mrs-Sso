@@ -16,6 +16,10 @@ public class ProductColorSizeDTO {
 
     private Long colorId;
 
+    private String color;
+
+    private String size;
+
     private Long sizeId;
 
     private Long quantity;

@@ -3,7 +3,6 @@ package com.vulenhtho.security;
 import com.vulenhtho.config.APIConstant;
 import com.vulenhtho.dto.UserDTO;
 import com.vulenhtho.dto.response.JwtResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -21,8 +20,11 @@ import java.util.stream.Collectors;
 
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
-    @Autowired
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
+
+    public CustomAuthenticationProvider(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {

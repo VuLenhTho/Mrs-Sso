@@ -3,15 +3,13 @@ package com.vulenhtho.service.impl;
 import com.vulenhtho.config.APIConstant;
 import com.vulenhtho.dto.*;
 import com.vulenhtho.dto.enumeration.PaymentMethod;
-import com.vulenhtho.dto.request.FilterProductRequest;
-import com.vulenhtho.dto.request.ListProductPageRequest;
-import com.vulenhtho.dto.request.PageHeaderDTO;
-import com.vulenhtho.dto.request.WebHomeRequest;
+import com.vulenhtho.dto.request.*;
 import com.vulenhtho.dto.response.ProductWebResponse;
 import com.vulenhtho.dto.response.ProductWebWindowViewResponseDTO;
 import com.vulenhtho.model.response.ProductFilterWebResponse;
 import com.vulenhtho.security.CustomUserDetail;
 import com.vulenhtho.service.ProductService;
+import com.vulenhtho.service.UserService;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -25,10 +23,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.vulenhtho.util.CommonUtils.convertToVnCurrency;
@@ -36,12 +31,16 @@ import static com.vulenhtho.util.CommonUtils.convertToVnCurrency;
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    private RestTemplate restTemplate;
-    private SecurityServiceImpl securityService;
+    private final RestTemplate restTemplate;
 
-    public ProductServiceImpl(RestTemplate restTemplate, SecurityServiceImpl securityService) {
+    private final SecurityServiceImpl securityService;
+
+    private final UserService userService;
+
+    public ProductServiceImpl(RestTemplate restTemplate, SecurityServiceImpl securityService, UserService userService) {
         this.restTemplate = restTemplate;
         this.securityService = securityService;
+        this.userService = userService;
     }
 
     @Override
@@ -62,6 +61,7 @@ public class ProductServiceImpl implements ProductService {
         modelAndView.addObject("bestSaleProducts", webHomeRequest.getHotProductList());
         setHeaderToModelAndView(modelAndView, webHomeRequest.getHeaderResponse());
         modelAndView.addObject("welcomeSlide", webHomeRequest.getWelcomeSlideDTOS());
+        setLinkToAdminPage(modelAndView);
 
         return modelAndView;
     }
@@ -72,15 +72,17 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ModelAndView getListProductPage(FilterProductRequest filter) {
-        ModelAndView modelAndView = new ModelAndView("web/product/product-list");
+    public ModelAndView getListProductPage(FilterProductRequest filter, boolean forAdmin) {
+        ModelAndView modelAndView = new ModelAndView("/web/product/product-list");
+        if (forAdmin) {
+            modelAndView.setViewName("/admin/product/product-list");
+        }
         String url = APIConstant.WEB_URI + "/products/window-view?page=" + (Integer.parseInt(filter.getPage()) - 1) + "&size=" + filter.getSize();
         if (StringUtils.isEmpty(filter.getSearch())) {
             if (!StringUtils.isEmpty(filter.getSubCategoryId())) url += "&subCategoryId=" + filter.getSubCategoryId();
         } else {
             url += "&search=" + filter.getSearch();
         }
-
         url += "&sort=" + filter.getSort();
 
         ResponseEntity<ListProductPageRequest> productPageRequest = restTemplate.exchange(url, HttpMethod.GET
@@ -100,6 +102,8 @@ public class ProductServiceImpl implements ProductService {
 
         ProductFilterWebResponse filterWebResponse = new ProductFilterWebResponse(filter.getSearch(), filter.getSort(), filter.getSubCategoryId());
         modelAndView.addObject("filter", filterWebResponse);
+        setLinkToAdminPage(modelAndView);
+
         return modelAndView;
     }
 
@@ -124,6 +128,42 @@ public class ProductServiceImpl implements ProductService {
         setProductHasSameSubCategory(modelAndView, productWebResponse.getSubCategoryDTO().getId());
         setHeaderToModelAndView(modelAndView, productResponseEntity.getBody().getHeader());
         modelAndView.addObject("productStatus", productWebResponse.getStatus());
+        setLinkToAdminPage(modelAndView);
+        return modelAndView;
+    }
+
+    @Override
+    public ModelAndView getDetailProductByAdmin(Long id) {
+        ModelAndView modelAndView = new ModelAndView("/admin/product/product-detail");
+        ResponseEntity<ProductDetailDTO> productDetailDTOResponseEntity = restTemplate.exchange(APIConstant.ADMIN_URI + "/product/" + id
+                , HttpMethod.GET, new HttpEntity<ProductDetailDTO>(securityService.getHeadersWithToken()), ProductDetailDTO.class);
+        //todo
+        if (!HttpStatus.OK.equals(productDetailDTOResponseEntity.getStatusCode())) {
+
+        }
+        ProductDetailDTO productDetailDTO = productDetailDTOResponseEntity.getBody();
+        productDetailDTO.getProductDTO().getProductColorSizeDTOS().sort(Comparator.comparing(ProductColorSizeDTO::getId));
+        modelAndView.addObject("product", productDetailDTO.getProductDTO());
+
+        productDetailDTO.getColorDTOS().sort((o1, o2) -> o2.getName().compareTo(o1.getName()));
+        productDetailDTO.getSizeDTOS().sort(Comparator.comparing(SizeDTO::getName));
+
+        modelAndView.addObject("color", productDetailDTO.getColorDTOS());
+        modelAndView.addObject("size", productDetailDTO.getSizeDTOS());
+        modelAndView.addObject("subCategoryDTOS", productDetailDTO.getSubCategoryDTOS());
+        modelAndView.addObject("token", securityService.getToken());
+        return modelAndView;
+    }
+
+    @Override
+    public ModelAndView getCreateProductByAdmin() {
+        ModelAndView modelAndView = new ModelAndView("/admin/product/product-create");
+
+        InfoToCreateProductDTO infoToCreateProductDTO = restTemplate.exchange(APIConstant.ADMIN_URI + "/product/infoToCreate"
+                , HttpMethod.GET, new HttpEntity<InfoToCreateProductDTO>(securityService.getHeadersWithToken()), InfoToCreateProductDTO.class).getBody();
+        modelAndView.addObject("token", securityService.getToken());
+        modelAndView.addObject("subCategoryDTOS", infoToCreateProductDTO.getSubCategoryDTOS());
+        modelAndView.addObject("discountDTOS", infoToCreateProductDTO.getDiscountDTOS());
         return modelAndView;
     }
 
@@ -315,6 +355,12 @@ public class ProductServiceImpl implements ProductService {
 
         ResponseEntity<CartDTO> responseEntity = restTemplate.exchange(APIConstant.WEB_URI + "/products/createBill"
                 , HttpMethod.POST, new HttpEntity<CartDTO>(cartDTO, securityService.getHeadersWithToken()), CartDTO.class);
+    }
+
+    private void setLinkToAdminPage(ModelAndView modelAndView) {
+        if (userService.isAdmin()) {
+            modelAndView.addObject("isAdmin", true);
+        }
     }
 
 

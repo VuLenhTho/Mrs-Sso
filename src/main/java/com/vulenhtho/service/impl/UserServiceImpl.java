@@ -163,6 +163,13 @@ public class UserServiceImpl implements UserService {
         return authoritySet.stream().anyMatch(role -> hasARoleInRoleList(role.getAuthority()));
     }
 
+    @Override
+    public boolean isAdmin() {
+        Collection<? extends GrantedAuthority> authoritySet = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+        return authoritySet.stream().anyMatch(role -> role.getAuthority().equals(Constant.ROLE_ADMIN));
+    }
+
+
     private boolean hasARoleInRoleList(String role) {
         return Constant.ROLE_ADMIN.equals(role) || Constant.ROLE_SALE.equals(role) || Constant.ROLE_USER.equals(role);
     }

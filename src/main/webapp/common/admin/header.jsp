@@ -36,7 +36,6 @@
                 <li class="icons">
                     Xin chào <span id="creator"><%=SecurityUtil.getUserName()%></span>
                 </li>
-
                 <li class="icons"><a href="javascript:void(0)"><i class="mdi mdi-account f-s-20" aria-hidden="true"></i></a>
                     <div class="drop-down dropdown-profile animated bounceInDown">
                         <div class="dropdown-content-body">

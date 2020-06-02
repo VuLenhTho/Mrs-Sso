@@ -76,7 +76,7 @@
                                                 <label class="col-lg-3 col-form-label" for="phone">Điện thoại
                                                 </label>
                                                 <div class="col-lg-9">
-                                                    <input type="text" class="form-control" id="phone"
+                                                    <input type="number" class="form-control" id="phone"
                                                            name="phone" placeholder="" value="${bill.phone}">
                                                 </div>
                                             </div>
@@ -113,15 +113,15 @@
                                                 </label>
                                                 <div class="col-lg-9">
                                                     <input type="text" class="form-control" id="accName"
-                                                           name="accName" placeholder="" value="${accName} ">
+                                                           name="accName" placeholder="" value="${accName}">
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label class="col-lg-3 col-form-label" for="accNumber">Số tài khoản
                                                 </label>
                                                 <div class="col-lg-9">
-                                                    <input type="text" class="form-control" id="accNumber"
-                                                           name="accNumber" placeholder="" value="${accNumber} ">
+                                                    <input type="number" class="form-control" id="accNumber"
+                                                           name="accNumber" placeholder="" value="${accNumber}">
                                                 </div>
                                             </div>
                                         </div>
@@ -255,7 +255,74 @@
             </div>
         </div>
 
-        <h4 class="card-title" style="margin-left: 12px">Danh sách sản phẩm</h4>
+        <button style="margin-left: 19px" id="btnAddItem" type="button" class="btn btn-rounded btn-info"><span
+                class="btn-icon-left"><i
+                class="fa fa-plus color-info"></i> </span>Thêm sản phẩm
+        </button>
+        <div class="row">
+            <div class="col-sm-7 col-lg-7">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="form-validation">
+                            <div class="form-group row">
+                                <div class="col-sm-6 col-lg-6">
+                                    <div class="row">
+                                        <label class="col-lg-3 col-form-label" for="addProductId">Mã/ Tên sản phẩm
+                                        </label>
+                                        <div class="col-lg-9">
+                                            <input type="text" class="form-control" id="addProductId"
+                                                   name="addProductId" placeholder="" value="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-lg-6">
+                                    <div class="row">
+                                        <label class="col-lg-3 col-form-label" for="addProductQuantity">
+                                            Số lượng
+                                        </label>
+                                        <div class="col-lg-9">
+                                            <input type="number" class="form-control" id="addProductQuantity"
+                                                   name="addProductQuantity" placeholder="" max="50" min="1" step="1"
+                                                   value="1">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-6 col-lg-6">
+                                    <div class="row">
+                                        <label class="col-lg-3 col-form-label" for="addProductColor">
+                                            Mã/Tên màu
+                                        </label>
+                                        <div class="col-lg-9">
+                                            <input type="text" class="form-control" id="addProductColor"
+                                                   name="addProductColor" placeholder="" value="">
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-sm-6 col-lg-6">
+                                    <div class="row">
+                                        <label class="col-lg-3 col-form-label" for="addProductSize">
+                                            Mã/Tên Size
+                                        </label>
+                                        <div class="col-lg-9">
+                                            <input type="text" class="form-control" id="addProductSize"
+                                                   name="addProductSize" placeholder="" value="">
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h4 class="card-title" style="margin-left: 19px">Danh sách sản phẩm</h4>
         <div class="row">
             <div class="col-lg-12">
                 <form action="" id="formItemList" method="get">
@@ -289,7 +356,6 @@
                                     </td>
                                     <td class="quantity-box">
                                         <input type="number" value="${item.quantity}" name="quantity"
-                                               id="quantity"
                                                min="1" max="100" step="1" class="c-input-text qty text">
                                         <input type="hidden" name="productId" value="${item.productId}">
                                     </td>
@@ -312,6 +378,7 @@
             </div>
         </div>
 
+
         <input type="hidden" value="${token}" id="token">
         <%@include file="/common/admin/footer.jsp" %>
 
@@ -330,86 +397,181 @@
     <script src="<c:url value="/template/paging/jquery.twbsPagination.min.js"/>"></script>
     <script src="<c:url value="/template/assets/plugins/sweetalert/js/sweetalert.min.js"/>"></script>
 
-    <script>
+        <script>
+            document.getElementById("btnUpdateBill").onclick = function () {
+                let paymentMethod = document.getElementById("paymentMethod").value;
+                let accName = document.getElementById("accName").value;
+                let accNumber = document.getElementById("accNumber").value;
+                let receiver = document.getElementById("receiver").value;
+                let phone = document.getElementById("phone").value;
+                let address = document.getElementById("address").value;
+                let textErr = "";
 
-        document.getElementById("btnUpdateBill").onclick = function () {
-            updateBill();
-        }
-
-        function updateBill() {
-            let productIds = "";
-            let quantityString = "";
-            let productIdsToDelete = "";
-            let formData = $('#formItemList').serializeArray();
-
-            $.each(formData, function (i, v) {
-                if (v.name === "productIdsToDelete") {
-                    productIdsToDelete = productIdsToDelete + v.value + ',';
+                if (paymentMethod === "PAY_BY_TRANSFER" && (!accName || !accNumber)) {
+                    textErr = "Hãy điền thông tin tài khoản thanh toán !!"
+                } else if (!receiver) {
+                    textErr = "Hãy điền tên người nhận!!"
+                } else if (!phone) {
+                    textErr = "Hãy điền số điện thoại người nhận!!"
+                } else if (!address) {
+                    textErr = "Hãy điền địa chỉ giao hàng!!"
                 }
-                if (v.name === "productId") {
-                    productIds = productIds + v.value + ',';
+                if (textErr !== "") {
+                    swal(textErr, {
+                        icon: "error",
+                    });
+                } else {
+                    updateBill();
                 }
-                if (v.name === "quantity") {
-                    quantityString = quantityString + v.value + ',';
-                }
-            });
-
-            let billDTO = {
-                id: document.getElementById("id").value,
-                receiver: document.getElementById("receiver").value,
-                phone: document.getElementById("phone").value,
-                address: document.getElementById("address").value,
-                note: document.getElementById("note").value,
-                paymentMethod: document.getElementById("paymentMethod").value,
-                accountName: document.getElementById("accName").value,
-                accountNumber: document.getElementById("accNumber").value,
-                status: document.getElementById("status").value
             }
 
-            let updateBillDTO = {
-                billDTO: billDTO,
-                productIdsToDel: productIdsToDelete,
-                productIds: productIds,
-                quantityOfProducts: quantityString
+            document.getElementById("btnAddItem").onclick = function () {
+                addItem();
             }
 
-            callUpdateBill(updateBillDTO)
+            function updateBill() {
+                let productIds = "";
+                let quantityString = "";
+                let productIdsToDelete = "";
+                let formData = $('#formItemList').serializeArray();
 
-        }
+                $.each(formData, function (i, v) {
+                    if (v.name === "productIdsToDelete") {
+                        productIdsToDelete = productIdsToDelete + v.value + ',';
+                    }
+                    if (v.name === "productId") {
+                        productIds = productIds + v.value + ',';
+                    }
+                    if (v.name === "quantity") {
+                        quantityString = quantityString + v.value + ',';
+                    }
+                });
+
+                let paymentInfo = document.getElementById("accName").value + "," + document.getElementById("accNumber").value;
+
+                let billDTO = {
+                    id: document.getElementById("id").value,
+                    receiver: document.getElementById("receiver").value,
+                    phone: document.getElementById("phone").value,
+                    address: document.getElementById("address").value,
+                    note: document.getElementById("note").value,
+                    paymentMethod: document.getElementById("paymentMethod").value,
+                    paymentInfo: paymentInfo,
+                    status: document.getElementById("status").value
+                }
+
+                let updateBillDTO = {
+                    billDTO: billDTO,
+                    productIdsToDel: productIdsToDelete,
+                    productIds: productIds,
+                    quantityOfProducts: quantityString
+                }
+
+                callUpdateBill(updateBillDTO)
+            }
+
+            function addItem() {
+                let product = document.getElementById("addProductId").value;
+                let color = document.getElementById("addProductColor").value;
+                let size = document.getElementById("addProductSize").value;
+                let quantity = document.getElementById("addProductQuantity").value;
+                let billId = document.getElementById("id").value;
+                let token = document.getElementById("token").value;
+
+                let data = {
+                    productInfo: product,
+                    colorInfo: color,
+                    sizeInfo: size,
+                    quantity: quantity,
+                    billId: billId
+                }
+
+                $.ajax({
+                    url: ('http://localhost:8888/api/admin/bill/addItem'),
+                    type: 'PUT',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    dataType: 'text',
+                    headers: {
+                        Authorization: token
+                    },
+                    success: function () {
+                        swal({
+                            title: "Thêm sản phẩm thành công",
+                            icon: "success",
+                        })
+                            .then((value) => {
+                                location.reload();
+                            });
+
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        let message = "Thêm sản phẩm thất bại, có lỗi xảy ra";
+                        switch (xhr.status) {
+                            case 400:
+                                if (xhr.responseText === 'NotEnoughProductQuantity') {
+                                    message = "Không đủ số lượng sản phẩm trong kho, hãy kiểm tra lại !!";
+                                }
+                                break;
+                            case 404:
+                                if (xhr.responseText === 'NotFound') {
+                                    message = "Không tìm thấy sản phẩm, hãy kiểm tra lại !!";
+                                }
+                                break;
+                        }
+                        swal(message, {
+                            icon: "error",
+                        });
+                    }
+                });
+            }
 
 
-        function callUpdateBill(data) {
-            let token = document.getElementById("token").value;
+            function callUpdateBill(data) {
+                let token = document.getElementById("token").value;
 
-            $.ajax({
-                url: ('http://localhost:8888/api/admin/bill'),
-                type: 'PUT',
-                contentType: 'application/json',
+                $.ajax({
+                    url: ('http://localhost:8888/api/admin/bill'),
+                    type: 'PUT',
+                    contentType: 'application/json',
                 data: JSON.stringify(data),
                 dataType: 'text',
                 headers: {
                     Authorization: token
                 },
-                success: function () {
-                    swal({
-                        title: "Cập nhật thành công",
-                        icon: "success",
-                    })
-                        .then((value) => {
-                            location.reload();
+                    success: function () {
+                        swal({
+                            title: "Cập nhật thành công",
+                            icon: "success",
+                        })
+                            .then((value) => {
+                                location.reload();
+                            });
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        let mesTitle = "Cập nhật thất bại, có lỗi xảy ra";
+                        let message = "";
+                        switch (xhr.status) {
+                            case 400:
+                                if (xhr.responseText === 'CanNotChangeQuantityAfterCONFIRMEDStatus') {
+                                    mesTitle = "Không thể thay đổi số lượng sản phẩm sau khi xác nhận đơn hàng !!";
+                                    message = "Hãy chuyển trạng thái đơn hàng về đơn mới hoặc đang kiểm tra và thay đổi số lượng !!"
+                                }
+                                if (xhr.responseText === 'PriceHasChanged') {
+                                    mesTitle = "Không thể thay đổi số lượng sản phẩm vì giá đã thay đổi !!";
+                                }
+                                break;
+                        }
+                        swal(mesTitle, {
+                            text: message,
+                            icon: "error",
                         });
-
-                },
-                error: function () {
-                    swal("Cập nhật thất bại, có lỗi xảy ra", {
-                        icon: "error",
-                    });
-                }
-            });
-        }
+                    }
+                });
+            }
 
 
-    </script>
+        </script>
 
 </body>
 </html>

@@ -99,8 +99,8 @@
                                 <label class="size-label">Size</label>
                                 <select id="size" class="selectpicker show-tick form-control">
                                     <option value="0" selected="selected">Chọn size</option>
-                                    <c:forEach items="${product.sizeDTOS}" var="size">
-                                        <option value="${size.id}">${size.name}</option>
+                                    <c:forEach items="${product.sizeDTOS}" var="sizeVar">
+                                        <option value="${sizeVar.id}">${sizeVar.name}</option>
                                     </c:forEach>
                                 </select>
                             </div>

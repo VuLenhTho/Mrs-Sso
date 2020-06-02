@@ -4,8 +4,9 @@ import com.vulenhtho.dto.enumeration.ProductStatus;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -35,15 +36,17 @@ public class ProductDTO {
 
     private String createdBy;
 
-    private Instant createdDate;
+    private String createdDate;
 
     private String lastModifiedBy;
 
-    private Instant lastModifiedDate;
+    private String lastModifiedDate;
 
     private CategoryDTO categoryDTO;
 
-    private Set<ProductColorSizeDTO> productColorSizeDTOS = new HashSet<>();
+    private SubCategoryDTO subCategoryDTO;
+
+    private List<ProductColorSizeDTO> productColorSizeDTOS = new ArrayList<>();
 
     private Set<ColorDTO> colorDTOS = new HashSet<>();
 

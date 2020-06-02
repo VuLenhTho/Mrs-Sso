@@ -26,6 +26,11 @@
                     <ul>
                         <c:if test="${name != null && name != 'anonymousUser'}">
                             <li><a href="/#">Xin chào <span><%=SecurityUtil.getUserName()%></span></a></li>
+                            <c:if test="${isAdmin == true}">
+                                <li class="icons"><a href="/admin/home"><span
+                                        id="linkToAdminPage">Quản lý cửa hàng</span></a>
+                                </li>
+                            </c:if>
                             <li><a href="<c:url value="/logout"/>">Đăng xuất</a></li>
                         </c:if>
                         <c:if test="${name == null || name == 'anonymousUser'}">

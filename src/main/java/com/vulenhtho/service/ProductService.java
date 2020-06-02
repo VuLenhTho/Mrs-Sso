@@ -9,9 +9,13 @@ import javax.servlet.http.HttpServletRequest;
 public interface ProductService {
     ModelAndView getWelcomePage();
 
-    ModelAndView getListProductPage(FilterProductRequest filterProductRequest);
+    ModelAndView getListProductPage(FilterProductRequest filterProductRequest, boolean forAdmin);
 
     ModelAndView getDetailProductPage(Long productId);
+
+    ModelAndView getDetailProductByAdmin(Long id);
+
+    ModelAndView getCreateProductByAdmin();
 
     void addProductToCart(ItemDTO itemDTO);
 
