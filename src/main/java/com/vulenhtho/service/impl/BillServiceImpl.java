@@ -6,6 +6,7 @@ import com.vulenhtho.dto.BillDTO;
 import com.vulenhtho.dto.enumeration.BillStatus;
 import com.vulenhtho.dto.enumeration.PaymentMethod;
 import com.vulenhtho.dto.request.PageBillsRequest;
+import com.vulenhtho.dto.request.ReportByMonthAndYearDTO;
 import com.vulenhtho.dto.response.BillFilterResponse;
 import com.vulenhtho.service.BillService;
 import com.vulenhtho.service.SecurityService;
@@ -132,5 +133,19 @@ public class BillServiceImpl implements BillService {
             default:
                 return null;
         }
+    }
+
+    @Override
+    public ModelAndView getReport(Integer month, Integer year) {
+        ModelAndView modelAndView = new ModelAndView("/admin/report/report");
+        ReportByMonthAndYearDTO reportByMonthAndYearDTO = restTemplate.exchange(APIConstant.ADMIN_URI + "/bill/reportByMonthAndYear?month=" + month + "&year=" + year,
+                HttpMethod.GET, new HttpEntity<ReportByMonthAndYearDTO>(securityService.getHeadersWithToken()), ReportByMonthAndYearDTO.class).getBody();
+
+        reportByMonthAndYearDTO.setVnImportMoney(CommonUtils.convertToVnCurrency(reportByMonthAndYearDTO.getImportMoney()));
+        reportByMonthAndYearDTO.setVnInterestMoney(CommonUtils.convertToVnCurrency(reportByMonthAndYearDTO.getInterestMoney()));
+        reportByMonthAndYearDTO.setVnMoneyFromSale(CommonUtils.convertToVnCurrency(reportByMonthAndYearDTO.getMoneyFromSale()));
+        modelAndView.addObject("reportData", reportByMonthAndYearDTO);
+
+        return modelAndView;
     }
 }

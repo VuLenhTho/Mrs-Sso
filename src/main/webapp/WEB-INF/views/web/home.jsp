@@ -23,7 +23,7 @@
                             <div class="col-md-12">
                                 <h1 class="m-b-20"><strong>${slide.title}</strong></h1>
                                 <p class="m-b-40">${slide.description}</p>
-                                <p><a class="btn hvr-hover" href="#">Khám phá</a></p>
+                                <p><a class="btn hvr-hover" href="#hot">Khám phá</a></p>
                             </div>
                         </div>
                     </div>
@@ -37,7 +37,7 @@
     </div>
 
     <!-- Start Products  -->
-    <div class="products-box" style="font-family: Helvetica Neue, Helvetica, Arial, sans-serif">
+    <div class="products-box" id="hot" style="font-family: Helvetica Neue, Helvetica, Arial, sans-serif">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
@@ -79,7 +79,7 @@
                                 </div>
 
                                 <div class="why-text">
-                                    <h4 style=" white-space: nowrap;text-overflow: ellipsis; overflow: hidden;">${trendProduct.name}</h4>
+                                        <%--                                    <h4 style=" white-space: nowrap;text-overflow: ellipsis; overflow: hidden;">${trendProduct.name}</h4>--%>
                                     <c:if test="${trendProduct.isDiscount == true}">
                                         <p style="display: inline-block">Chỉ còn:&nbsp;</p><h4
                                             style="color: red;display: inline-block"> ${trendProduct.vnPrice}</h4>
@@ -109,7 +109,7 @@
                                 </div>
 
                                 <div class="why-text">
-                                    <h4>${bestSale.name}</h4>
+                                        <%--                                    <h4>${bestSale.name}</h4>--%>
                                     <c:if test="${bestSale.isDiscount == true}">
                                         <p style="display: inline-block">Chỉ còn:&nbsp;</p>
                                         <h4 style="color: red;display: inline-block"> ${bestSale.vnPrice}</h4>

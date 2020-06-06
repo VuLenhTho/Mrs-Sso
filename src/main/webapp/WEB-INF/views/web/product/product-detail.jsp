@@ -288,7 +288,7 @@
             dataType: 'text',
             statusCode: {
                 401: function () {
-                    window.location = "http://localhost:8080/login";
+                    window.location = "http://localhost:8080/login?mess=addToCart";
                 },
                 400: function () {
                     swal("Có lỗi xảy ra!!", "Liên hệ nhân viên bán hàng để được hỗ trợ!", "error")

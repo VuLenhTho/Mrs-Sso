@@ -79,8 +79,7 @@
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label class="col-lg-3 col-form-label" for="shortDescription">Mô tả
-                                                    toán
+                                                <label class="col-lg-3 col-form-label" for="shortDescription">Mô tả ngắn
                                                 </label>
                                                 <div class="col-lg-9">
                                                     <input type="text" class="form-control" id="shortDescription"
@@ -164,7 +163,7 @@
                                                 </label>
                                                 <div class="col-lg-9">
                                                     <select class="form-control" id="discount" name="discount">
-                                                        <option value="" selected="selected">Không</option>
+                                                        <option value="no" selected="selected">Không</option>
                                                         <c:forEach items="${discountDTOS}" var="discount">
                                                             <option value="${discount.id}">${discount.name}</option>
                                                         </c:forEach>
@@ -195,31 +194,34 @@
     <script src="<c:url value="/template/paging/jquery.twbsPagination.min.js"/>"></script>
     <script src="<c:url value="/template/assets/plugins/sweetalert/js/sweetalert.min.js"/>"></script>
 
-    <script>
-        $('#btnAddProduct').click(function (e) {
+        <script>
+            $('#btnAddProduct').click(function (e) {
+                let discountDTO = [{id: document.getElementById("discount").value}];
+                if (document.getElementById("discount").value === "no") {
+                    discountDTO = [];
+                }
+                let productDTO = {
+                    name: document.getElementById("name").value,
+                    importPrice: document.getElementById("importPrice").value,
+                    price: document.getElementById("price").value,
+                    shortDescription: document.getElementById("shortDescription").value,
+                    status: document.getElementById("status").value,
+                    thumbnail: document.getElementById("thumbnail").value,
+                    photoList: document.getElementById("photoList").value,
+                    hot: document.getElementById("hot").value,
+                    trend: document.getElementById("trend").value,
+                    subCategoryDTO: {id: document.getElementById("subCategoryDTO").value},
+                    discountDTOS: discountDTO
+                }
 
-            let productDTO = {
-                name: document.getElementById("name").value,
-                importPrice: document.getElementById("importPrice").value,
-                price: document.getElementById("price").value,
-                shortDescription: document.getElementById("shortDescription").value,
-                status: document.getElementById("status").value,
-                thumbnail: document.getElementById("thumbnail").value,
-                photoList: document.getElementById("photoList").value,
-                hot: document.getElementById("hot").value,
-                trend: document.getElementById("trend").value,
-                subCategoryDTO: {id: document.getElementById("subCategoryDTO").value}
-                discountDTO: {id: document.getElementById("discount").value}
-            }
+                callAddProduct(productDTO);
+            });
 
-            callAddProduct(productDTO);
-        });
+            function callAddProduct(data) {
+                let token = document.getElementById("token").value;
 
-        function callAddProduct(data) {
-            let token = document.getElementById("token").value;
-
-            $.ajax({
-                url: ('http://localhost:8888/api/admin/product'),
+                $.ajax({
+                    url: ('http://localhost:8888/api/admin/product'),
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify(data),

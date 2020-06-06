@@ -50,7 +50,7 @@ public class ProductDTO {
 
     private Set<ColorDTO> colorDTOS = new HashSet<>();
 
-    private Set<DiscountDTO> discountDTOS = new HashSet<>();
+    private List<DiscountDTO> discountDTOS = new ArrayList<>();
 
     private Set<SizeDTO> sizeDTOS = new HashSet<>();
 

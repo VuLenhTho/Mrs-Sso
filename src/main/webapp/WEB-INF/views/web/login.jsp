@@ -28,27 +28,30 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="logo text-center">
-                                <a href="/web">
-                                    <img src="<c:url value="/shoptemplate/images/logo3.png"/> " alt="">
+                                <a href="/home">
+                                    <img src="<c:url value="/shoptemplate/images/newLogo2.jpg"/> " alt="">
                                 </a>
                             </div>
-                            <h3 class="text-center m-text-15">Đăng nhập</h3>
-                            <h5 class="text-center m-text-15" style="color: #ff5185">${mess}</h5>
-                            <form:form action="/login" method="post" >
+                            <br>
+                            <h5 class="text-center m-text-15" style="color: #0a0a0a">${mess}</h5>
+                            <form:form action="/login" method="post">
                                 <div class="form-group">
-                                    <label>UserName</label>
-                                    <input type="text" class="form-control" placeholder="UserName" name="userName">
+                                    <label>Tài khoản</label>
+                                    <input type="text" class="form-control" placeholder="Tài khoản" name="userName">
                                 </div>
                                 <div class="form-group">
-                                    <label>Password</label>
-                                    <input type="password" class="form-control" placeholder="Password" name="password">
+                                    <label>Mật khẩu</label>
+                                    <input type="password" class="form-control" placeholder="Mật khẩu" name="password">
                                 </div>
 
                                 <div class="text-center m-b-15 m-text-15">
-                                    <button type="submit" class="btn btn-primary">Sign in</button>
+                                    <button type="submit" class="btn btn-primary">Đăng nhập</button>
                                 </div>
                                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                             </form:form>
+
+                            <p style="text-align: center">Chưa có tài khoản? <a href="/signUp" style="color: #ed9aff">Đăng
+                                ký ngay!</a></p>
                         </div>
                     </div>
                 </div>

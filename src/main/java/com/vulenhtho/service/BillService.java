@@ -13,5 +13,5 @@ public interface BillService {
 
     String deletes(HttpServletRequest request);
 
-
+    ModelAndView getReport(Integer month, Integer year);
 }

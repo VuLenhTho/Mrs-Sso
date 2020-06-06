@@ -1,6 +1,7 @@
 package com.vulenhtho.service.impl;
 
 import com.vulenhtho.config.APIConstant;
+import com.vulenhtho.controller.web.LoginController;
 import com.vulenhtho.dto.*;
 import com.vulenhtho.dto.enumeration.PaymentMethod;
 import com.vulenhtho.dto.request.*;
@@ -37,10 +38,13 @@ public class ProductServiceImpl implements ProductService {
 
     private final UserService userService;
 
-    public ProductServiceImpl(RestTemplate restTemplate, SecurityServiceImpl securityService, UserService userService) {
+    private final LoginController loginController;
+
+    public ProductServiceImpl(RestTemplate restTemplate, SecurityServiceImpl securityService, UserService userService, LoginController loginController) {
         this.restTemplate = restTemplate;
         this.securityService = securityService;
         this.userService = userService;
+        this.loginController = loginController;
     }
 
     @Override
@@ -103,6 +107,7 @@ public class ProductServiceImpl implements ProductService {
         ProductFilterWebResponse filterWebResponse = new ProductFilterWebResponse(filter.getSearch(), filter.getSort(), filter.getSubCategoryId());
         modelAndView.addObject("filter", filterWebResponse);
         setLinkToAdminPage(modelAndView);
+        modelAndView.addObject("token", securityService.getToken());
 
         return modelAndView;
     }
@@ -151,7 +156,9 @@ public class ProductServiceImpl implements ProductService {
         modelAndView.addObject("color", productDetailDTO.getColorDTOS());
         modelAndView.addObject("size", productDetailDTO.getSizeDTOS());
         modelAndView.addObject("subCategoryDTOS", productDetailDTO.getSubCategoryDTOS());
+        modelAndView.addObject("discountDTOS", productDetailDTO.getDiscountDTOS());
         modelAndView.addObject("token", securityService.getToken());
+
         return modelAndView;
     }
 
@@ -255,8 +262,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ModelAndView getCart() {
         ModelAndView modelAndView = new ModelAndView("/web/cart");
+        setLinkToAdminPage(modelAndView);
         if (!(SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof CustomUserDetail)) {
-            return new ModelAndView("/web/login");
+            return loginController.login("getCart");
         }
         CustomUserDetail customUserDetail = (CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         CartDTO cartDTO = customUserDetail.getCartDTO();
@@ -297,6 +305,7 @@ public class ProductServiceImpl implements ProductService {
         modelAndView.addObject("costOfCart", convertToVnCurrency(costOfCart));
         modelAndView.addObject("cartDTO", cartDTO);
         setHeaderToModelAndView(modelAndView, itemsForCartAndHeaderResponseEntity.getBody().getHeaderDTO());
+
         return modelAndView;
     }
 

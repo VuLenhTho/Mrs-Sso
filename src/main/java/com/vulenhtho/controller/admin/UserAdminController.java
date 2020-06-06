@@ -28,11 +28,11 @@ import java.util.List;
 @RequestMapping("/admin")
 public class UserAdminController {
 
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
-    private SecurityServiceImpl securityService;
+    private final SecurityServiceImpl securityService;
 
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
     public UserAdminController(RestTemplate restTemplate, SecurityServiceImpl securityService, UserService userService) {

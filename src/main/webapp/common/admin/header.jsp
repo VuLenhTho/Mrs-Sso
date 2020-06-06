@@ -2,7 +2,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <div class="header">
     <div class="nav-header">
-        <div class="brand-logo"><a href="/home"><img src="<c:url value="/shoptemplate/images/logo3mini.png"/>" alt="">
+        <div class="brand-logo"><a style="padding-top: 5px" href="/home"><img
+                src="<c:url value="/shoptemplate/images/newMiniLogo2.jpg"/>" alt="">
         </a>
         </div>
         <div class="nav-control">

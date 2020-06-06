@@ -354,7 +354,7 @@
 
         var textError = "";
         if (user === '' || fullName === '' || phone === '') {
-            textError = "Vui lòng điện đầy đủ các mục có gắn dấu *";
+            textError = "Vui lòng điền đầy đủ các mục có gắn dấu *";
 
         } else if ((pass !== '' && confirmPass === '') || (pass === '' && confirmPass !== '')) {
             textError = "Hãy điền cả mật khẩu và xác nhận mật khẩu hoặc bỏ qua nếu không muốn thay đổi!";

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Setter
@@ -20,4 +21,6 @@ public class ProductDetailDTO {
     private List<ColorDTO> colorDTOS;
 
     private List<SizeDTO> sizeDTOS;
+
+    private List<DiscountDTO> discountDTOS = new ArrayList<>();
 }

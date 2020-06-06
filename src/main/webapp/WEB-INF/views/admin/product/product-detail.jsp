@@ -138,6 +138,31 @@
                                                     </select>
                                                 </div>
                                             </div>
+                                            <div class="form-group row">
+                                                <label class="col-lg-3 col-form-label" for="discount">Khuyến mại
+                                                </label>
+                                                <div class="col-lg-9">
+                                                    <select class="form-control" id="discount" name="discount">
+                                                        <c:if test="${product.discountDTOS.size() > 0}">
+                                                            <option value="${product.discountDTOS[0].id}"
+                                                                    selected="selected">${product.discountDTOS[0].name}</option>
+                                                            <option value="no">Không</option>
+                                                            <c:forEach items="${discountDTOS}" var="discount">
+                                                                <c:if test="${product.discountDTOS[0].id != discount.id}">
+                                                                    <option value="${discount.id}">${discount.name}</option>
+                                                                </c:if>
+                                                            </c:forEach>
+                                                        </c:if>
+                                                        <c:if test="${product.discountDTOS.size() < 1}">
+                                                            <option value="no" selected="selected">Không</option>
+                                                            <c:forEach items="${discountDTOS}" var="discount">
+                                                                <option value="${discount.id}">${discount.name}</option>
+                                                            </c:forEach>
+                                                        </c:if>
+
+                                                    </select>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -362,37 +387,43 @@
     <script src="<c:url value="/template/paging/jquery.twbsPagination.min.js"/>"></script>
     <script src="<c:url value="/template/assets/plugins/sweetalert/js/sweetalert.min.js"/>"></script>
 
-    <script>
-        $('#btnUpdateProduct').click(function (e) {
-            let idsToDel = "";
-            let formData = $('#formSubmit').serializeArray();
-            $.each(formData, function (i, v) {
-                if (v.name === "productColorSizeId") {
-                    idsToDel = idsToDel + v.value + ',';
+        <script>
+            $('#btnUpdateProduct').click(function (e) {
+                let idsToDel = "";
+                let formData = $('#formSubmit').serializeArray();
+                $.each(formData, function (i, v) {
+                    if (v.name === "productColorSizeId") {
+                        idsToDel = idsToDel + v.value + ',';
+                    }
+                });
+                let discountDTO = [{id: document.getElementById("discount").value}];
+                if (document.getElementById("discount").value === "no") {
+                    discountDTO = [];
                 }
+
+
+                let productDTO = {
+                    id: document.getElementById("id").value,
+                    name: document.getElementById("name").value,
+                    importPrice: document.getElementById("importPrice").value,
+                    price: document.getElementById("price").value,
+                    shortDescription: document.getElementById("shortDescription").value,
+                    status: document.getElementById("status").value,
+                    thumbnail: document.getElementById("thumbnail").value,
+                    photoList: document.getElementById("photoList").value,
+                    hot: document.getElementById("hot").value,
+                    trend: document.getElementById("trend").value,
+                    subCategoryDTO: {id: document.getElementById("subCategoryDTO").value},
+                    discountDTOS: discountDTO
+                }
+
+                let productDetailDTO = {
+                    productDTO: productDTO,
+                    productColorSizeIdsToDel: idsToDel
+                }
+
+                callUpdateProduct(productDetailDTO);
             });
-
-            let productDTO = {
-                id: document.getElementById("id").value,
-                name: document.getElementById("name").value,
-                importPrice: document.getElementById("importPrice").value,
-                price: document.getElementById("price").value,
-                shortDescription: document.getElementById("shortDescription").value,
-                status: document.getElementById("status").value,
-                thumbnail: document.getElementById("thumbnail").value,
-                photoList: document.getElementById("photoList").value,
-                hot: document.getElementById("hot").value,
-                trend: document.getElementById("trend").value,
-                subCategoryDTO: {id: document.getElementById("subCategoryDTO").value}
-            }
-
-            let productDetailDTO = {
-                productDTO: productDTO,
-                productColorSizeIdsToDel: idsToDel
-            }
-
-            callUpdateProduct(productDetailDTO);
-        });
 
         $('#btnAddProductColorSize').click(function () {
             let productColorSizeDTO = {

@@ -35,7 +35,7 @@
                         </c:if>
                         <c:if test="${name == null || name == 'anonymousUser'}">
                             <li><a href="<c:url value="/login"/>">Đăng nhập</a></li>
-                            <li><a href="#">Đăng ký</a></li>
+                            <li><a href="/signUp">Đăng ký</a></li>
                         </c:if>
 
                     </ul>
@@ -49,7 +49,8 @@
 <!-- Start Main Top -->
 <header class="main-header" style="font-family: Helvetica,Arial">
     <!-- Start Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-default bootsnav">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-default bootsnav"
+         style="padding-top: 0; padding-bottom: 0">
         <div class="container">
             <!-- Start Header Navigation -->
             <div class="navbar-header">
@@ -57,8 +58,9 @@
                         aria-controls="navbars-rs-food" aria-expanded="false" aria-label="Toggle navigation">
                     <i class="fa fa-bars"></i>
                 </button>
-                <a class="navbar-brand" href="<c:url value="/home"/>"><img
-                        src="<c:url value="/shoptemplate/images/logosso.png"/>"
+                <a class="navbar-brand" href="<c:url value="/home"/>"
+                   style="padding-top: 10px; padding-bottom: 10px"><img
+                        src="<c:url value="/shoptemplate/images/newLogo2.jpg"/>"
                         class="logo" alt=""></a>
             </div>
             <!-- End Header Navigation -->

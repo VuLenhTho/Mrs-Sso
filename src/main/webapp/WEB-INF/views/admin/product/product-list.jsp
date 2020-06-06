@@ -6,41 +6,14 @@
 
 <head>
     <%@include file="/common/web/head.jsp" %>
-    <style>
-        #addCartButton {
-            display: block;
-            background-color: black;
-            border-bottom-color: black;
-        }
-    </style>
+    <link href="<c:url value="/template/assets/plugins/sweetalert/css/sweetalert.css"/>" rel="stylesheet">
 </head>
 
 <body>
 <%@include file="/common/web/header.jsp" %>
 
-<!-- Start All Title Box -->
-<div class="all-title-box">
-    <div class="container" style="font-family: Helvetica,Arial">
-        <div class="row">
-            <div class="col-lg-12">
-                <h2>Shop</h2>
-                <ul class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="<c:url value="/home"/>">Trang chủ</a></li>
-                    <li class="breadcrumb-item active">Sản phẩm</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- End All Title Box -->
-
 <!-- Start Shop Page  -->
 <div class="shop-box-inner" style="font-family: Helvetica,Arial">
-    <a href="<c:url value="/admin/product/create"/>">
-        <button type="button" class="btn btn-rounded btn-info"><span class="btn-icon-left"><i
-                class="fa fa-plus color-info"></i> </span>Thêm sản phẩm
-        </button>
-    </a>
     <form action="<c:url value="/products"/>" id="formSubmit" method="get">
         <div class="container">
             <div class="row">
@@ -129,7 +102,14 @@
                                 </div>
 
                             </div>
+                            <a>
+                                <button id="btnDeleteProducts" class="btn btn-danger" type="button">Xóa sản phẩm
+                                </button>
+                            </a>
 
+                            <a href="/admin/product/create">
+                                <button id="btnAddProduct" class="btn btn-danger" type="button">Thêm sản phẩm</button>
+                            </a>
                         </div>
 
                         <div class="row product-categorie-box">
@@ -140,8 +120,8 @@
 
                                             <div class="col-sm-6 col-md-6 col-lg-4 col-xl-4">
                                                 <div class="products-single fix">
-                                                    <a href="/admin/product/${product.id}">
-                                                        <div class="box-img-hover">
+                                                    <div class="box-img-hover">
+                                                        <a href="/admin/product/${product.id}">
                                                             <c:if test="${product.isDiscount == true}">
                                                                 <div class="type-lb">
                                                                     <p class="sale">Sale</p>
@@ -150,22 +130,26 @@
 
                                                             <img src="${product.thumbnail}" class="img-fluid"
                                                                  alt="Image">
+                                                        </a>
+                                                    </div>
+                                                    <div class="why-text">
+                                                        <input type="checkbox" class="check-box" name="productId"
+                                                               title=""
+                                                               value="${product.id}">
+                                                        <h4 style=" white-space: nowrap;text-overflow: ellipsis; overflow: hidden;">${product.name}</h4>
+                                                        <c:if test="${product.isDiscount == true}">
+                                                            <p style="display: inline-block">
+                                                                <del>${product.originalPrice}</del>
+                                                                Chỉ còn:&nbsp;
+                                                            </p>
+                                                            <h4 style="color: red;display: inline-block"> ${product.vnPrice}</h4>
+                                                        </c:if>
+                                                        <c:if test="${product.isDiscount != true}">
+                                                            <h4>${product.vnPrice}</h4>
+                                                        </c:if>
 
-                                                        </div>
-                                                        <div class="why-text">
-                                                            <h4 style=" white-space: nowrap;text-overflow: ellipsis; overflow: hidden;">${product.name}</h4>
-                                                            <c:if test="${product.isDiscount == true}">
-                                                                <p style="display: inline-block">
-                                                                    <del>${product.originalPrice}</del>
-                                                                    Chỉ còn:&nbsp;
-                                                                </p>
-                                                                <h4 style="color: red;display: inline-block"> ${product.vnPrice}</h4>
-                                                            </c:if>
-                                                            <c:if test="${product.isDiscount != true}">
-                                                                <h4>${product.vnPrice}</h4>
-                                                            </c:if>
-                                                        </div>
-                                                    </a>
+                                                    </div>
+
                                                 </div>
                                             </div>
                                         </c:forEach>
@@ -182,6 +166,7 @@
             </div>
         </div>
     </form>
+    <input type="hidden" value="${token}" id="token">
 
     <form action="<c:url value="/products"/>" id="formSearch" method="get">
         <input type="hidden" id="search-data" name="search">
@@ -216,6 +201,7 @@
 <script src="<c:url value="/shoptemplate/js/jquery.nicescroll.min.js"/>"></script>
 <script src="<c:url value="/template/paging/jquery.twbsPagination.js"/>"></script>
 <script src="<c:url value="/template/paging/jquery.twbsPagination.min.js"/>"></script>
+<script src="<c:url value="/template/assets/plugins/sweetalert/js/sweetalert.min.js"/>"></script>
 <script>
     $(function () {
         $('#sort').change(function () {
@@ -233,6 +219,77 @@
         }
         $('#formSearch').submit();
     })
+
+    $('#btnDeleteProducts').click(function () {
+        let ids = [];
+        let formData = $('#formSubmit').serializeArray();
+        $.each(formData, function (i, v) {
+            if (v.name === "productId") {
+                let id = parseInt(v.value, 10);
+                ids.push(id);
+            }
+        });
+
+        if (ids.length < 1) {
+            swal("Hãy chọn những sản phẩm muốn xóa!", {
+                icon: "info",
+            });
+        } else {
+            swal({
+                title: "Bạn có chắc không?",
+                text: "Những sản phẩm này sẽ bị xóa!",
+                icon: "warning",
+                buttons: {
+                    cancel: {
+                        text: "Quay lại",
+                        visible: true,
+                    },
+                    confirm: {
+                        text: "Xóa",
+                        visible: true,
+                    }
+                },
+                dangerMode: true
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        let idsRequestDTO = {ids: ids}
+                        callDeleteProducts(idsRequestDTO);
+                    }
+                });
+        }
+    })
+
+    function callDeleteProducts(data) {
+        let token = document.getElementById("token").value;
+
+        $.ajax({
+            url: ('http://localhost:8888/api/admin/products'),
+            type: 'DELETE',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            dataType: 'text',
+            headers: {
+                Authorization: token
+            },
+            success: function () {
+                swal({
+                    title: "Xóa thành công",
+                    icon: "success",
+                })
+                    .then((value) => {
+                        location.reload();
+                    });
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                let mesTitle = "Xóa thất bại, có lỗi xảy ra";
+                swal(mesTitle, {
+                    icon: "error",
+                });
+            }
+        });
+    }
+
 </script>
 <script type="text/javascript">
     var totalPages = ${totalPage};
