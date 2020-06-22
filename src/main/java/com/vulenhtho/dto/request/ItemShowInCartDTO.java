@@ -1,4 +1,4 @@
-package com.vulenhtho.dto;
+package com.vulenhtho.dto.request;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -5,9 +5,10 @@ import com.vulenhtho.controller.web.LoginController;
 import com.vulenhtho.dto.*;
 import com.vulenhtho.dto.enumeration.PaymentMethod;
 import com.vulenhtho.dto.request.*;
+import com.vulenhtho.dto.response.ItemsForCartAndHeader;
+import com.vulenhtho.dto.response.ProductFilterWebResponse;
 import com.vulenhtho.dto.response.ProductWebResponse;
 import com.vulenhtho.dto.response.ProductWebWindowViewResponseDTO;
-import com.vulenhtho.model.response.ProductFilterWebResponse;
 import com.vulenhtho.security.CustomUserDetail;
 import com.vulenhtho.service.ProductService;
 import com.vulenhtho.service.UserService;
@@ -354,6 +355,7 @@ public class ProductServiceImpl implements ProductService {
         cartDTO.setPaymentMethod(PaymentMethod.valueOf(request.getParameter("paymentMethod")));
         cartDTO.setAccountName(request.getParameter("accountName"));
         cartDTO.setAccountNumber(request.getParameter("accountNumber"));
+        cartDTO.setTradingCode(request.getParameter("tradingCode"));
         cartDTO.setNote(request.getParameter("note"));
         ((CustomUserDetail) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).setCartDTO(cartDTO);
     }

@@ -12,8 +12,7 @@
 <meta name="author" content="">
 
 <!-- Site Icons -->
-<link rel="shortcut icon" href="<c:url value="/shoptemplate/images/logo3.ico"/>" type="image/x-icon">
-<link rel="apple-touch-icon" href="<c:url value="/shoptemplate/images/logo3.png"/>">
+<link rel="icon" type="image/png" sizes="16x16" href="<c:url value="/template/icons/webLogo.png"/>">
 
 <!-- Bootstrap CSS -->
 <link rel="stylesheet" href="<c:url value="/shoptemplate/css/bootstrap.min.css"/>">

@@ -1,150 +1,130 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@include file="/common/taglib.jsp" %>
 
 <!DOCTYPE html>
-<html lang="en" class="h-100" id="login-page1">
-<%@include file="/common/taglib.jsp" %>
+<html lang="en">
+
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Đăng Nhập</title>
-    <!-- Favicon icon -->
-    <link rel="icon" type="image/png" sizes="16x16" href="<c:url value="/template/assets/images/favicon.png"/>">
-    <!-- Custom Stylesheet -->
-    <link href="<c:url value="/template/css/style.css"/> " rel="stylesheet">
+    <title style="font-family: Helvetica,serif">Đăng nhập</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--===============================================================================================-->
+    <link rel="icon" type="image/png" href="<c:url value="/template/login/images/icons/favicon.ico"/>"/>
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css"
+          href="<c:url value="/template/login/vendor/bootstrap/css/bootstrap.min.css"/>"/>
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css"
+          href="<c:url value="/template/login/fonts/font-awesome-4.7.0/css/font-awesome.min.css"/>"/>
+
+    <link rel="stylesheet" type="text/css"
+          href="<c:url value="/template/login/fonts/Linearicons-Free-v1.0.0/icon-font.min.css"/>"/>
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="<c:url value="/template/login/vendor/animate/animate.css"/>"/>
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css"
+          href="<c:url value="/template/login/vendor/css-hamburgers/hamburgers.min.css"/>"/>
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css"
+          href="<c:url value="/template/login/vendor/animsition/css/animsition.min.css"/>"/>
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="<c:url value="/template/login/vendor/select2/select2.min.css"/>"/>
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css"
+          href="<c:url value="/template/login/vendor/daterangepicker/daterangepicker.css"/>"/>
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="<c:url value="/template/login/css/util.css"/>"/>
+    <link rel="stylesheet" type="text/css" href="<c:url value="/template/login/css/main.css"/>"/>
+    <!--===============================================================================================-->
+
 </head>
+<body>
 
-<body class="h-100">
-<div id="preloader">
-    <div class="loader">
-        <svg class="circular" viewBox="25 25 50 50">
-            <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="3" stroke-miterlimit="10"/>
-        </svg>
-    </div>
-</div>
-<div class="login-bg h-100">
-    <div class="container h-100">
-        <div class="row justify-content-center h-100">
-            <div class="col-xl-6">
-                <div class="form-input-content">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="logo text-center">
-                                <a href="/home">
-                                    <img src="<c:url value="/shoptemplate/images/newLogo2.jpg"/> " alt="">
-                                </a>
-                            </div>
-                            <br>
-                            <p style="text-align: center;color: #ed9aff; font-size: 150%;">Đăng ký tài khoản</p>
-                            <br>
-                            <div class="form-group row">
+<div class="limiter">
+    <div class="container-login100" id="container1"
+         style="background-image: url('https://previews.123rf.com/images/mrtwister/mrtwister1804/mrtwister180400065/99567512-marine-theme-background-sea-shells-on-blue-shabby-wooden-boards-with-copy-space.jpg'); font-family: Helvetica, Arial, sans-serif;">
+        <div class="wrap-login100 p-t-30 p-b-50">
 
-                                <label class="col-lg-4 col-form-label" for="val-username">Tài khoản
-                                    <span class="text-danger">*</span>
-                                </label>
-                                <div class="col-lg-7">
-                                    <input type="text" class="form-control" id="val-username"
-                                           name="userName"
-                                           maxlength="25" placeholder=""
-                                           value="">
-                                </div>
 
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-lg-4 col-form-label" for="val-username">Mật khẩu
-                                    <span class="text-danger">*</span>
-                                </label>
-                                <div class="col-lg-7">
-                                    <input type="password" class="form-control" id="password"
-                                           maxlength="25" name="password" placeholder="" value="">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-lg-4 col-form-label" for="val-username"> Xác nhận mật khẩu
-                                    <span class="text-danger">*</span>
-                                </label>
-                                <div class="col-lg-7">
-                                    <input type="password" class="form-control" id="confirmPassword"
-                                           maxlength="25" name="confirmPassword"
-                                           placeholder="" value="">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-lg-4 col-form-label" for="val-username">Họ tên
-                                    <span class="text-danger">*</span>
-                                </label>
-                                <div class="col-lg-7">
-                                    <input type="text" class="form-control" id="fullName" name="fullName"
-                                           maxlength="30" placeholder=""
-                                           value="${user.fullName}">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-lg-4 col-form-label" for="val-username">Điện thoại
-                                    <span class="text-danger">*</span>
-                                </label>
-                                <div class="col-lg-7">
-                                    <input type="text" class="form-control" id="phone" name="phone"
-                                           maxlength="15" placeholder="" value="${user.phone}">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-lg-4 col-form-label" for="val-username">Email
-                                    <span class="text-danger">*</span>
-                                </label>
-                                <div class="col-lg-7">
-                                    <input type="email" class="form-control" id="email" name="email"
-                                           maxlength="40" placeholder="" value="${user.email}">
-                                </div>
-                            </div>
+				<span class="login100-form-title p-b-41" style="font-family: Helvetica,serif ; font-weight: bold">
+					Đăng ký tài khoản
+				</span>
 
-                            <div class="form-group row">
-                                <label class="col-lg-4 col-form-label" for="val-username">Địa chỉ
-                                </label>
-                                <div class="col-lg-7">
-                                    <input type="text" class="form-control" id="address" name="address"
-                                           maxlength="100" placeholder="" value="${user.address}">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-lg-4 col-form-label" for="val-username">Giới tính
-                                </label>
-                                <div class="col-lg-7">
-                                    <select class="form-control" id="sex" name="sex">
-                                        <option value="true" selected="selected">Nam</option>
-                                        <option value="false">Nữ</option>
-                                    </select>
-                                </div>
-                            </div>
+            <div class="login100-form validate-form p-b-33 p-t-5">
 
-                            <div class="form-group row">
-                                <div class="col-lg-6 " style="margin: auto;">
-                                    <button type="button" style="margin: auto;" class="btn btn-info" id="btnSignUp">Đăng
-                                        ký
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-lg-12 ml-auto">
-                                    <p style="text-align: center"><a href="/login" style="color: #ed9aff">Đăng nhập</a>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="wrap-input100 validate-input" data-validate="Enter username">
+                    <input class="input100" type="text" name="userName" id="val-username" placeholder="Tài khoản">
+                    <span class="focus-input100" data-placeholder="&#xe82a;"></span>
                 </div>
+
+                <div class="wrap-input100 validate-input" data-validate="Enter password">
+                    <input class="input100" type="password" name="password" id="password" placeholder="Mật khẩu">
+                    <span class="focus-input100" data-placeholder="&#xe80f;"></span>
+                </div>
+                <div class="wrap-input100 validate-input" data-validate="Enter password">
+                    <input class="input100" type="password" name="confirmPassword" id="confirmPassword"
+                           placeholder="Xác nhận mật khẩu">
+                    <span class="focus-input100" data-placeholder="&#xe80f;"></span>
+                </div>
+                <div class="wrap-input100 validate-input" data-validate="Enter username">
+                    <input class="input100" type="text" name="fullName" id="fullName" placeholder="Họ tên">
+                    <span class="focus-input100" data-placeholder="&#xe802;"></span>
+                </div>
+                <div class="wrap-input100 validate-input" data-validate="Enter username">
+                    <input class="input100" type="number" name="phone" id="phone" placeholder="Điện thoại">
+                    <span class="focus-input100" data-placeholder="&#xe830;"></span>
+                </div>
+                <div class="wrap-input100 validate-input" data-validate="Enter username">
+                    <input class="input100" type="text" name="email" id="email" placeholder="Email">
+                    <span class="focus-input100" data-placeholder="&#xe818;"></span>
+                </div>
+                <div class="wrap-input100 validate-input" data-validate="Enter username">
+                    <input class="input100" type="text" name="address" id="address" placeholder="Địa chỉ">
+                    <span class="focus-input100" data-placeholder="&#xe833;"></span>
+                </div>
+                <div class="wrap-input100 validate-input" data-validate="Enter username">
+                    <label for="sex" style="padding-left: 14px; font-size: 130%">Giới tính</label>
+                    <select style="font-size: 130%" class="form-control" id="sex" name="sex">
+                        <option value="true" selected="selected">Nam</option>
+                        <option value="false">Nữ</option>
+                    </select>
+                </div>
+
+                <div class="container-login100-form-btn m-t-32">
+                    <button class="login100-form-btn" id="btnSignUp"
+                            style="font-family: Helvetica,serif ; font-weight: bold; text-transform: none">
+                        Đăng ký
+                    </button>
+                </div>
+
+                <br>
+                <p style="text-align: center"><a href="/login" style="color: #ed9aff">Đăng nhập</a>
+                </p>
             </div>
         </div>
     </div>
 </div>
-<!-- #/ container -->
-<script src="<c:url value="/template/js/modernizr-3.6.0.min.js"/> "></script>
-<!-- Common JS -->
-<script src="<c:url value="/template/assets/plugins/common/common.min.js"/>"></script>
-<!-- Custom script -->
-<script src="<c:url value="/template/js/custom.min.js"/> "></script>
-<script src="<c:url value="/template/assets/plugins/sweetalert/js/sweetalert.min.js"/>"></script>
 
+
+<div id="dropDownSelect1"></div>
+
+<!--===============================================================================================-->
+<script src="<c:url value="/template/login/vendor/jquery/jquery-3.2.1.min.js"/>"></script>
+<!--===============================================================================================-->
+<script src="<c:url value="/template/login/vendor/animsition/js/animsition.min.js"/>"></script>
+<!--===============================================================================================-->
+<script src="<c:url value="/template/login/vendor/bootstrap/js/popper.js"/>"></script>
+<script src="<c:url value="/template/login/vendor/bootstrap/js/bootstrap.min.js"/>"></script>
+<!--===============================================================================================-->
+<script src="<c:url value="/template/login/vendor/select2/select2.min.js"/>"></script>
+<!--===============================================================================================-->
+<script src="<c:url value="/template/login/vendor/daterangepicker/moment.min.js"/>"></script>
+<script src="<c:url value="/template/login/vendor/daterangepicker/daterangepicker.js"/>"></script>
+<!--===============================================================================================-->
+<script src="<c:url value="/template/login/vendor/countdowntime/countdowntime.js"/>"></script>
+<!--===============================================================================================-->
+<script src="<c:url value="/template/login/js/main.js"/>"></script>
+<script src="<c:url value="/template/assets/plugins/sweetalert/js/sweetalert.min.js"/>"></script>
 <script>
 
     $('#btnSignUp').click(function (e) {
@@ -230,13 +210,17 @@
             contentType: 'application/json',
             data: JSON.stringify(userDTO),
             dataType: 'text',
-            statusCode: {
-                201: function () {
-                    swal("Thành công!", "Hãy nhập mã xác nhận để kích hoạt tài khoản", "success")
-                }
+            success: function () {
+                swal({
+                    title: "Đăng ký thành công",
+                    icon: "success",
+                })
+                    .then((value) => {
+                        window.location.href = "http://localhost:8080/login";
+                    });
             },
             error: function () {
-                swal("Có lỗi xảy ra, hãy kiểm tra lại thông tin!", "error")
+                swal("Có lỗi xảy ra!!", "Hãy kiểm tra lại thông tin!! ", "error")
             }
         });
     }

@@ -14,7 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/admin")
 @PreAuthorize("hasRole('ADMIN')")
 public class ProductAdminController {
-    private ProductService productService;
+    private final ProductService productService;
 
     public ProductAdminController(ProductService productService) {
         this.productService = productService;

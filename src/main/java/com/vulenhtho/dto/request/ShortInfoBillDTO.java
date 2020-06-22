@@ -1,4 +1,4 @@
-package com.vulenhtho.dto;
+package com.vulenhtho.dto.request;
 
 import com.vulenhtho.dto.enumeration.BillStatus;
 import com.vulenhtho.dto.enumeration.PaymentMethod;

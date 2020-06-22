@@ -14,14 +14,14 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
-public class CartController {
+public class BillController {
 
-    private ProductService productService;
+    private final ProductService productService;
 
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
-    public CartController(ProductService productService, UserService userService) {
+    public BillController(ProductService productService, UserService userService) {
         this.productService = productService;
         this.userService = userService;
     }

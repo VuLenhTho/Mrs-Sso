@@ -61,6 +61,7 @@ public class BillServiceImpl implements BillService {
             List<String> paymentInfo = Arrays.stream(bill.getPaymentInfo().split(",")).collect(Collectors.toList());
             modelAndView.addObject("accName", paymentInfo.get(0));
             modelAndView.addObject("accNumber", paymentInfo.get(1));
+            modelAndView.addObject("tradingCode", paymentInfo.get(2));
         }
         modelAndView.addObject("token", securityService.getToken());
         return modelAndView;

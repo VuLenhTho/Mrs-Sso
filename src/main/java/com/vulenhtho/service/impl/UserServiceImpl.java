@@ -2,9 +2,9 @@ package com.vulenhtho.service.impl;
 
 import com.vulenhtho.config.APIConstant;
 import com.vulenhtho.config.Constant;
-import com.vulenhtho.dto.ChangeUserAndResult;
 import com.vulenhtho.dto.RoleDTO;
 import com.vulenhtho.dto.UserDTO;
+import com.vulenhtho.dto.response.ChangeUserAndResult;
 import com.vulenhtho.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
@@ -28,9 +28,9 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
-    private SecurityServiceImpl securityService;
+    private final SecurityServiceImpl securityService;
 
 
     @Autowired

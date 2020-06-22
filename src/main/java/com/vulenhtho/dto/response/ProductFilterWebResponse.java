@@ -1,4 +1,4 @@
-package com.vulenhtho.model.response;
+package com.vulenhtho.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

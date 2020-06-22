@@ -39,7 +39,7 @@ public class ProductController {
     }
 
     @GetMapping("/product/{id}")
-    public ModelAndView webProductDetail(@PathVariable Long id) {
+    public ModelAndView getWebProductDetail(@PathVariable Long id) {
         return productService.getDetailProductPage(id);
     }
 

@@ -1,6 +1,6 @@
 package com.vulenhtho.service;
 
-import com.vulenhtho.dto.ChangeUserAndResult;
+import com.vulenhtho.dto.response.ChangeUserAndResult;
 
 import javax.servlet.http.HttpServletRequest;
 

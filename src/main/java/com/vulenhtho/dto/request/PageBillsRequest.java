@@ -1,6 +1,5 @@
 package com.vulenhtho.dto.request;
 
-import com.vulenhtho.dto.ShortInfoBillDTO;
 import lombok.Getter;
 import lombok.Setter;
 

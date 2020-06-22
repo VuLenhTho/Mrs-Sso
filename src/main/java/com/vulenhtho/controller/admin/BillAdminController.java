@@ -13,11 +13,11 @@ import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/admin")
-public class BillController {
+public class BillAdminController {
 
-    private BillService billService;
+    private final BillService billService;
 
-    public BillController(BillService billService) {
+    public BillAdminController(BillService billService) {
         this.billService = billService;
     }
 
@@ -47,8 +47,5 @@ public class BillController {
         return billService.update(id);
     }
 
-    @GetMapping("/bill/update")
-    public ModelAndView updateBill(HttpServletRequest request) {
-        return null;
-    }
+
 }

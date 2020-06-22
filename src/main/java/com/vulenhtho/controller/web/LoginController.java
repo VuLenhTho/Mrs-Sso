@@ -17,7 +17,7 @@ public class LoginController {
 
     @GetMapping("/login")
     public ModelAndView login(@RequestParam(required = false) String mess) {
-        ModelAndView modelAndView = new ModelAndView("web/login");
+        ModelAndView modelAndView = new ModelAndView("/web/login");
         if (!StringUtils.isEmpty(mess)) {
             switch (mess) {
                 case "addToCart":

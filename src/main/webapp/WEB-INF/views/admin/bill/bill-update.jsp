@@ -124,6 +124,14 @@
                                                            name="accNumber" placeholder="" value="${accNumber}">
                                                 </div>
                                             </div>
+                                            <div class="form-group row">
+                                                <label class="col-lg-3 col-form-label" for="accNumber">Mã giao dịch
+                                                </label>
+                                                <div class="col-lg-9">
+                                                    <input type="text" class="form-control" id="tradingCode"
+                                                           name="tradingCode" placeholder="" value="${tradingCode}">
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -447,7 +455,7 @@
                     }
                 });
 
-                let paymentInfo = document.getElementById("accName").value + "," + document.getElementById("accNumber").value;
+                let paymentInfo = document.getElementById("accName").value + "," + document.getElementById("accNumber").value + "," + document.getElementById("tradingCode").value;
 
                 let billDTO = {
                     id: document.getElementById("id").value,

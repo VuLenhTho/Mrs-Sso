@@ -26,6 +26,8 @@ public class CartDTO {
 
     private String accountNumber;
 
+    private String tradingCode;
+
     private Long totalImportMoney;
 
     private Long totalMoney;

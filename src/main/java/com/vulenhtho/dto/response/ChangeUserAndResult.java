@@ -1,5 +1,6 @@
-package com.vulenhtho.dto;
+package com.vulenhtho.dto.response;
 
+import com.vulenhtho.dto.UserDTO;
 import lombok.Data;
 
 @Data

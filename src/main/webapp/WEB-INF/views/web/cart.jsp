@@ -153,12 +153,6 @@
                                         <label class="custom-control-label" for="debit">Thanh toán qua ví điện
                                             tử</label>
                                     </div>
-                                    <div class="custom-control custom-radio">
-                                        <input id="paypal" name="paymentMethod" type="radio"
-                                               class="custom-control-input"
-                                               required onchange="handleChangePaymentType();" value="PAYPAL">
-                                        <label class="custom-control-label" for="paypal">Paypal</label>
-                                    </div>
                                 </div>
                             </c:if>
                             <c:if test="${cartDTO.paymentMethod == 'PAY_BY_TRANSFER'}">
@@ -179,40 +173,9 @@
                                         <label class="custom-control-label" for="debit1">Thanh toán qua ví điện
                                             tử</label>
                                     </div>
-                                    <div class="custom-control custom-radio">
-                                        <input id="paypal1" name="paymentMethod" type="radio"
-                                               class="custom-control-input"
-                                               required onchange="handleChangePaymentType();" value="PAYPAL">
-                                        <label class="custom-control-label" for="paypal1">Paypal</label>
-                                    </div>
                                 </div>
                             </c:if>
-                            <c:if test="${cartDTO.paymentMethod == 'PAYPAL'}">
-                                <div class="d-block my-3">
-                                    <div class="custom-control custom-radio">
-                                        <input id="credit2" name="paymentMethod" type="radio"
-                                               class="custom-control-input"
-                                               required onchange="handleChangePaymentType();"
-                                               value="PAY_ON_DELIVERY">
-                                        <label class="custom-control-label" for="credit2">Thanh toán khi nhận
-                                            hàng</label>
-                                    </div>
-                                    <div class="custom-control custom-radio">
-                                        <input id="debit2" name="paymentMethod" type="radio"
-                                               class="custom-control-input"
-                                               required onchange="handleChangePaymentType();" value="PAY_BY_TRANSFER"
-                                               checked>
-                                        <label class="custom-control-label" for="debit2">Thanh toán qua ví điện
-                                            tử</label>
-                                    </div>
-                                    <div class="custom-control custom-radio">
-                                        <input id="paypal2" name="paymentMethod" type="radio"
-                                               class="custom-control-input"
-                                               required onchange="handleChangePaymentType();" value="PAYPAL">
-                                        <label class="custom-control-label" for="paypal2">Paypal</label>
-                                    </div>
-                                </div>
-                            </c:if>
+
 
                             <div class="row">
                                 <div class="col-md-6 mb-3" id="divPaymentInfo1">
@@ -227,7 +190,13 @@
                                            placeholder="" maxlength="20" value="${cartDTO.accountNumber}">
                                     <div class="invalid-feedback"> Vui lòng điền mục này!</div>
                                 </div>
-                                <div class="col-md-12 mb-6">
+                                <div class="col-md-12 mb-12" id="divPaymentInfo3">
+                                    <label for="tradingCode">Mã giao dịch</label>
+                                    <input type="text" class="form-control" id="tradingCode" name="tradingCode"
+                                           placeholder="" maxlength="50" value="${cartDTO.tradingCode}">
+                                    <div class="invalid-feedback"> Vui lòng điền mục này!</div>
+                                </div>
+                                <div class="col-md-12 mb-12">
                                     <p id="guide">Quý khách vui lòng điền tên chủ tài khoản, số tài khoản theo mẫu và
                                         thực hiện chuyển tiền đến số tài khoản <b>021543662102</b> để tiến hành thanh
                                         toán.<br>
@@ -348,6 +317,7 @@
         let note = document.getElementById("note").value;
         let accountName = document.getElementById("cc-name").value;
         let accountNumber = document.getElementById("cc-number").value;
+        let tradingCode = document.getElementById("tradingCode").value;
         let paymentMethod = "";
         let radioButtons = document.getElementsByName("paymentMethod");
 
@@ -358,7 +328,7 @@
         }
 
         $.get("http://localhost:8080/updateBillInfo?receiver=" + receiver + "&phone=" + phone + "&address=" + address + "&note=" + note + "&paymentMethod="
-            + paymentMethod + "&accountName=" + accountName + "&accountNumber=" + accountNumber + "", function (data, status) {
+            + paymentMethod + "&accountName=" + accountName + "&accountNumber=" + accountNumber + "&tradingCode=" + tradingCode, function (data, status) {
         });
     }
 
@@ -392,6 +362,7 @@
                     let note = document.getElementById("note").value;
                     let accountName = document.getElementById("cc-name").value;
                     let accountNumber = document.getElementById("cc-number").value;
+                    let tradingCode = document.getElementById("tradingCode").value;
                     let paymentMethod = "";
                     let radioButtons = document.getElementsByName("paymentMethod");
 
@@ -402,7 +373,7 @@
                     }
 
                     $.get("http://localhost:8080/createBill?receiver=" + receiver + "&phone=" + phone + "&address=" + address + "&note=" + note + "&paymentMethod="
-                        + paymentMethod + "&accountName=" + accountName + "&accountNumber=" + accountNumber + "", function (data, status) {
+                        + paymentMethod + "&accountName=" + accountName + "&accountNumber=" + accountNumber + "&tradingCode=" + tradingCode, function (data, status) {
                     });
                 }
 
@@ -416,8 +387,10 @@
 <script>
     let payment1 = document.getElementById("divPaymentInfo1");
     let payment2 = document.getElementById("divPaymentInfo2");
+    let payment3 = document.getElementById("divPaymentInfo3");
     let accountName = document.getElementById("cc-name");
     let accountNumber = document.getElementById("cc-number");
+    let tradingCode = document.getElementById("tradingCode");
 
     let guide = document.getElementById("guide");
 
@@ -434,6 +407,7 @@
         if (${cartDTO.paymentMethod != 'PAY_BY_TRANSFER'}) {
             payment1.style.display = 'none';
             payment2.style.display = 'none';
+            payment3.style.display = 'none';
             guide.style.display = 'none';
         }
     }
@@ -442,22 +416,21 @@
         if (paymentMethod === "PAY_ON_DELIVERY") {
             payment1.style.display = 'none';
             payment2.style.display = 'none';
+            payment3.style.display = 'none';
             accountName.required = false;
             accountNumber.required = false;
+            tradingCode.required = false;
             guide.style.display = 'none';
         } else if (paymentMethod === "PAY_BY_TRANSFER") {
             accountName.required = true;
             accountNumber.required = true;
+            tradingCode.required = true;
+
             payment1.style.display = 'block';
             payment2.style.display = 'block';
+            payment3.style.display = 'block';
             guide.style.display = 'block';
 
-        } else if (paymentMethod === "PAYPAL") {
-            accountName.required = true;
-            accountNumber.required = true;
-            payment1.style.display = 'block';
-            payment2.style.display = 'block';
-            guide.style.display = 'block';
         }
     }
 </script>

@@ -5,7 +5,7 @@
 <!-- Sweetalert -->
 <link href="<c:url value="/template/assets/plugins/sweetalert/css/sweetalert.css"/>" rel="stylesheet">
 <!-- Favicon icon -->
-<link rel="icon" type="image/png" sizes="16x16" href="<c:url value="/template/assets/images/favicon.png"/>">
+<link rel="icon" type="image/png" sizes="16x16" href="<c:url value="/template/icons/webLogo.png"/>">
 <!-- wysihtml5 -->
 <link rel="stylesheet" href="<c:url value="/template/assets/plugins/wysihtml5/css/bootstrap-wysihtml5.css"/>">
 <!-- Custom Stylesheet -->

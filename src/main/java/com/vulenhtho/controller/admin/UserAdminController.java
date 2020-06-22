@@ -3,10 +3,10 @@ package com.vulenhtho.controller.admin;
 
 import com.vulenhtho.config.APIConstant;
 import com.vulenhtho.config.Constant;
-import com.vulenhtho.dto.ChangeUserAndResult;
 import com.vulenhtho.dto.RoleDTO;
 import com.vulenhtho.dto.UserDTO;
 import com.vulenhtho.dto.request.PageUserRequest;
+import com.vulenhtho.dto.response.ChangeUserAndResult;
 import com.vulenhtho.dto.response.UserFilterResponse;
 import com.vulenhtho.service.UserService;
 import com.vulenhtho.service.impl.SecurityServiceImpl;
