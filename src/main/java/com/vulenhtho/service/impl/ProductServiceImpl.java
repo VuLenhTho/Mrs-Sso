@@ -128,6 +128,7 @@ public class ProductServiceImpl implements ProductService {
         if (productWebResponse.getOriginalPrice() != null) {
             productWebResponse.setVnOriginalPrice(convertToVnCurrency(productWebResponse.getOriginalPrice()));
         }
+        sortColorAndSize(productWebResponse.getColorDTOS(), productWebResponse.getSizeDTOS());
         modelAndView.addObject("product", productWebResponse);
         setSizeColorAmount(modelAndView, productWebResponse.getProductColorSizeDTOS());
         setPhotoList(modelAndView, productWebResponse.getPhotoList());
@@ -135,6 +136,7 @@ public class ProductServiceImpl implements ProductService {
         setHeaderToModelAndView(modelAndView, productResponseEntity.getBody().getHeader());
         modelAndView.addObject("productStatus", productWebResponse.getStatus());
         setLinkToAdminPage(modelAndView);
+
         return modelAndView;
     }
 
@@ -149,11 +151,9 @@ public class ProductServiceImpl implements ProductService {
         }
         ProductDetailDTO productDetailDTO = productDetailDTOResponseEntity.getBody();
         productDetailDTO.getProductDTO().getProductColorSizeDTOS().sort(Comparator.comparing(ProductColorSizeDTO::getId));
+        sortColorAndSize(productDetailDTO.getColorDTOS(), productDetailDTO.getSizeDTOS());
+
         modelAndView.addObject("product", productDetailDTO.getProductDTO());
-
-        productDetailDTO.getColorDTOS().sort((o1, o2) -> o2.getName().compareTo(o1.getName()));
-        productDetailDTO.getSizeDTOS().sort(Comparator.comparing(SizeDTO::getName));
-
         modelAndView.addObject("color", productDetailDTO.getColorDTOS());
         modelAndView.addObject("size", productDetailDTO.getSizeDTOS());
         modelAndView.addObject("subCategoryDTOS", productDetailDTO.getSubCategoryDTOS());
@@ -161,6 +161,11 @@ public class ProductServiceImpl implements ProductService {
         modelAndView.addObject("token", securityService.getToken());
 
         return modelAndView;
+    }
+
+    private void sortColorAndSize(List<ColorDTO> colorDTOS, List<SizeDTO> sizeDTOS) {
+        colorDTOS.sort((o1, o2) -> o2.getName().compareTo(o1.getName()));
+        sizeDTOS.sort(Comparator.comparing(SizeDTO::getName));
     }
 
     @Override
@@ -284,7 +289,6 @@ public class ProductServiceImpl implements ProductService {
 
         //total price of cart before discount
         Long costOfCart = itemShowInCartDTOS.stream().mapToLong(ItemShowInCartDTO::getTotalPrice).sum();
-        //total import price
         Long totalImportPrice = itemShowInCartDTOS.stream().mapToLong(item -> item.getImportPrice() * item.getQuantity()).sum();
         Long discountInBill = itemsForCartAndHeader.getDiscountDTOS().stream().mapToLong(DiscountDTO::getPercent).sum();
 

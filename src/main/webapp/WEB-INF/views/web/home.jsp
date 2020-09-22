@@ -6,6 +6,7 @@
 
 <head>
     <%@include file="/common/web/head.jsp" %>
+
 </head>
 
 <body>
@@ -79,7 +80,7 @@
                                 </div>
 
                                 <div class="why-text">
-                                        <%--                                    <h4 style=" white-space: nowrap;text-overflow: ellipsis; overflow: hidden;">${trendProduct.name}</h4>--%>
+                                    <h4 style=" white-space: nowrap;text-overflow: ellipsis; overflow: hidden;">${trendProduct.name}</h4>
                                     <c:if test="${trendProduct.isDiscount == true}">
                                         <p style="display: inline-block">Chỉ còn:&nbsp;</p><h4
                                             style="color: red;display: inline-block"> ${trendProduct.vnPrice}</h4>
@@ -104,12 +105,12 @@
                                             <p class="sale">Sale</p>
                                         </div>
                                     </c:if>
-                                    <img src="${bestSale.thumbnail}" class="img-fluid"
+                                    <img  src="${bestSale.thumbnail}" class="img-fluid"
                                          alt="Image">
                                 </div>
 
                                 <div class="why-text">
-                                        <%--                                    <h4>${bestSale.name}</h4>--%>
+                                    <h4>${bestSale.name}</h4>
                                     <c:if test="${bestSale.isDiscount == true}">
                                         <p style="display: inline-block">Chỉ còn:&nbsp;</p>
                                         <h4 style="color: red;display: inline-block"> ${bestSale.vnPrice}</h4>

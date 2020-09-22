@@ -179,8 +179,8 @@
                                         <div class="col-lg-6">
                                             <c:if test="${user == null}">
                                                 <select class="form-control" id="locked" name="locked">
-                                                    <option value="true" selected="selected">Hoạt động</option>
-                                                    <option value="false">Khóa</option>
+                                                    <option value="false" selected="selected">Hoạt động</option>
+                                                    <option value="true">Khóa</option>
                                                 </select>
                                             </c:if>
                                             <c:if test="${user!= null}">

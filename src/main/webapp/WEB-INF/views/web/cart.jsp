@@ -150,8 +150,7 @@
                                     <div class="custom-control custom-radio">
                                         <input id="debit" name="paymentMethod" type="radio" class="custom-control-input"
                                                required onchange="handleChangePaymentType();" value="PAY_BY_TRANSFER">
-                                        <label class="custom-control-label" for="debit">Thanh toán qua ví điện
-                                            tử</label>
+                                        <label class="custom-control-label" for="debit">Thanh toán qua chuyển khoản</label>
                                     </div>
                                 </div>
                             </c:if>
@@ -170,8 +169,7 @@
                                                class="custom-control-input"
                                                required onchange="handleChangePaymentType();" value="PAY_BY_TRANSFER"
                                                checked>
-                                        <label class="custom-control-label" for="debit1">Thanh toán qua ví điện
-                                            tử</label>
+                                        <label class="custom-control-label" for="debit1">Thanh toán qua chuyển khoản</label>
                                     </div>
                                 </div>
                             </c:if>
@@ -196,11 +194,19 @@
                                            placeholder="" maxlength="50" value="${cartDTO.tradingCode}">
                                     <div class="invalid-feedback"> Vui lòng điền mục này!</div>
                                 </div>
-                                <div class="col-md-12 mb-12">
+                                <div class="col-md-12 mb-12" id="divPaymentInfo4">
                                     <p id="guide">Quý khách vui lòng điền tên chủ tài khoản, số tài khoản theo mẫu và
-                                        thực hiện chuyển tiền đến số tài khoản <b>021543662102</b> để tiến hành thanh
-                                        toán.<br>
+                                        thực hiện chuyển khoản để tiến hành thanh toán.<br>
                                         Số tiền cần chuyển là thành tiền của đơn hàng.</p>
+                                    <div class="row">
+                                        <div class="col-md-2 mb-2">
+                                            <img src="/shoptemplate/images/payment-icon/veitin.jpg" width="50" height="50">
+                                        </div>
+                                        <div class="col-md-9 mb-9">
+                                            <b style="margin-bottom: auto;margin-top: 25px">VietinBank:  </b><p style="margin-bottom: auto;margin-top: 25px; display: inline-block"> 021532554788 - VU LENH THO</p>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
                             <hr class="mb-1">
@@ -388,6 +394,7 @@
     let payment1 = document.getElementById("divPaymentInfo1");
     let payment2 = document.getElementById("divPaymentInfo2");
     let payment3 = document.getElementById("divPaymentInfo3");
+    let payment4 = document.getElementById("divPaymentInfo4");
     let accountName = document.getElementById("cc-name");
     let accountNumber = document.getElementById("cc-number");
     let tradingCode = document.getElementById("tradingCode");
@@ -408,6 +415,7 @@
             payment1.style.display = 'none';
             payment2.style.display = 'none';
             payment3.style.display = 'none';
+            payment4.style.display = 'none';
             guide.style.display = 'none';
         }
     }
@@ -417,6 +425,7 @@
             payment1.style.display = 'none';
             payment2.style.display = 'none';
             payment3.style.display = 'none';
+            payment4.style.display = 'none';
             accountName.required = false;
             accountNumber.required = false;
             tradingCode.required = false;
@@ -429,6 +438,7 @@
             payment1.style.display = 'block';
             payment2.style.display = 'block';
             payment3.style.display = 'block';
+            payment4.style.display = 'block';
             guide.style.display = 'block';
 
         }

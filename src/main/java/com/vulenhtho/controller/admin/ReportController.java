@@ -19,13 +19,22 @@ public class ReportController {
         this.billService = billService;
     }
 
-    @GetMapping("/report")
+    @GetMapping("/reportByMonthAndYear")
     public ModelAndView getReportByMonthAndYear(@RequestParam(required = false) Integer month, @RequestParam(required = false) Integer year) {
         if (month == null || year == null) {
             Calendar calendar = Calendar.getInstance();
             year = calendar.get(Calendar.YEAR);
-            month = calendar.get(Calendar.MONTH);
+            month = calendar.get(Calendar.MONTH) + 1;
         }
-        return billService.getReport(month, year);
+        return billService.getReportByMonthAndYear(month, year);
+    }
+
+    @GetMapping("/reportByYear")
+    public ModelAndView getReportByYear(@RequestParam(required = false) Integer year) {
+        if (year == null) {
+            Calendar calendar = Calendar.getInstance();
+            year = calendar.get(Calendar.YEAR);
+        }
+        return billService.getReportByYear(year);
     }
 }

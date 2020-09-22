@@ -7,7 +7,7 @@
             <div class="row">
                 <div class="col-lg-4 col-md-12 col-sm-12">
                     <div class="footer-widget">
-                        <h4>Mrs. Sso</h4>
+                        <h4>Mrs Sso</h4>
                         <p>Produced by Vu Lenh Tho </p>
                         <ul>
                             <li><a href="https://www.facebook.com/vulenhtho" target="_blank"><i class="fab fa-facebook"
@@ -40,7 +40,7 @@
                                 <p><i class="fas fa-phone-square"></i>Điện thoại: <a href="#">+84 353 113 548</a></p>
                             </li>
                             <li>
-                                <p><i class="fas fa-envelope"></i>Email: <a href="mailto:darksoulover@gmail.com" target="_blank">darksoulover@gmail.com</a>
+                                <p><i class="fas fa-envelope"></i>Email: <a href="mailto:darksoulover@gmail.com" target="_blank">vulenhtho34@gmail.com</a>
                                 </p>
                             </li>
                         </ul>
@@ -54,7 +54,7 @@
 
 <!-- Start copyright -->
 <div class="footer-copyright">
-    <p class="footer-company">All Rights Reserved. &copy; 2020 <a href="<c:url value="/home"/>">Mrs. Sso</a> Produced by
+    <p class="footer-company"> <a href="<c:url value="/home"/>">Mrs Sso 2020.</a> Produced by
         :
         <a href="https://www.facebook.com/vulenhtho" target="_blank">Vu Lenh Tho</a></p>
 </div>

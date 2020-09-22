@@ -5,7 +5,7 @@
 <html lang="en">
 
 <head>
-    <title style="font-family: Helvetica,serif">Đăng nhập</title>
+    <title style="font-family: Helvetica,serif">Đăng ký</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--===============================================================================================-->
@@ -42,7 +42,7 @@
 
 <div class="limiter">
     <div class="container-login100" id="container1"
-         style="background-image: url('https://previews.123rf.com/images/mrtwister/mrtwister1804/mrtwister180400065/99567512-marine-theme-background-sea-shells-on-blue-shabby-wooden-boards-with-copy-space.jpg'); font-family: Helvetica, Arial, sans-serif;">
+         style="background-image: url('/shoptemplate/images/banner-03.jpg'); font-family: Helvetica, Arial, sans-serif;">
         <div class="wrap-login100 p-t-30 p-b-50">
 
 
@@ -99,6 +99,7 @@
 
                 <br>
                 <p style="text-align: center"><a href="/login" style="color: #ed9aff">Đăng nhập</a>
+                <p style="text-align: center"><a href="/home" style="color: #ed9aff">Trang chủ</a>
                 </p>
             </div>
         </div>

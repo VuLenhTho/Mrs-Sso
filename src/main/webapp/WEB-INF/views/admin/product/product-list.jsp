@@ -50,7 +50,7 @@
                                              data-parent="#list-group-men">
                                             <div class="list-group">
                                                 <c:forEach items="${category.subCategoryDTOS}" var="subCategory">
-                                                    <a href="<c:url value="/products?subCategoryId=${subCategory.id}"/>"
+                                                    <a href="<c:url value="/admin/products?subCategoryId=${subCategory.id}"/>"
                                                        class="list-group-item list-group-item-action">${subCategory.name}
                                                     </a>
                                                 </c:forEach>

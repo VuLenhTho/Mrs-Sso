@@ -137,8 +137,8 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public ModelAndView getReport(Integer month, Integer year) {
-        ModelAndView modelAndView = new ModelAndView("/admin/report/report");
+    public ModelAndView getReportByMonthAndYear(Integer month, Integer year) {
+        ModelAndView modelAndView = new ModelAndView("/admin/report/report-by-month-and-year");
         ReportByMonthAndYearDTO reportByMonthAndYearDTO = restTemplate.exchange(APIConstant.ADMIN_URI + "/bill/reportByMonthAndYear?month=" + month + "&year=" + year,
                 HttpMethod.GET, new HttpEntity<ReportByMonthAndYearDTO>(securityService.getHeadersWithToken()), ReportByMonthAndYearDTO.class).getBody();
 
@@ -148,5 +148,20 @@ public class BillServiceImpl implements BillService {
         modelAndView.addObject("reportData", reportByMonthAndYearDTO);
 
         return modelAndView;
+    }
+
+    @Override
+    public ModelAndView getReportByYear(Integer year) {
+        ModelAndView modelAndView = new ModelAndView("/admin/report/report-by-year");
+        ReportByMonthAndYearDTO reportByMonthAndYearDTO = restTemplate.exchange(APIConstant.ADMIN_URI + "/bill/reportByYear?year=" + year,
+                HttpMethod.GET, new HttpEntity<ReportByMonthAndYearDTO>(securityService.getHeadersWithToken()), ReportByMonthAndYearDTO.class).getBody();
+
+        reportByMonthAndYearDTO.setVnImportMoney(CommonUtils.convertToVnCurrency(reportByMonthAndYearDTO.getImportMoney()));
+        reportByMonthAndYearDTO.setVnInterestMoney(CommonUtils.convertToVnCurrency(reportByMonthAndYearDTO.getInterestMoney()));
+        reportByMonthAndYearDTO.setVnMoneyFromSale(CommonUtils.convertToVnCurrency(reportByMonthAndYearDTO.getMoneyFromSale()));
+        modelAndView.addObject("reportData", reportByMonthAndYearDTO);
+
+        return modelAndView;
+
     }
 }

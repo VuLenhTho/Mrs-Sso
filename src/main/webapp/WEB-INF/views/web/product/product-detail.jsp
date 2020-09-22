@@ -83,7 +83,7 @@
                     <c:if test="${product.discountDTOS.size() > 0}">
                         <h5>
                             <del>${product.vnOriginalPrice}</del>
-                                ${product.vnOriginalPrice}
+                                ${product.vnPrice}
                         </h5>
                         <h4>Khuyến mại:</h4>
                         <c:forEach items="${product.discountDTOS}" var="discount">
@@ -170,7 +170,7 @@
                                             <h4 style="color: red;display: inline-block"> ${product.vnPrice}</h4>
                                         </c:if>
                                         <c:if test="${product.isDiscount != true}">
-                                            <h5>${product.vnPrice}</h5>
+                                            <h4 style="display: inline-block">${product.vnPrice}</h4>
                                         </c:if>
                                     </div>
                                 </div>

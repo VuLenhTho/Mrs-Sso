@@ -8,7 +8,9 @@ import lombok.Setter;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -43,11 +45,11 @@ public class ProductWebResponse {
 
     private Set<ProductColorSizeDTO> productColorSizeDTOS = new HashSet<>();
 
-    private Set<ColorDTO> colorDTOS = new HashSet<>();
+    private List<ColorDTO> colorDTOS = new ArrayList<>();
 
     private Set<DiscountDTO> discountDTOS = new HashSet<>();
 
-    private Set<SizeDTO> sizeDTOS = new HashSet<>();
+    private List<SizeDTO> sizeDTOS = new ArrayList<>();
 
     private PageHeaderDTO header;
 

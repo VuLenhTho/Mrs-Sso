@@ -148,7 +148,7 @@
 
                                                         </div>
                                                         <div class="why-text">
-<%--                                                            <h4 style=" white-space: nowrap;text-overflow: ellipsis; overflow: hidden;">${product.name}</h4>--%>
+                                                            <h4 style=" white-space: nowrap;text-overflow: ellipsis; overflow: hidden;">${product.name}</h4>
                                                             <c:if test="${product.isDiscount == true}">
                                                                 <p style="display: inline-block">
                                                                     <del>${product.originalPrice}</del>

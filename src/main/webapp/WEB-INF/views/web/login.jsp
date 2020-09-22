@@ -42,8 +42,9 @@
 
 <div class="limiter">
     <div class="container-login100" id="container1"
-         style="background-image: url('https://previews.123rf.com/images/mrtwister/mrtwister1804/mrtwister180400065/99567512-marine-theme-background-sea-shells-on-blue-shabby-wooden-boards-with-copy-space.jpg'); font-family: Helvetica, Arial, sans-serif;">
-        <div class="wrap-login100 p-t-30 p-b-50">
+         style="background-image: url('/shoptemplate/images/banner-03.jpg'); font-family: Helvetica, Arial, sans-serif;">
+
+    <div class="wrap-login100 p-t-30 p-b-50">
 
 
 				<span class="login100-form-title p-b-41" style="font-family: Helvetica,serif ; font-weight: bold">
@@ -73,6 +74,7 @@
                 <br>
                 <p style="text-align: center">Chưa có tài khoản? <a href="/signUp" style="color: #ed9aff">Đăng ký
                     ngay!</a></p>
+                <p style="text-align: center"><a href="/home" style="color: #ed9aff">Trang chủ</a>
             </form:form>
         </div>
     </div>

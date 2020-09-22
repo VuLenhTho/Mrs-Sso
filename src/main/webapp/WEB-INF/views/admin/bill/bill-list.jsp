@@ -26,14 +26,6 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-body">
-                            <a href="<c:url value=""/>">
-                                <button type="button" class="btn btn-rounded btn-info"><span class="btn-icon-left"><i
-                                        class="fa fa-plus color-info"></i> </span>Tạo đơn hàng
-                                </button>
-                            </a>
-                            <br>
-                            <br>
-                            <br>
                             <h4 class="card-title">Danh sách đơn hàng</h4>
 
                             <div class="form-row align-items-center">
@@ -175,11 +167,12 @@
                                 <table class="table muted-table-bordered" id="table">
                                     <colgroup>
                                         <col width="auto" span="1">
-                                        <col width="270" span="1">
+                                        <col width="250" span="1">
                                         <col width="auto" span="1">
-                                        <col width="200" span="1">
-                                        <col width="200" span="1">
-                                        <col width="auto" span="2">
+                                        <col width="190" span="1">
+                                        <col width="150" span="1">
+                                        <col width="auto" span="1">
+                                        <col width="150" span="1">
                                         <col width="200" span="1">
                                     </colgroup>
                                     <thead class="thead-info">
